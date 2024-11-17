@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">GAME.COM</string>
+    <string name="title_game">Game</string>
+    <string name="title_home">Home</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="game_face">N!ntendid</string>
+    <string name="game_face2">Smitch</string>
+    <string name="game_face3"></string>
+    <string name="start">START</string>
+    <string name="tetris">Tetris</string>
+    <string name="score">score:\n0</string>
+    <string name="lines">lines:\n0</string>
+    <string name="btn_A">A</string>
+    <string name="btn_B">B</string>
+    <string name="btn_X">X</string>
+    <string name="btn_Y">Y</string>
+    <string name="nul" />
+</resources>

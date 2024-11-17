@@ -1,0 +1,298 @@
+package com.cyzco.game;
+
+import android.util.Log;
+import android.os.Bundle;
+import android.view.View;
+import android.os.Handler;
+import android.os.Vibrator;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
+import android.content.Context;
+import android.view.MotionEvent;
+import android.view.SurfaceView;
+import android.os.VibrationEffect;
+import android.view.WindowManager;
+import androidx.activity.EdgeToEdge;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import android.content.pm.ActivityInfo;
+import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity
+{
+    Button a, s, d, A, X, Y, l1, r1, orientPortrait, orientLandscape;
+    Vibrator vibrator;
+    TextView scores, lines;
+    SurfaceView monitor;
+    TetrisGame tetrisGame = new TetrisGame(this);  // 'this' refers to the Activity context
+
+    @SuppressLint("MissingInflatedId")
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        // Retrieve the orientation from SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
+        int orientation = sharedPreferences.getInt("orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        Log.d("MainActivity", "Retrieved orientation: " + orientation);
+        if (orientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+        {
+            setRequestedOrientation(orientation);
+        }
+
+        setContentView(R.layout.activity_main);
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+        window.getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_FULLSCREEN |
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+
+        EdgeToEdge.enable(this);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) ->
+        {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        // Initialize views and game logic
+        a = findViewById(R.id.a);
+        s = findViewById(R.id.s);
+        d = findViewById(R.id.d);
+        A = findViewById(R.id.A);
+        X = findViewById(R.id.X);
+        Y = findViewById(R.id.Y);
+        l1 = findViewById(R.id.l1);
+        r1 = findViewById(R.id.r1);
+        orientPortrait = findViewById(R.id.orient_P);
+        orientLandscape = findViewById(R.id.orient_L);
+        scores = findViewById(R.id.scores);
+        lines = findViewById(R.id.lines);
+        monitor = findViewById(R.id.mon);
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        tetrisGame = new TetrisGame(this);
+        startGameLoop();
+        setButtonListeners();
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        SharedPreferences sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
+        int orientation = sharedPreferences.getInt("orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        if (orientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+        {
+            setRequestedOrientation(orientation);
+        }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        // Save the current orientation
+        SharedPreferences sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        int currentOrientation = getResources().getConfiguration().orientation;
+        editor.putInt("orientation", currentOrientation == 1 ? ActivityInfo.SCREEN_ORIENTATION_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        editor.apply();
+        super.onBackPressed();
+    }
+
+    @Override
+    public void setRequestedOrientation(int requestedOrientation)
+    {
+        super.setRequestedOrientation(requestedOrientation);
+        SharedPreferences sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("orientation", requestedOrientation);
+        editor.apply();
+        Log.d("MainActivity", "Orientation set to: " + requestedOrientation);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setButtonListeners()
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        orientPortrait.setOnClickListener(v ->
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            editor.putInt("orientation", ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            editor.apply();
+        });
+
+        orientLandscape.setOnClickListener(v ->
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            editor.putInt("orientation", ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            editor.apply();
+        });
+
+        // Move the block left
+        setupContinuousMovement(a, () ->
+        {tetrisGame.movePieceLeft();
+        tetrisGame.renderGame(monitor);});
+
+        // Move the block right
+        setupContinuousMovement(d, () ->
+        {tetrisGame.movePieceRight();
+        tetrisGame.renderGame(monitor);});
+
+        // Move the block down
+        setupContinuousMovement(s, () ->
+        {tetrisGame.movePieceDown();
+        tetrisGame.renderGame(monitor);});
+
+        // Drop the block immediately
+        A.setOnTouchListener((v, event) ->
+        {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (vibrator != null)
+                {
+                    vibrator.vibrate(VibrationEffect.createOneShot(5, VibrationEffect.DEFAULT_AMPLITUDE));
+                }
+                tetrisGame.dropPiece();
+                tetrisGame.renderGame(monitor);
+            }
+            return true;
+        });
+
+        // Rotate the block anti-clockwise
+        X.setOnTouchListener((v, event) ->
+        {
+            if (event.getAction() == MotionEvent.ACTION_DOWN)
+            {
+                if (vibrator != null)
+                {
+                    vibrator.vibrate(VibrationEffect.createOneShot(5, VibrationEffect.DEFAULT_AMPLITUDE));
+                }
+                tetrisGame.rotatePieceCounterClockwise();
+                tetrisGame.renderGame(monitor);
+            }
+            return true;
+        });
+
+        // Rotate the block clockwise
+        Y.setOnTouchListener((v, event) ->
+        {
+            if (event.getAction() == MotionEvent.ACTION_DOWN)
+            {
+                if (vibrator != null)
+                {
+                    vibrator.vibrate(VibrationEffect.createOneShot(5, VibrationEffect.DEFAULT_AMPLITUDE));
+                }
+                tetrisGame.rotatePieceClockwise();
+                tetrisGame.renderGame(monitor);
+            }
+            return true;
+        });
+
+        // Rotate the block anti-clockwise
+        l1.setOnTouchListener((v, event) ->
+        {
+            if (event.getAction() == MotionEvent.ACTION_DOWN)
+            {
+                if (vibrator != null)
+                {
+                    vibrator.vibrate(VibrationEffect.createOneShot(5, VibrationEffect.DEFAULT_AMPLITUDE));
+                }
+                tetrisGame.rotatePieceCounterClockwise();
+                tetrisGame.renderGame(monitor);
+            }
+            return true;
+        });
+
+        // Rotate the block clockwise
+        r1.setOnTouchListener((v, event) ->
+        {
+            if (event.getAction() == MotionEvent.ACTION_DOWN)
+            {
+                if (vibrator != null)
+                {
+                    vibrator.vibrate(VibrationEffect.createOneShot(5, VibrationEffect.DEFAULT_AMPLITUDE));
+                }
+                tetrisGame.rotatePieceClockwise();
+                tetrisGame.renderGame(monitor);
+            }
+            return true;
+        });
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setupContinuousMovement(View button, Runnable moveAction)
+    {
+        Handler movementHandler = new Handler(); // Create a new Handler for this button
+        Runnable movementRunnable = new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                moveAction.run(); // Execute the specific movement action
+                movementHandler.postDelayed(this, 100); // Adjust delay for speed
+            }
+        };
+
+        button.setOnTouchListener((v, event) ->
+        {
+            switch (event.getAction())
+            {
+                case MotionEvent.ACTION_DOWN:
+                    movementHandler.post(movementRunnable); // Start the movement
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    movementHandler.removeCallbacks(movementRunnable); // Stop the movement
+                    break;
+            }
+            return true;
+        });
+    }
+
+    private void startGameLoop()
+    {
+        final Handler fallHandler = new Handler();
+        final Handler moveHandler = new Handler();
+
+        // Falling speed loop
+        Runnable fallRunnable = new Runnable()
+        {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void run()
+            {
+                lines.setText("lines:\n"+tetrisGame.getLinesCleared());
+                scores.setText("score:\n"+tetrisGame.getScoreGained());
+                tetrisGame.movePieceDown();
+                tetrisGame.renderGame(monitor);
+                fallHandler.postDelayed(this, 800); // Falling speed interval
+            }
+        };
+
+        // Start the falling loop
+        fallHandler.post(fallRunnable);
+
+        // Movement speed loop (optional continuous movement handling)
+        Runnable moveRunnable = new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                moveHandler.postDelayed(this, 50); // Movement speed interval
+            }
+        };
+
+        // Start the movement loop
+        moveHandler.post(moveRunnable);
+    }
+}

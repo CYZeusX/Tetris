@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/start_p"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dmg">
+
+    <RelativeLayout
+        android:id="@+id/mon_back"
+        android:layout_width="350dp"
+        android:layout_height="290dp"
+        android:background="@drawable/mon_back"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.25"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="226dp"
+            android:layout_height="207dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/monitor"/>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/tetris"
+            android:src="@drawable/tetrisnew"/>
+
+        <Button
+            android:id="@+id/start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginVertical="30dp"
+            android:backgroundTint="#555B27"
+            android:elevation="12dp"
+            android:text="@string/start"
+            android:textStyle="bold"
+            app:cornerRadius="25dp"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/gb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="-6dp"
+        android:text="@string/game_face2"
+        android:textColor="@color/game_text"
+        android:textSize="28sp"
+        android:textStyle="italic"
+        app:layout_constraintStart_toEndOf="@+id/nin"
+        app:layout_constraintTop_toTopOf="@+id/nin" />
+
+    <TextView
+        android:id="@+id/nin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/game_face"
+        android:textColor="@color/game_text"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/mon_back"
+        app:layout_constraintTop_toBottomOf="@+id/mon_back" />
+
+    <TextView
+        android:id="@+id/sm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="3dp"
+        android:text="@string/game_face3"
+        android:textColor="@color/game_text"
+        app:layout_constraintBottom_toBottomOf="@+id/gb"
+        app:layout_constraintStart_toEndOf="@+id/gb" />
+
+    <RelativeLayout
+        android:id="@+id/pad_right"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/mon_back"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/relativeLayout"
+        app:layout_constraintTop_toTopOf="@+id/relativeLayout"
+        app:layout_constraintVertical_bias="0">
+
+        <RelativeLayout
+            android:id="@+id/pad_cent"
+            android:layout_width="40dp"
+            android:layout_height="25dp"
+            android:layout_centerInParent="true"
+            android:background="@color/dmg" />
+
+        <Button
+            android:id="@+id/Y"
+            android:layout_width="55dp"
+            android:layout_height="62dp"
+            android:text="Y"
+            android:textColor="@color/btn_txt"
+            android:layout_above="@id/pad_cent"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="@color/btn"
+            app:shapeAppearanceOverlay="@style/button"/>
+
+        <Button
+            android:id="@+id/A"
+            android:layout_width="55dp"
+            android:layout_height="62dp"
+            android:text="A"
+            android:textColor="@color/btn_txt"
+            android:layout_below="@id/pad_cent"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="@color/btn"
+            app:shapeAppearanceOverlay="@style/button"/>
+
+        <Button
+            android:id="@+id/X"
+            android:layout_width="55dp"
+            android:layout_height="62dp"
+            android:text="X"
+            android:textColor="@color/btn_txt"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/pad_cent"
+            android:backgroundTint="@color/btn"
+            app:shapeAppearanceOverlay="@style/button"/>
+
+        <Button
+            android:id="@+id/B"
+            android:layout_width="55dp"
+            android:layout_height="62dp"
+            android:text="B"
+            android:textColor="@color/btn_txt"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/pad_cent"
+            android:backgroundTint="@color/btn"
+            app:shapeAppearanceOverlay="@style/button" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:background="@color/nul"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nin"
+        app:layout_constraintVertical_bias="0.01">
+
+        <Button
+            android:id="@+id/a"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="-8dp"
+            android:layout_toStartOf="@id/pad_mid"
+            android:backgroundTint="@color/pad"
+            android:outlineAmbientShadowColor="@color/nul"
+            android:rotation="-90"
+            app:cornerRadius="5dp"
+            tools:ignore="RtlSymmetry" />
+
+        <Button
+            android:id="@+id/d"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="-8dp"
+            android:layout_toEndOf="@id/pad_mid"
+            android:backgroundTint="@color/pad"
+            android:outlineAmbientShadowColor="@color/nul"
+            android:rotation="-90"
+            app:cornerRadius="5dp"
+            tools:ignore="RtlSymmetry" />
+
+        <Button
+            android:id="@+id/w"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_above="@id/pad_mid"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="-8dp"
+            android:backgroundTint="@color/pad"
+            android:outlineAmbientShadowColor="@color/nul"
+            app:cornerRadius="5dp" />
+
+        <Button
+            android:id="@+id/s"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/pad_mid"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-8dp"
+            android:backgroundTint="@color/pad"
+            android:outlineAmbientShadowColor="@color/pad"
+            app:cornerRadius="5dp" />
+
+        <RelativeLayout
+            android:id="@+id/pad_mid"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerInParent="true"
+            android:background="@color/pad"
+            android:elevation="0dp">
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/orient_at_portrait"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="230dp"
+        android:backgroundTint="@color/func"
+        app:flow_horizontalBias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mon_back" />
+
+    <ImageView
+        android:layout_width="28dp"
+        android:layout_height="18dp"
+        android:background="@drawable/land"
+        android:contentDescription="@string/nul"
+        app:layout_constraintBottom_toBottomOf="@+id/orient_at_portrait"
+        app:layout_constraintEnd_toEndOf="@+id/orient_at_portrait"
+        app:layout_constraintStart_toStartOf="@+id/orient_at_portrait"
+        app:layout_constraintTop_toTopOf="@+id/orient_at_portrait" />
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/orient_at_land"
+        tools:ignore="MissingConstraints"/>
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/l1"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/r1"
+        tools:ignore="MissingConstraints"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
