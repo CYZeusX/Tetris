@@ -1,6 +1,6 @@
 ## HONEST DISCLAIMER:  NOT quite the result of my knowledge. (AI contributed a LOT)
 ## IMPORTANT: meant for Android ONLY
-\n
+
 
 ## * Incommensurably innovative features
     - able to play on both orientation    >> potrait | landscape
