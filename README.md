@@ -1,5 +1,5 @@
 ## > DISCLAIMER:  NOT quite the result of my knowledge. (AI contributed a LOT)
-    Meant for ANDROID  (NOT pc/IOS/other...)
+## > IMPORTANT: meant for Android ONLY
 
 
 ## * Incommensurably innovative features
