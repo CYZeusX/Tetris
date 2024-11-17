@@ -1,4 +1,5 @@
-# HONEST DISCLAIMER:  NOT quite the result of my knowledge. (AI contributed a LOT)
+# HONEST DISCLAIMER:  NOT quite the result of my knowledge. 
+# (AI contributed a LOT)
 ### IMPORTANT: meant for Android ONLY
 ---
 
