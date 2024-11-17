@@ -6,8 +6,9 @@
 ### Purpose
     it is totally for personal uses
     
-    Why build a tetris game to play yourself?
-    because I have high demand. The ordinary Tetris game on mobile I have found is **LACK OF FEATURES**.
+    (Why build a tetris game to play yourself?)
+        Because I have high demand. 
+        I have found LACK OF FEATURES on most of the Tetris games on Android.
     > lack of blocks anti-clockwise rotation
     > lack of landscape orientation mode
 
