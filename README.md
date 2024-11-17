@@ -1,12 +1,11 @@
-# HONEST DISCLAIMER:  NOT quite the result of my knowledge. 
-# (AI contributed a LOT)
+# HONEST DISCLAIMER:  NOT quite the result of my knowledge. (AI contributed a LOT)
 ### IMPORTANT: meant for Android ONLY
 ---
 
 ### Purpose
     - is totally for personal uses
     
-    *Why build a tetris game to play yourself?*
+    _Why build a tetris game to play yourself?_
     - because I have high demand. The ordinary Tetris game on mobile I have found is **LACK OF FEATURES**.
     > lack of blocks anti-clockwise rotation
     > lack of landscape orientation mode
