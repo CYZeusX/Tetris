@@ -259,6 +259,7 @@
         android:layout_height="55dp"
         android:backgroundTint="@color/dmg"
         android:layout_marginTop="-10dp"
+        app:layout_constraintHorizontal_bias="0.7"
         app:cornerRadius="5dp"
         app:layout_constraintEnd_toStartOf="@+id/mon_back"
         app:layout_constraintStart_toStartOf="parent"
@@ -271,8 +272,9 @@
         android:layout_width="140dp"
         android:layout_height="55dp"
         android:backgroundTint="@color/dmg"
-        app:cornerRadius="5dp"
         android:layout_marginTop="-10dp"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:cornerRadius="5dp"
         app:layout_constraintStart_toEndOf="@id/mon_back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -280,45 +282,41 @@
         app:strokeWidth="2dp"/>
 
     <Button
-        android:id="@+id/orient_P"
+        android:id="@+id/orient_at_portrait"
         android:layout_width="0dp"
         android:layout_height="0dp"
         tools:ignore="MissingConstraints" />
 
     <Button
-        android:id="@+id/orient_L"
-        android:layout_width="20dp"
-        android:layout_height="60dp"
+        android:id="@+id/orient_at_land"
+        android:layout_width="40dp"
+        android:layout_height="70dp"
         android:backgroundTint="@color/func"
-        app:cornerRadius="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.02"
-        app:layout_constraintStart_toEndOf="@+id/mon_back"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.236"/>
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="@+id/r1"
+        app:layout_constraintTop_toTopOf="@+id/mon_back" />
 
     <ImageView
-        android:layout_width="9dp"
-        android:layout_height="14dp"
+        android:layout_width="18dp"
+        android:layout_height="28dp"
         android:background="@drawable/pot"
         android:contentDescription="@string/nul"
-        app:layout_constraintBottom_toBottomOf="@+id/orient_L"
-        app:layout_constraintEnd_toEndOf="@+id/orient_L"
-        app:layout_constraintStart_toStartOf="@+id/orient_L"
-        app:layout_constraintTop_toTopOf="@+id/orient_L" />
+        app:layout_constraintBottom_toBottomOf="@+id/orient_at_land"
+        app:layout_constraintEnd_toEndOf="@+id/orient_at_land"
+        app:layout_constraintStart_toStartOf="@+id/orient_at_land"
+        app:layout_constraintTop_toTopOf="@+id/orient_at_land" />
 
     <Button
-        android:id="@+id/color"
-        android:layout_width="20dp"
-        android:layout_height="60dp"
+        android:id="@+id/setting"
+        android:layout_width="45dp"
+        android:layout_height="51dp"
         android:backgroundTint="@color/func"
-        app:cornerRadius="20dp"
+        app:cornerRadius="120dp"
+        app:layout_constraintVertical_bias="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.02"
-        app:layout_constraintStart_toEndOf="@+id/mon_back"
-        app:layout_constraintTop_toBottomOf="@+id/orient_L"
-        app:layout_constraintVertical_bias="0.05" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mon_back" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

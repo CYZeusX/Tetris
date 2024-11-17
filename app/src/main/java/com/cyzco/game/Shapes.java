@@ -42,9 +42,9 @@ public class Shapes
     public static final char[][] J_SHAPE =
             {
              {space, space, space, space},
-             {space,block, space, space},
-             {space,block, space, space},
-             {space,block, block, space}
+             {space, block, space, space},
+             {space, block, space, space},
+             {space, block, block, space}
             };
 
     public static final char[][] L_SHAPE =
@@ -52,7 +52,7 @@ public class Shapes
              {space, space, space, space},
              {space, space, block, space},
              {space, space, block, space},
-             {space, space, block, block, space},
+             {space, block, block, space},
             };
 
     public static final char[][][] SHAPES =

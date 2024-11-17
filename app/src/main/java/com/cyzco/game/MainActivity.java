@@ -5,26 +5,26 @@ import android.os.Bundle;
 import android.view.View;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
+import android.view.WindowInsets;
 import android.os.VibrationEffect;
-import android.view.WindowManager;
 import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import android.content.pm.ActivityInfo;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.view.WindowInsetsController;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity
 {
-    Button a, s, d, A, X, Y, l1, r1, orientPortrait, orientLandscape;
+    Button a, s, d, A, X, Y, l1, r1, orientPortrait, orientLandscape, setting;
     Vibrator vibrator;
     TextView scores, lines;
     SurfaceView monitor;
@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
+        TetrisGame tetrisGame = new TetrisGame(this);
         // Retrieve the orientation from SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
         int orientation = sharedPreferences.getInt("orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
@@ -44,16 +45,17 @@ public class MainActivity extends AppCompatActivity
         {
             setRequestedOrientation(orientation);
         }
-
         setContentView(R.layout.activity_main);
-        Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-        window.getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_FULLSCREEN |
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
-                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+
+        WindowInsetsController insetsController = getWindow().getInsetsController();
+        if (insetsController != null)
+        {
+            // Hide the status bar and navigation bar
+            insetsController.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+
+            // Enable gestures for immersive experience (if needed)
+            insetsController.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        }
 
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) ->
@@ -72,8 +74,9 @@ public class MainActivity extends AppCompatActivity
         Y = findViewById(R.id.Y);
         l1 = findViewById(R.id.l1);
         r1 = findViewById(R.id.r1);
-        orientPortrait = findViewById(R.id.orient_P);
-        orientLandscape = findViewById(R.id.orient_L);
+        orientPortrait = findViewById(R.id.orient_at_portrait);
+        orientLandscape = findViewById(R.id.orient_at_land);
+        setting = findViewById(R.id.setting);
         scores = findViewById(R.id.scores);
         lines = findViewById(R.id.lines);
         monitor = findViewById(R.id.mon);
@@ -138,6 +141,10 @@ public class MainActivity extends AppCompatActivity
             editor.putInt("orientation", ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             editor.apply();
         });
+
+        //setting
+        setting.setOnClickListener(v ->
+        {});
 
         // Move the block left
         setupContinuousMovement(a, () ->
@@ -273,7 +280,7 @@ public class MainActivity extends AppCompatActivity
             {
                 lines.setText("lines:\n"+tetrisGame.getLinesCleared());
                 scores.setText("score:\n"+tetrisGame.getScoreGained());
-                tetrisGame.movePieceDown();
+                tetrisGame.updateGame();
                 tetrisGame.renderGame(monitor);
                 fallHandler.postDelayed(this, 800); // Falling speed interval
             }

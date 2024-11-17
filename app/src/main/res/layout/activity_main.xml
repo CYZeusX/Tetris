@@ -172,20 +172,20 @@
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:background="@color/nul"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nin"
         app:layout_constraintVertical_bias="0.01">
 
         <Button
             android:id="@+id/a"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginEnd="-8dp"
             android:layout_toStartOf="@id/pad_mid"
@@ -197,8 +197,8 @@
 
         <Button
             android:id="@+id/d"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="-8dp"
             android:layout_toEndOf="@id/pad_mid"
@@ -210,8 +210,8 @@
 
         <Button
             android:id="@+id/w"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_above="@id/pad_mid"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="-8dp"
@@ -221,8 +221,8 @@
 
         <Button
             android:id="@+id/s"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_below="@id/pad_mid"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="-8dp"
@@ -232,8 +232,8 @@
 
         <RelativeLayout
             android:id="@+id/pad_mid"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerInParent="true"
             android:background="@color/pad"
             android:elevation="0dp">
@@ -241,46 +241,42 @@
     </RelativeLayout>
 
     <Button
-        android:id="@+id/orient_L"
+        android:id="@+id/orient_at_land"
         android:layout_width="0dp"
         android:layout_height="0dp"
         tools:ignore="MissingConstraints" />
 
     <Button
-        android:id="@+id/orient_P"
+        android:id="@+id/orient_at_portrait"
         android:layout_width="60dp"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="230dp"
         android:backgroundTint="@color/func"
-        app:cornerRadius="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:flow_horizontalBias="0.5"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.16"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mon_back"
-        app:layout_constraintVertical_bias="0.794" />
+        app:layout_constraintTop_toBottomOf="@+id/mon_back" />
 
     <ImageView
-        android:layout_width="18dp"
-        android:layout_height="9dp"
+        android:layout_width="28dp"
+        android:layout_height="18dp"
         android:background="@drawable/land"
         android:contentDescription="@string/nul"
-        app:layout_constraintBottom_toBottomOf="@+id/orient_P"
-        app:layout_constraintEnd_toEndOf="@+id/orient_P"
-        app:layout_constraintStart_toStartOf="@+id/orient_P"
-        app:layout_constraintTop_toTopOf="@+id/orient_P"/>
+        app:layout_constraintBottom_toBottomOf="@+id/orient_at_portrait"
+        app:layout_constraintEnd_toEndOf="@+id/orient_at_portrait"
+        app:layout_constraintStart_toStartOf="@+id/orient_at_portrait"
+        app:layout_constraintTop_toTopOf="@+id/orient_at_portrait" />
 
     <Button
-        android:id="@+id/color"
-        android:layout_width="60dp"
-        android:layout_height="30dp"
+        android:id="@+id/setting"
+        android:layout_width="45dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="228dp"
         android:backgroundTint="@color/func"
-        app:cornerRadius="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.16"
-        app:layout_constraintStart_toEndOf="@+id/orient_P"
-        app:layout_constraintTop_toBottomOf="@+id/mon_back"
-        app:layout_constraintVertical_bias="0.794" />
+        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mon_back" />
 
     <Button
         android:layout_width="0dp"

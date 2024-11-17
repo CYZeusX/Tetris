@@ -29,7 +29,7 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="150dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/textView"
             android:layout_centerHorizontal="true"
@@ -44,12 +44,12 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/textView"
             android:layout_centerHorizontal="true"
-            android:layout_marginVertical="30dp"
+            android:layout_marginVertical="17dp"
             android:backgroundTint="#555B27"
             android:elevation="12dp"
             android:text="@string/start"
             android:textStyle="bold"
-            app:cornerRadius="25dp"/>
+            app:cornerRadius="25dp" />
 
     </RelativeLayout>
 
@@ -155,20 +155,20 @@
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:background="@color/nul"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nin"
         app:layout_constraintVertical_bias="0.01">
 
         <Button
             android:id="@+id/a"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginEnd="-8dp"
             android:layout_toStartOf="@id/pad_mid"
@@ -180,8 +180,8 @@
 
         <Button
             android:id="@+id/d"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="-8dp"
             android:layout_toEndOf="@id/pad_mid"
@@ -193,8 +193,8 @@
 
         <Button
             android:id="@+id/w"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_above="@id/pad_mid"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="-8dp"
@@ -204,8 +204,8 @@
 
         <Button
             android:id="@+id/s"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_below="@id/pad_mid"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="-8dp"
@@ -215,8 +215,8 @@
 
         <RelativeLayout
             android:id="@+id/pad_mid"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerInParent="true"
             android:background="@color/pad"
             android:elevation="0dp">

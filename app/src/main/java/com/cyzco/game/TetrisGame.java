@@ -16,27 +16,27 @@ public class TetrisGame
 {
     private final char[][] BOARD;
     private Tetromino currentPiece;
-    private int boardWidth = 10; // 10 blocks wide
-    private int boardHeight = 20; // 20 blocks tall
+    private final int BOARD_WIDTH = 10; // 10 blocks wide
+    private final int BOARD_HEIGHT = 20; // 20 blocks tall
     private final char BOARD_BLOCK = Shapes.space;
     private final char BLOCK_PIECE = Shapes.block;
     private int linesCleared = 0;
     private int scoreGained = 0;
-    private int placeBlockScore = 36;
-    private int removeLineScore = 100;
+    private final int REMOVE_LINE_SCORE = 100;
     private boolean showEffect = false;
-    private long effectEndTime = 1000; // Timestamp for when the effect ends
-    private Context context;
-    private Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+    private long effectEndTime = 550; // Timestamp for when the effect ends
+    private final Context CONTEXT;
+    private boolean vibrationTriggered = false;
+    // Variables to control effect timing and fade
 
     public TetrisGame(Context context)
     {
-        this.context = context;
+        this.CONTEXT = context;
 
-        BOARD = new char[boardHeight][boardWidth];
-        for (int y = 0; y < boardHeight; y++)
+        BOARD = new char[BOARD_HEIGHT][BOARD_WIDTH];
+        for (int y = 0; y < BOARD_HEIGHT; y++)
         {
-            for (int x = 0; x < boardWidth; x++)
+            for (int x = 0; x < BOARD_WIDTH; x++)
             {
                 BOARD[y][x] = BOARD_BLOCK;
             }
@@ -60,7 +60,7 @@ public class TetrisGame
         char[][] randomShape = Shapes.SHAPES[randomIndex];
         currentPiece = new Tetromino(randomShape);
 
-        int startX = (boardWidth - currentPiece.getShape()[0].length) / 2;
+        int startX = (BOARD_WIDTH - currentPiece.getShape()[0].length) / 2;
         int startY = 0;
         currentPiece.setPosition(startX, startY);
 
@@ -160,7 +160,7 @@ public class TetrisGame
                 {
                     int boardX = newX + j;
                     int boardY = newY + i;
-                    if (boardX < 0 || boardX >= boardWidth || boardY >= boardHeight || (boardY >= 0 && BOARD[boardY][boardX] != BOARD_BLOCK))
+                    if (boardX < 0 || boardX >= BOARD_WIDTH || boardY >= BOARD_HEIGHT || (boardY >= 0 && BOARD[boardY][boardX] != BOARD_BLOCK))
                     {
                         System.out.println("Cannot move: Collision detected at X=" + boardX + " Y=" + boardY); // Debugging log
                         return false; // Blocked, cannot move
@@ -186,7 +186,7 @@ public class TetrisGame
                 {
                     int boardX = startX + j;
                     int boardY = startY + i;
-                    if (boardY >= 0 && boardY < boardHeight && boardX >= 0 && boardX < boardWidth)
+                    if (boardY >= 0 && boardY < BOARD_HEIGHT && boardX >= 0 && boardX < BOARD_WIDTH)
                     {
                         BOARD[boardY][boardX] = shape[i][j];
                     }
@@ -194,6 +194,7 @@ public class TetrisGame
             }
         }
 
+        int placeBlockScore = 36;
         scoreGained += placeBlockScore;
         checkCompletedLines(); // Check for completed lines after locking
     }
@@ -203,10 +204,10 @@ public class TetrisGame
     {
         int rowsClearedInThisStep = 0; // Counter for rows cleared in one step
 
-        for (int y = 0; y < boardHeight; y++)
+        for (int y = 0; y < BOARD_HEIGHT; y++)
         {
             boolean lineComplete = true;
-            for (int x = 0; x < boardWidth; x++)
+            for (int x = 0; x < BOARD_WIDTH; x++)
             {
                 if (BOARD[y][x] == BOARD_BLOCK)
                 {
@@ -225,13 +226,13 @@ public class TetrisGame
         // Check if 4 rows were cleared at once
         if (rowsClearedInThisStep == 4)
         {
-            scoreGained += removeLineScore * 2; // Double the score for clearing 4 rows
+            scoreGained += REMOVE_LINE_SCORE * 2; // Double the score for clearing 4 rows
             showEffect = true;
-            effectEndTime = System.currentTimeMillis() + 1000; // Show for 1 second
+            effectEndTime += System.currentTimeMillis();
         }
         else
         {
-            scoreGained += removeLineScore * rowsClearedInThisStep; // Normal score for other cases
+            scoreGained += REMOVE_LINE_SCORE * rowsClearedInThisStep; // Normal score for other cases
         }
 
         linesCleared += rowsClearedInThisStep; // Update the total lines cleared
@@ -241,14 +242,24 @@ public class TetrisGame
     {
         for (int y = lineIndex; y > 0; y--)
         {
-            System.arraycopy(BOARD[y - 1], 0, BOARD[y], 0, boardWidth);
+            System.arraycopy(BOARD[y - 1], 0, BOARD[y], 0, BOARD_WIDTH);
         }
-        for (int x = 0; x < boardWidth; x++)
+        for (int x = 0; x < BOARD_WIDTH; x++)
         {
             BOARD[0][x] = BOARD_BLOCK;
         }
         linesCleared++;
-        scoreGained += removeLineScore;
+        scoreGained += REMOVE_LINE_SCORE;
+    }
+
+    public int calculateShadowPosition()
+    {
+        int shadowY = currentPiece.getY();
+        while (canMove(currentPiece, currentPiece.getX(), shadowY + 1))
+        {
+            shadowY++;
+        }
+        return shadowY; // The Y-coordinate where the shadow will rest
     }
 
     public void renderGame(SurfaceView monitor)
@@ -269,11 +280,11 @@ public class TetrisGame
             // Calculate block size dynamically based on monitor dimensions
             int canvasWidth = canvas.getWidth();
             int canvasHeight = canvas.getHeight();
-            int blockSize = Math.min(canvasWidth / boardWidth, canvasHeight / boardHeight); // Square blocks
+            int blockSize = Math.min(canvasWidth / BOARD_WIDTH, canvasHeight / BOARD_HEIGHT); // Square blocks
 
             // Calculate padding for centering the board
-            int paddingLeft = (canvasWidth - (boardWidth * blockSize)) / 2;
-            int paddingTop = (canvasHeight - (boardHeight * blockSize)) / 2;
+            int paddingLeft = (canvasWidth - (BOARD_WIDTH * blockSize)) / 2;
+            int paddingTop = (canvasHeight - (BOARD_HEIGHT * blockSize)) / 2;
 
             // Render the board
             for (int y = 0; y < BOARD.length; y++)
@@ -291,10 +302,13 @@ public class TetrisGame
                 }
             }
 
-            // Render the current piece
+            // Render the shadow
+            int shadowY = calculateShadowPosition(); // Calculate where the shadow should be
             char[][] shape = currentPiece.getShape();
             int pieceX = currentPiece.getX();
-            int pieceY = currentPiece.getY();
+
+            paint.setColor(Color.argb(150, 100, 100, 100)); // Light gray for shadow
+            paint.setAlpha(150);          // Semi-transparent shadow
 
             for (int i = 0; i < shape.length; i++)
             {
@@ -302,25 +316,46 @@ public class TetrisGame
                 {
                     if (shape[i][j] != BOARD_BLOCK)
                     {
-                        // Draw '@' for each block of the current piece
-                        String symbol = String.valueOf(BLOCK_PIECE); // The symbol to render
-                        float blockX = paddingLeft + (pieceX + j) * blockSize; // Adjust position with padding
-                        float blockY = paddingTop + (pieceY + i + 1) * blockSize; // Adjust position with padding
-                        canvas.drawText(symbol, blockX, blockY, paint);
+                        // Calculate shadow block positions
+                        float blockX = paddingLeft + (pieceX + j) * blockSize;
+                        float blockY = paddingTop + (shadowY + i + 1) * blockSize;
+
+                        // Draw the shadow as a character
+                        canvas.drawText(String.valueOf(BLOCK_PIECE), blockX, blockY, paint);
                     }
                 }
             }
 
-            // Draw the effect if active
-            if (showEffect) {
+            // Reset paint for rendering the actual piece
+            paint.setColor(Color.BLACK);
+
+            // Render the current piece
+            int pieceY = currentPiece.getY();
+            for (int i = 0; i < shape.length; i++)
+            {
+                for (int j = 0; j < shape[i].length; j++)
+                {
+                    if (shape[i][j] != BOARD_BLOCK)
+                    {
+                        // Draw current piece blocks
+                        float blockX = paddingLeft + (pieceX + j) * blockSize;
+                        float blockY = paddingTop + (pieceY + i) * blockSize;
+                        canvas.drawText(String.valueOf(BLOCK_PIECE), blockX, blockY, paint);
+                    }
+                }
+            }
+
+            // Handle the effect (fade-in / fade-out logic)
+            if (showEffect)
+            {
                 long currentTime = System.currentTimeMillis();
-                if (currentTime <= effectEndTime) {
+                if (currentTime <= effectEndTime)
+                {
+                    int targetWidth = 250;
+                    int targetHeight = 120;
+
                     // Load the bitmap
                     Bitmap effectBitmap = BitmapFactory.decodeResource(monitor.getResources(), R.drawable.tetris_boom);
-
-                    // Define desired fixed size (e.g., 200x200 pixels)
-                    int targetWidth = 250; // Desired width in pixels
-                    int targetHeight = 120; // Desired height in pixels
 
                     // Resize the bitmap to the fixed dimensions
                     Bitmap resizedBitmap = Bitmap.createScaledBitmap(effectBitmap, targetWidth, targetHeight, true);
@@ -329,21 +364,37 @@ public class TetrisGame
                     float posX = (canvasWidth - targetWidth) / 2.0f;
                     float posY = (canvasHeight - targetHeight) / 2.0f;
 
-                    if (vibrator != null)
-                        vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
+                    // Trigger vibrator only once
+                    if (!vibrationTriggered)
+                    {
+                        setVibrator();
+                        vibrationTriggered = true; // Prevent further calls
+                    }
 
                     // Draw the resized bitmap
                     canvas.drawBitmap(resizedBitmap, posX, posY, null);
 
                     // Recycle the resized bitmap to free memory
                     resizedBitmap.recycle();
-                } else {
-                    // Effect duration ended
+                }
+                else
+                {
                     showEffect = false;
+                    vibrationTriggered = false; // Reset flag for next effect
                 }
             }
-
             holder.unlockCanvasAndPost(canvas); // Ensure canvas is posted correctly
+        }
+    }
+
+    public void setVibrator()
+    {
+        if (CONTEXT != null)
+        {
+            Vibrator vibrator = (Vibrator) CONTEXT.getSystemService(Context.VIBRATOR_SERVICE);
+            long[] timings = new long[]{500};
+            int[] amplitudes = new int[]{30};
+            vibrator.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1));
         }
     }
 
