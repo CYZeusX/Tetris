@@ -1,14 +1,23 @@
 ## HONEST DISCLAIMER:  NOT quite the result of my knowledge. (AI contributed a LOT)
 ## IMPORTANT: meant for Android ONLY
 
+## Purpose
+    - is totally for personal uses
+    
+    <u>Why build a tetris game to play yourself?</u>
+    - because I have high demand. The ordinary Tetris game on mobile I have found is **bold**LACK OF FEATURES.
+    > lack of blocks anti-clockwise rotation
+    > lack of landscape orientation mode
 
-## * Incommensurably innovative features
+## * Incommensurably Innovative Features
     - able to play on both orientation    >> potrait | landscape
     - can change the blocks of the game   >> because the blocks uses char to for the shapes
+    - has shoulder buttons, can use index figers to rotate blocks
     
-## * comming soon features
+## * Comming soon features
     - light|dark mode
-    - supports controllers  >>  ( testing with: ROG Tessen , RAZER Kishi Ultra )
+    - supports controllers  >> testing with: ROG Tessen , RAZER Kishi Ultra
+    - background music
 
 ## * Working on
     - pause menu
