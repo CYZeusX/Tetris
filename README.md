@@ -14,13 +14,14 @@
 
 ### * Incommensurably Innovative Features
     - able to play on both orientation    >> potrait | landscape
-    - can change the blocks of the game   >> because the blocks uses char to for the shapes
+    - can change the blocks of the game   >> because the blocks uses char for the shapes
     - has shoulder buttons, can use index figers to rotate blocks
     
 ### * Comming soon features
     - light|dark mode
     - supports controllers  >> testing with: ROG Tessen , RAZER Kishi Ultra
     - background music
+    - audio effect
 
 ### * Working on
     - pause menu
