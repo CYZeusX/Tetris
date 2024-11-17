@@ -1,5 +1,6 @@
 ## > DISCLAIMER:  NOT quite the result of my knowledge. (AI contributed a LOT)
-Meant for ANDROID  (NOT pc/IOS/other...)
+    Meant for ANDROID  (NOT pc/IOS/other...)
+
 
 ## * Incommensurably innovative features
     - able to play on both orientation    >> potrait | landscape
