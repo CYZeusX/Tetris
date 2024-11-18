@@ -8,8 +8,11 @@
 > [!TIP]
 > ### * Incommensurably Innovative Features
     - able to play on both orientation    >> potrait | landscape
-    - can change the blocks of the game   >> because the blocks formed with symbols
+    - blocks can be emojis, letters, symbols, or even sentence(NOT Recommended)!
+    - can change the blocks of the game   >> because the blocks formed with symbols (String)
+    - can change the particles of the background  >> because the background forms with symbols (char)
     - has shoulder buttons, can use index figers to rotate blocks
+
     
 ### Purpose
     it is totally for personal uses
@@ -20,33 +23,13 @@
                 > lack of blocks anti-clockwise rotation
                 > lack of landscape orientation mode
 
-### * Incommensurably Innovative Features
-    - able to play on both orientation    >> potrait | landscape
-    - can change the blocks of the game   >> because the blocks formed with symbols
-    - has shoulder buttons, can use index figers to rotate blocks
-
-### * Incommensurably Innovative Features
-    - able to play on both orientation    >> potrait | landscape
-    - can change the blocks of the game   >> because the blocks formed with symbols
-    - has shoulder buttons, can use index figers to rotate blocks
-### * Incommensurably Innovative Features
-    - able to play on both orientation    >> potrait | landscape
-    - can change the blocks of the game   >> because the blocks formed with symbols
-    - has shoulder buttons, can use index figers to rotate blocks
-### * Incommensurably Innovative Features
-    - able to play on both orientation    >> potrait | landscape
-    - can change the blocks of the game   >> because the blocks formed with symbols
-    - has shoulder buttons, can use index figers to rotate blocks
-### * Incommensurably Innovative Features
-    - able to play on both orientation    >> potrait | landscape
-    - can change the blocks of the game   >> because the blocks formed with symbols
-    - has shoulder buttons, can use index figers to rotate blocks
     
 ### * Comming soon features
     - light|dark mode
     - supports controllers  >> testing with: ROG Tessen , RAZER Kishi Ultra
     - background music
     - audio effect
+
 
 ### * Working on
     - pause menu
@@ -55,11 +38,12 @@
     - quit app
     - setting menu
     - change light|dark mode
-    - custom char for blocks
-    - return default char for blocks
+    - buton for customize character for blocks
+    - button for return to default character for blocks
     - save block for later
     - 3 next following blocks
     - sync monitor between potrait and landscape mode
+
 
 ### * Completed features / fixes
     - fixed blocks unaligned with monitor
@@ -67,3 +51,5 @@
     + Implemented block shadow
     + Implemented "Tetris!" effect when cleared 4 rows at once
     + Implemented "Tetris!" effect with vibration
+    + Implemented having colours for each blocks
+    + Implemented customization for particles of the blocks and background
