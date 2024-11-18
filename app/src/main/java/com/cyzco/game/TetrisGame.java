@@ -303,7 +303,8 @@ public class TetrisGame
         }
     }
 
-    private void initializeBlockColorsAndCharacters() {
+    private void initializeBlockColorsAndCharacters()
+    {
         blockColors.put(Shapes.I_BLOCK, Color.parseColor("#00FFFF")); // I-shape
         blockColors.put(Shapes.O_BLOCK, Color.parseColor("#FFEB3B")); // O-shape
         blockColors.put(Shapes.T_BLOCK, Color.parseColor("#9500FF")); // T-shape
@@ -312,7 +313,7 @@ public class TetrisGame
         blockColors.put(Shapes.J_BLOCK, Color.parseColor("#3460FF")); // J-shape
         blockColors.put(Shapes.L_BLOCK, Color.parseColor("#FFA621")); // L-shape
 
-        blockColors.put(Shapes.space, Color.TRANSPARENT); // No color for empty spaces
+        blockColors.put(Shapes.space, Color.WHITE); // No color for empty spaces
     }
 
 
@@ -330,12 +331,10 @@ public class TetrisGame
 
         if (canvas != null)
         {
-            // Clear the canvas with a background color
-            canvas.drawColor(Color.rgb(167, 179, 75)); // Background color
-
             Paint paint = new Paint();
             paint.setTextSize(28);       // Adjust size as needed
             paint.setTypeface(Typeface.MONOSPACE); // Monospace font for alignment
+            canvas.drawColor(Color.rgb(167, 179, 75)); // Background color
 
             // Calculate block size dynamically based on monitor dimensions
             int canvasWidth = canvas.getWidth();
@@ -345,6 +344,17 @@ public class TetrisGame
             // Calculate padding for centering the board
             int paddingLeft = (canvasWidth - (BOARD_WIDTH * blockSize)) / 2;
             int paddingTop = (canvasHeight - (BOARD_HEIGHT * blockSize)) / 2;
+
+            // Fill the entire grid with the space character
+            for (int y = 0; y < BOARD_HEIGHT; y++)
+            {
+                for (int x = 0; x < BOARD_WIDTH; x++)
+                {
+                    float posX = paddingLeft + x * blockSize;
+                    float posY = paddingTop + (y + 1) * blockSize;
+                    canvas.drawText(String.valueOf(Shapes.space), posX, posY, paint);  // Draw space as background
+                }
+            }
 
             // Render fixed blocks
             for (int y = 0; y < BOARD.length; y++)
@@ -362,7 +372,7 @@ public class TetrisGame
 
                         float posX = paddingLeft + x * blockSize;
                         float posY = paddingTop + (y + 1) * blockSize;
-                        canvas.drawText(String.valueOf(BLOCK_PIECE), posX, posY, paint);
+                        canvas.drawText(BLOCK_PIECE, posX, posY, paint);
                     }
                 }
             }
@@ -389,7 +399,7 @@ public class TetrisGame
                         // Draw current piece blocks
                         float blockX = paddingLeft + (pieceX + j) * blockSize;
                         float blockY = paddingTop + (pieceY + i) * blockSize;
-                        canvas.drawText(String.valueOf(BLOCK_PIECE), blockX, blockY, paint);
+                        canvas.drawText(BLOCK_PIECE, blockX, blockY, paint);
                     }
                 }
             }
@@ -410,7 +420,7 @@ public class TetrisGame
                         // Calculate shadow block positions
                         float blockX = paddingLeft + (pieceX + j) * blockSize;
                         float blockY = paddingTop + (shadowY + i + 1) * blockSize;
-                        canvas.drawText(String.valueOf(BLOCK_PIECE), blockX, blockY, paint);
+                        canvas.drawText(BLOCK_PIECE, blockX, blockY, paint);
                     }
                 }
             }

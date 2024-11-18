@@ -9,8 +9,8 @@ public class Shapes
     public static final char Z_BLOCK = 'Z';
     public static final char J_BLOCK = 'J';
     public static final char L_BLOCK = 'L';
-    public static String block = "回";
-    public static char space = '.';
+    public static String block = "=";
+    public static char space = '_';
 
     public static final char[][] I_SHAPE =
             {
