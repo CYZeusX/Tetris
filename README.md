@@ -17,7 +17,7 @@
 
 ### * Incommensurably Innovative Features
     - able to play on both orientation    >> potrait | landscape
-    - can change the blocks of the game   >> because the blocks uses char for the shapes
+    - can change the blocks of the game   >> because the blocks formed with symbols
     - has shoulder buttons, can use index figers to rotate blocks
     
 ### * Comming soon features
