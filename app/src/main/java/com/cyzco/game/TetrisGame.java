@@ -2,7 +2,6 @@ package com.cyzco.game;
 
 import android.graphics.BitmapFactory;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.VibrationEffect;
 import android.view.SurfaceHolder;
 import android.graphics.Typeface;
@@ -16,7 +15,6 @@ import android.os.Vibrator;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Objects;
 
 public class TetrisGame
 {
@@ -345,12 +343,15 @@ public class TetrisGame
             int paddingLeft = (canvasWidth - (BOARD_WIDTH * blockSize)) / 2;
             int paddingTop = (canvasHeight - (BOARD_HEIGHT * blockSize)) / 2;
 
-            // Fill the entire grid with the space character
+            // Render the board with characters
             for (int y = 0; y < BOARD_HEIGHT; y++)
             {
                 for (int x = 0; x < BOARD_WIDTH; x++)
                 {
-                    float posX = paddingLeft + x * blockSize;
+                    paint.setColor(Color.argb(150, 100, 100, 100)); // Light gray for shadow
+                    paint.setAlpha(100);
+
+                    float posX = paddingLeft + (x+0.1f) * blockSize;
                     float posY = paddingTop + (y + 1) * blockSize;
                     canvas.drawText(String.valueOf(Shapes.space), posX, posY, paint);  // Draw space as background
                 }
