@@ -3,7 +3,7 @@
 > ### <ins>AI contributed a LOT</ins>
 
 > [!NOTE]
-> ### IMPORTANT: meant for Android ONLY
+> ### meant for Android ONLY
 ---
 
 ### Purpose
