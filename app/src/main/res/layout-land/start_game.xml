@@ -199,6 +199,9 @@
             android:backgroundTint="@color/btn"
             android:layout_centerHorizontal="true"
             android:layout_above="@id/pad_cent"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:paddingHorizontal="0dp"
             app:shapeAppearanceOverlay="@style/button"/>
 
         <Button
@@ -210,6 +213,9 @@
             android:backgroundTint="@color/btn"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/pad_cent"
+            android:paddingHorizontal="0dp"
+            android:textSize="25sp"
+            android:textStyle="bold"
             app:shapeAppearanceOverlay="@style/button" />
 
         <Button
@@ -221,6 +227,9 @@
             android:backgroundTint="@color/btn"
             android:layout_toStartOf="@id/pad_cent"
             android:layout_centerVertical="true"
+            android:paddingHorizontal="0dp"
+            android:textSize="25sp"
+            android:textStyle="bold"
             app:shapeAppearanceOverlay="@style/button" />
 
         <Button
@@ -232,6 +241,9 @@
             android:backgroundTint="@color/btn"
             android:layout_toEndOf="@id/pad_cent"
             android:layout_centerVertical="true"
+            android:paddingHorizontal="0dp"
+            android:textSize="25sp"
+            android:textStyle="bold"
             app:shapeAppearanceOverlay="@style/button" />
     </RelativeLayout>
 

@@ -130,6 +130,8 @@
             android:backgroundTint="@color/btn"
             android:text="@string/btn_Y"
             android:textColor="@color/btn_txt"
+            android:paddingHorizontal="0dp"
+            android:textSize="25sp"
             android:textStyle="bold"
             app:shapeAppearanceOverlay="@style/button"/>
 
@@ -142,6 +144,8 @@
             android:backgroundTint="@color/btn"
             android:text="@string/btn_A"
             android:textColor="@color/btn_txt"
+            android:paddingHorizontal="0dp"
+            android:textSize="25sp"
             android:textStyle="bold"
             app:shapeAppearanceOverlay="@style/button"/>
 
@@ -154,6 +158,8 @@
             android:backgroundTint="@color/btn"
             android:text="@string/btn_X"
             android:textColor="@color/btn_txt"
+            android:paddingHorizontal="0dp"
+            android:textSize="25sp"
             android:textStyle="bold"
             app:shapeAppearanceOverlay="@style/button"/>
 
@@ -165,8 +171,10 @@
             android:layout_toEndOf="@id/pad_cent"
             android:backgroundTint="@color/btn"
             android:text="@string/btn_B"
-            android:textStyle="bold"
             android:textColor="@color/btn_txt"
+            android:paddingHorizontal="0dp"
+            android:textSize="25sp"
+            android:textStyle="bold"
             app:shapeAppearanceOverlay="@style/button" />
     </RelativeLayout>
 

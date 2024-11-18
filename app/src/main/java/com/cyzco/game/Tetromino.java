@@ -8,11 +8,8 @@ public class Tetromino
     public Tetromino(char[][] shape)
     {
         this.shape = shape;
-    }
-
-    public char[][] getShape()
-    {
-        return shape;
+        this.x = 0;
+        this.y = 0;
     }
 
     public void setPosition(int x, int y)
@@ -29,6 +26,11 @@ public class Tetromino
     public int getY()
     {
         return y;
+    }
+
+    public char[][] getShape()
+    {
+        return shape;
     }
 
     // Method to rotate the piece clockwise

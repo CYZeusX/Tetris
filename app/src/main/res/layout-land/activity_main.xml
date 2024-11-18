@@ -213,6 +213,8 @@
             android:layout_above="@id/pad_cent"
             android:text="@string/btn_Y"
             android:textColor="@color/btn_txt"
+            android:paddingHorizontal="0dp"
+            android:textSize="25sp"
             android:textStyle="bold"
             app:shapeAppearanceOverlay="@style/button"/>
 
@@ -225,6 +227,8 @@
             android:layout_below="@id/pad_cent"
             android:text="@string/btn_A"
             android:textColor="@color/btn_txt"
+            android:paddingHorizontal="0dp"
+            android:textSize="25sp"
             android:textStyle="bold"
             app:shapeAppearanceOverlay="@style/button" />
 
@@ -237,6 +241,8 @@
             android:layout_centerVertical="true"
             android:text="@string/btn_X"
             android:textColor="@color/btn_txt"
+            android:paddingHorizontal="0dp"
+            android:textSize="25sp"
             android:textStyle="bold"
             app:shapeAppearanceOverlay="@style/button" />
 
@@ -249,6 +255,8 @@
             android:layout_centerVertical="true"
             android:text="@string/btn_B"
             android:textColor="@color/btn_txt"
+            android:paddingHorizontal="0dp"
+            android:textSize="25sp"
             android:textStyle="bold"
             app:shapeAppearanceOverlay="@style/button" />
     </RelativeLayout>
@@ -313,10 +321,11 @@
         android:layout_height="51dp"
         android:backgroundTint="@color/func"
         app:cornerRadius="120dp"
-        app:layout_constraintVertical_bias="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mon_back" />
+        app:layout_constraintStart_toEndOf="@+id/orient_at_land"
+        app:layout_constraintTop_toTopOf="@+id/mon_back"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintHorizontal_bias="0.2"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

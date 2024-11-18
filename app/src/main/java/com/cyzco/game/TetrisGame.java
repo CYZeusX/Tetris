@@ -12,6 +12,10 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Color;
 import android.os.Vibrator;
+import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Objects;
 
 public class TetrisGame
 {
@@ -20,16 +24,17 @@ public class TetrisGame
     private final int BOARD_WIDTH = 10; // 10 blocks wide
     private final int BOARD_HEIGHT = 20; // 20 blocks tall
     private final char BOARD_BLOCK = Shapes.space;
-    private final char BLOCK_PIECE = Shapes.block;
+    private final String BLOCK_PIECE = Shapes.block;
     private int linesCleared = 0;
     private int scoreGained = 0;
     private final int REMOVE_LINE_SCORE = 100;
     private boolean showEffect = false;
-    private long effectEndTime = 550; // Timestamp for when the effect ends
+    private long effectEndTime = 500; // Timestamp for when the effect ends
     private final Context CONTEXT;
     private boolean vibrationTriggered = false;
     private Bitmap effectBitmap; // Class member for reuse
     private Bitmap resizedEffectBitmap;
+    private final Map<Character, Integer> blockColors = new HashMap<>();
 
     public TetrisGame(Context context)
     {
@@ -43,6 +48,8 @@ public class TetrisGame
                 BOARD[y][x] = BOARD_BLOCK;
             }
         }
+
+        initializeBlockColorsAndCharacters();
         spawnNewPiece();
     }
 
@@ -56,22 +63,29 @@ public class TetrisGame
         return scoreGained;
     }
 
-    private void spawnNewPiece()
-    {
-        int randomIndex = (int) (Math.random() * Shapes.SHAPES.length);
-        char[][] randomShape = Shapes.SHAPES[randomIndex];
-        currentPiece = new Tetromino(randomShape);
+    private void spawnNewPiece() {
+        int randomIndex = (int) (Math.random() * Shapes.SHAPES.length);  // Random index for shapes
+        char[][] randomShape = Shapes.SHAPES[randomIndex];  // Get the random shape from the Shapes array
 
+        // Debugging: Print the selected shape
+        System.out.println("Random shape index: " + randomIndex);
+        for (char[] row : randomShape) {
+            System.out.println(Arrays.toString(row));  // Print each row of the shape
+        }
+
+        currentPiece = new Tetromino(randomShape);  // Pass the shape to the Tetromino constructor
+
+        // Position the new piece at the top of the board
         int startX = (BOARD_WIDTH - currentPiece.getShape()[0].length) / 2;
         int startY = 0;
         currentPiece.setPosition(startX, startY);
 
         // Check if the piece can be placed
-        if (!canMove(currentPiece, startX, startY))
-        {
+        if (!canMove(currentPiece, startX, startY)) {
             handleGameOver();  // Handle game over if the piece can't fit
         }
     }
+
 
     private boolean isPaused = false;
 
@@ -209,7 +223,6 @@ public class TetrisGame
         checkCompletedLines(); // Check for completed lines after locking
     }
 
-
     private void checkCompletedLines()
     {
         int rowsClearedInThisStep = 0; // Counter for rows cleared in one step
@@ -238,7 +251,7 @@ public class TetrisGame
         {
             scoreGained += REMOVE_LINE_SCORE * 2; // Double the score for clearing 4 rows
             showEffect = true;
-            effectEndTime = System.currentTimeMillis() + 550;
+            effectEndTime = System.currentTimeMillis() + 500;
         }
         else
         {
@@ -304,11 +317,25 @@ public class TetrisGame
         }
     }
 
+    private void initializeBlockColorsAndCharacters() {
+        blockColors.put(Shapes.I_BLOCK, Color.CYAN);      // I-shape
+        blockColors.put(Shapes.O_BLOCK, Color.YELLOW);    // O-shape
+        blockColors.put(Shapes.T_BLOCK, Color.MAGENTA);   // T-shape
+        blockColors.put(Shapes.S_BLOCK, Color.GREEN);     // S-shape
+        blockColors.put(Shapes.Z_BLOCK, Color.RED);       // Z-shape
+        blockColors.put(Shapes.J_BLOCK, Color.BLUE);      // J-shape
+        blockColors.put(Shapes.L_BLOCK, Color.rgb(255, 165, 0)); // L-shape
+
+        blockColors.put(Shapes.space, Color.TRANSPARENT); // No color for empty spaces
+    }
+
+
     public void renderGame(SurfaceView monitor)
     {
         // Ensure effect bitmaps are initialized
         if (effectBitmap == null || resizedEffectBitmap == null)
         {
+            System.err.println("Effect bitmaps not initialized!");
             initEffects(CONTEXT.getResources());
         }
 
@@ -321,7 +348,6 @@ public class TetrisGame
             canvas.drawColor(Color.rgb(167, 179, 75)); // Background color
 
             Paint paint = new Paint();
-            paint.setColor(Color.BLACK); // Text color
             paint.setTextSize(28);       // Adjust size as needed
             paint.setTypeface(Typeface.MONOSPACE); // Monospace font for alignment
 
@@ -334,64 +360,73 @@ public class TetrisGame
             int paddingLeft = (canvasWidth - (BOARD_WIDTH * blockSize)) / 2;
             int paddingTop = (canvasHeight - (BOARD_HEIGHT * blockSize)) / 2;
 
-            // Render the board
+            // Render fixed blocks
             for (int y = 0; y < BOARD.length; y++)
             {
                 for (int x = 0; x < BOARD[y].length; x++)
                 {
-                    if (BOARD[y][x] != BOARD_BLOCK)
+                    char blockChar = BOARD[y][x]; // Get the block type
+                    if (blockChar != Shapes.space)
                     {
-                        // Render '@' for non-empty cells
-                        String symbol = String.valueOf(BLOCK_PIECE); // The symbol to render
-                        float posX = paddingLeft + x * blockSize; // Adjusted position with dynamic padding
-                        float posY = paddingTop + (y + 1) * blockSize; // Adjusted position with dynamic padding
-                        canvas.drawText(symbol, posX, posY, paint);
+                        Integer color = blockColors.get(blockChar); // Get the color for the block
+                        if (color != null) {
+                            paint.setColor(color); // Set the block color
+                        }
+
+                        float posX = paddingLeft + x * blockSize;
+                        float posY = paddingTop + (y + 1) * blockSize;
+                        canvas.drawText(String.valueOf(Shapes.block), posX, posY, paint);
                     }
                 }
             }
 
-            // Render the shadow
-            int shadowY = calculateShadowPosition(); // Calculate where the shadow should be
-            char[][] shape = currentPiece.getShape();
-            int pieceX = currentPiece.getX();
-
-            paint.setColor(Color.argb(150, 100, 100, 100)); // Light gray for shadow
-            paint.setAlpha(150);          // Semi-transparent shadow
-
-            for (int i = 0; i < shape.length; i++)
-            {
-                for (int j = 0; j < shape[i].length; j++)
-                {
-                    if (shape[i][j] != BOARD_BLOCK)
-                    {
-                        // Calculate shadow block positions
-                        float blockX = paddingLeft + (pieceX + j) * blockSize;
-                        float blockY = paddingTop + (shadowY + i + 1) * blockSize;
-
-                        // Draw the shadow as a character
-                        canvas.drawText(String.valueOf(BLOCK_PIECE), blockX, blockY, paint);
-                    }
-                }
-            }
-
-            // Reset paint for rendering the actual piece
-            paint.setColor(Color.BLACK);
 
             // Render the current piece
+            char[][] shape = currentPiece.getShape();
+            int pieceX = currentPiece.getX();
             int pieceY = currentPiece.getY();
+
             for (int i = 0; i < shape.length; i++)
             {
                 for (int j = 0; j < shape[i].length; j++)
                 {
-                    if (shape[i][j] != BOARD_BLOCK)
+                    if (shape[i][j] != Shapes.space)
                     {
+                        char blockChar = shape[i][j]; // Get block type
+                        Integer color = blockColors.get(blockChar); // Get the color for the block
+                        // Debug color for invalid blocks
+                        paint.setColor(Objects.requireNonNullElse(color, Color.BLACK));
+
+
                         // Draw current piece blocks
                         float blockX = paddingLeft + (pieceX + j) * blockSize;
                         float blockY = paddingTop + (pieceY + i) * blockSize;
-                        canvas.drawText(String.valueOf(BLOCK_PIECE), blockX, blockY, paint);
+                        canvas.drawText(String.valueOf(Shapes.block), blockX, blockY, paint);
                     }
                 }
             }
+
+
+            // Render the shadow
+            int shadowY = calculateShadowPosition();
+
+            for (int i = 0; i < shape.length; i++)
+            {
+                for (int j = 0; j < shape[i].length; j++)
+                {
+                    if (shape[i][j] != Shapes.space)
+                    {
+                        paint.setColor(Color.argb(150, 100, 100, 100)); // Light gray for shadow
+                        paint.setAlpha(150);
+
+                        // Calculate shadow block positions
+                        float blockX = paddingLeft + (pieceX + j) * blockSize;
+                        float blockY = paddingTop + (shadowY + i + 1) * blockSize;
+                        canvas.drawText(String.valueOf(Shapes.block), blockX, blockY, paint);
+                    }
+                }
+            }
+
 
             // Handle the effect
             if (showEffect && resizedEffectBitmap != null)
