@@ -14,11 +14,11 @@
 ### Purpose
     it is totally for personal uses
     
-    (- Why not just download one on app store? -)
-        Because I have high demand. 
-        I have found LACK OF FEATURES on most of the Tetris games on Android.
-    > lack of blocks anti-clockwise rotation
-    > lack of landscape orientation mode
+    Q&A: Why not just download one on app store?
+         - Because I have high demand. 
+         - I have found LACK OF FEATURES on most of the Tetris games on Android.
+                > lack of blocks anti-clockwise rotation
+                > lack of landscape orientation mode
 
 ### * Incommensurably Innovative Features
     - able to play on both orientation    >> potrait | landscape
