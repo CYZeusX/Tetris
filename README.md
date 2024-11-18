@@ -1,5 +1,5 @@
-# HONEST DISCLAIMER:  NOT quite the result of my knowledge. 
-# AI contributed a LOT
+# [!IMPORTANT] HONEST DISCLAIMER:  NOT quite the result of my knowledge. 
+# <ins>AI contributed a LOT</ins>
 ### IMPORTANT: meant for Android ONLY
 ---
 
@@ -30,8 +30,16 @@
     - quit app
     - setting menu
     - change light|dark mode
-    - change char for blocks
-    - return to default char of the blocks
+    - custom char for blocks
+    - return default char for blocks
     - save block for later
     - 3 next following blocks
-    - block shadow
+    - sync monitor between potrait and landscape mode
+    - ~~block shadow~~
+
+### * Completed features / fixes
+- fixed blocks unaligned with monitor
+- fixed freezed "Tetris!" effect when triggered the second time
+- Implemented block shadow
+- Implemented "Tetris!" effect when cleared 4 rows at once
+- Implemented "Tetris!" effect with vibration
