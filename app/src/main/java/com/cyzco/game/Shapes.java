@@ -9,7 +9,7 @@ public class Shapes
     public static final char Z_BLOCK = 'Z';
     public static final char J_BLOCK = 'J';
     public static final char L_BLOCK = 'L';
-    public static String block = "Jennifer";
+    public static String block = "回";
     public static char space = '.';
 
     public static final char[][] I_SHAPE =
@@ -50,33 +50,18 @@ public class Shapes
     public static final char[][] J_SHAPE =
             {
              {space, space, space, space},
-             {space, J_BLOCK, space, space},
-             {space, J_BLOCK, space, space},
+             {space, space, J_BLOCK, space},
+             {space, space, J_BLOCK, space},
              {space, J_BLOCK, J_BLOCK, space},
             };
 
     public static final char[][] L_SHAPE =
             {
              {space, space, space, space},
-             {space, space, L_BLOCK, space},
-             {space, space, L_BLOCK, space},
+             {space, L_BLOCK, space, space},
+             {space, L_BLOCK, space, space},
              {space, L_BLOCK, L_BLOCK, space}
             };
-
-    public static char[][] getShapeForBlock(char blockType)
-    {
-        return switch (blockType)
-        {
-            case I_BLOCK -> I_SHAPE;
-            case O_BLOCK -> O_SHAPE;
-            case T_BLOCK -> T_SHAPE;
-            case S_BLOCK -> S_SHAPE;
-            case Z_BLOCK -> Z_SHAPE;
-            case J_BLOCK -> J_SHAPE;
-            case L_BLOCK -> L_SHAPE;
-            default -> new char[][]{{space}}; // Return an empty shape for unknown types
-        };
-    }
 
     public static final char[][][] SHAPES =
     {I_SHAPE, O_SHAPE, T_SHAPE, S_SHAPE, Z_SHAPE, J_SHAPE, L_SHAPE};

@@ -2,6 +2,7 @@ package com.cyzco.game;
 
 import android.graphics.BitmapFactory;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.VibrationEffect;
 import android.view.SurfaceHolder;
 import android.graphics.Typeface;
@@ -34,7 +35,7 @@ public class TetrisGame
     private boolean vibrationTriggered = false;
     private Bitmap effectBitmap; // Class member for reuse
     private Bitmap resizedEffectBitmap;
-    private final Map<Character, Integer> blockColors = new HashMap<>();
+    private Map<Character, Integer> blockColors = new HashMap<>();
 
     public TetrisGame(Context context)
     {
@@ -302,29 +303,14 @@ public class TetrisGame
         }
     }
 
-
-    public void cleanupEffects()
-    {
-        if (resizedEffectBitmap != null && !resizedEffectBitmap.isRecycled())
-        {
-            resizedEffectBitmap.recycle();
-            resizedEffectBitmap = null;
-        }
-        if (effectBitmap != null && !effectBitmap.isRecycled())
-        {
-            effectBitmap.recycle();
-            effectBitmap = null;
-        }
-    }
-
     private void initializeBlockColorsAndCharacters() {
-        blockColors.put(Shapes.I_BLOCK, Color.CYAN);      // I-shape
-        blockColors.put(Shapes.O_BLOCK, Color.YELLOW);    // O-shape
-        blockColors.put(Shapes.T_BLOCK, Color.MAGENTA);   // T-shape
-        blockColors.put(Shapes.S_BLOCK, Color.GREEN);     // S-shape
-        blockColors.put(Shapes.Z_BLOCK, Color.RED);       // Z-shape
-        blockColors.put(Shapes.J_BLOCK, Color.BLUE);      // J-shape
-        blockColors.put(Shapes.L_BLOCK, Color.rgb(255, 165, 0)); // L-shape
+        blockColors.put(Shapes.I_BLOCK, Color.parseColor("#00FFFF")); // I-shape
+        blockColors.put(Shapes.O_BLOCK, Color.parseColor("#FFEB3B")); // O-shape
+        blockColors.put(Shapes.T_BLOCK, Color.parseColor("#9500FF")); // T-shape
+        blockColors.put(Shapes.S_BLOCK, Color.parseColor("#59FF33")); // S-shape
+        blockColors.put(Shapes.Z_BLOCK, Color.parseColor("#FF4D4D")); // Z-shape
+        blockColors.put(Shapes.J_BLOCK, Color.parseColor("#3460FF")); // J-shape
+        blockColors.put(Shapes.L_BLOCK, Color.parseColor("#FFA621")); // L-shape
 
         blockColors.put(Shapes.space, Color.TRANSPARENT); // No color for empty spaces
     }
@@ -371,11 +357,12 @@ public class TetrisGame
                         Integer color = blockColors.get(blockChar); // Get the color for the block
                         if (color != null) {
                             paint.setColor(color); // Set the block color
+                            paint.setFakeBoldText(true);
                         }
 
                         float posX = paddingLeft + x * blockSize;
                         float posY = paddingTop + (y + 1) * blockSize;
-                        canvas.drawText(String.valueOf(Shapes.block), posX, posY, paint);
+                        canvas.drawText(String.valueOf(BLOCK_PIECE), posX, posY, paint);
                     }
                 }
             }
@@ -394,14 +381,15 @@ public class TetrisGame
                     {
                         char blockChar = shape[i][j]; // Get block type
                         Integer color = blockColors.get(blockChar); // Get the color for the block
-                        // Debug color for invalid blocks
-                        paint.setColor(Objects.requireNonNullElse(color, Color.BLACK));
-
+                        if (color != null) {
+                            paint.setColor(color); // Set the block color
+                            paint.setFakeBoldText(true);
+                        }
 
                         // Draw current piece blocks
                         float blockX = paddingLeft + (pieceX + j) * blockSize;
                         float blockY = paddingTop + (pieceY + i) * blockSize;
-                        canvas.drawText(String.valueOf(Shapes.block), blockX, blockY, paint);
+                        canvas.drawText(String.valueOf(BLOCK_PIECE), blockX, blockY, paint);
                     }
                 }
             }
@@ -422,7 +410,7 @@ public class TetrisGame
                         // Calculate shadow block positions
                         float blockX = paddingLeft + (pieceX + j) * blockSize;
                         float blockY = paddingTop + (shadowY + i + 1) * blockSize;
-                        canvas.drawText(String.valueOf(Shapes.block), blockX, blockY, paint);
+                        canvas.drawText(String.valueOf(BLOCK_PIECE), blockX, blockY, paint);
                     }
                 }
             }

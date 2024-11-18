@@ -33,4 +33,11 @@
     <color name="pad">#1D1C23</color>
     <color name="pad_release">#302F38</color>
     <color name="red">#FF0000</color>
+    <color name="I">#00FFFF</color>
+    <color name="O">#FFEB3B</color>
+    <color name="T">#9500FF</color>
+    <color name="S">#59FF33</color>
+    <color name="Z">#FF4E4E</color>
+    <color name="J">#3460FF</color>
+    <color name="L">#FFA621</color>
 </resources>
