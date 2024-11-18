@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
-        TetrisGame tetrisGame = new TetrisGame(this);
+        TetrisGame tetrisGame;
         // Retrieve the orientation from SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
         int orientation = sharedPreferences.getInt("orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity
         {
             setRequestedOrientation(orientation);
         }
+
         setContentView(R.layout.activity_main);
 
         WindowInsetsController insetsController = getWindow().getInsetsController();
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         tetrisGame = new TetrisGame(this);
+        tetrisGame.initEffects(getResources());
         startGameLoop();
         setButtonListeners();
     }
@@ -144,7 +146,9 @@ public class MainActivity extends AppCompatActivity
 
         //setting
         setting.setOnClickListener(v ->
-        {});
+        {
+            tetrisGame.togglePause();
+        });
 
         // Move the block left
         setupContinuousMovement(a, () ->

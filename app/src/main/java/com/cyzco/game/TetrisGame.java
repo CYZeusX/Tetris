@@ -1,6 +1,7 @@
 package com.cyzco.game;
 
 import android.graphics.BitmapFactory;
+import android.content.res.Resources;
 import android.os.VibrationEffect;
 import android.view.SurfaceHolder;
 import android.graphics.Typeface;
@@ -27,7 +28,8 @@ public class TetrisGame
     private long effectEndTime = 550; // Timestamp for when the effect ends
     private final Context CONTEXT;
     private boolean vibrationTriggered = false;
-    // Variables to control effect timing and fade
+    private Bitmap effectBitmap; // Class member for reuse
+    private Bitmap resizedEffectBitmap;
 
     public TetrisGame(Context context)
     {
@@ -71,6 +73,12 @@ public class TetrisGame
         }
     }
 
+    private boolean isPaused = false;
+
+    public void togglePause()
+    {
+        isPaused = !isPaused;
+    }
 
     private void handleGameOver()
     {
@@ -95,7 +103,9 @@ public class TetrisGame
 
     public void updateGame()
     {
-        movePieceDown();  // Move the piece down incrementally
+        if (!isPaused) {
+            movePieceDown();
+        }
     }
 
     public void movePieceDown()
@@ -228,7 +238,7 @@ public class TetrisGame
         {
             scoreGained += REMOVE_LINE_SCORE * 2; // Double the score for clearing 4 rows
             showEffect = true;
-            effectEndTime += System.currentTimeMillis();
+            effectEndTime = System.currentTimeMillis() + 550;
         }
         else
         {
@@ -262,8 +272,46 @@ public class TetrisGame
         return shadowY; // The Y-coordinate where the shadow will rest
     }
 
+    public void initEffects(Resources resources)
+    {
+        if (effectBitmap == null)
+        {
+            effectBitmap = BitmapFactory.decodeResource(resources, R.drawable.tetris_boom);
+            if (effectBitmap != null)
+            {
+                resizedEffectBitmap = Bitmap.createScaledBitmap(effectBitmap, 250, 120, true);
+                System.out.println("Effect bitmaps initialized.");
+            }
+            else
+            {
+                System.err.println("Error: Could not decode resource for tetris_boom.");
+            }
+        }
+    }
+
+
+    public void cleanupEffects()
+    {
+        if (resizedEffectBitmap != null && !resizedEffectBitmap.isRecycled())
+        {
+            resizedEffectBitmap.recycle();
+            resizedEffectBitmap = null;
+        }
+        if (effectBitmap != null && !effectBitmap.isRecycled())
+        {
+            effectBitmap.recycle();
+            effectBitmap = null;
+        }
+    }
+
     public void renderGame(SurfaceView monitor)
     {
+        // Ensure effect bitmaps are initialized
+        if (effectBitmap == null || resizedEffectBitmap == null)
+        {
+            initEffects(CONTEXT.getResources());
+        }
+
         SurfaceHolder holder = monitor.getHolder();
         Canvas canvas = holder.lockCanvas();
 
@@ -345,56 +393,50 @@ public class TetrisGame
                 }
             }
 
-            // Handle the effect (fade-in / fade-out logic)
-            if (showEffect)
+            // Handle the effect
+            if (showEffect && resizedEffectBitmap != null)
             {
                 long currentTime = System.currentTimeMillis();
                 if (currentTime <= effectEndTime)
                 {
-                    int targetWidth = 250;
-                    int targetHeight = 120;
+                    float posX = (canvasWidth - resizedEffectBitmap.getWidth()) / 2.0f;
+                    float posY = (canvasHeight - resizedEffectBitmap.getHeight()) / 2.0f;
 
-                    // Load the bitmap
-                    Bitmap effectBitmap = BitmapFactory.decodeResource(monitor.getResources(), R.drawable.tetris_boom);
-
-                    // Resize the bitmap to the fixed dimensions
-                    Bitmap resizedBitmap = Bitmap.createScaledBitmap(effectBitmap, targetWidth, targetHeight, true);
-
-                    // Determine position to center the resized image
-                    float posX = (canvasWidth - targetWidth) / 2.0f;
-                    float posY = (canvasHeight - targetHeight) / 2.0f;
-
-                    // Trigger vibrator only once
-                    if (!vibrationTriggered)
-                    {
-                        setVibrator();
-                        vibrationTriggered = true; // Prevent further calls
-                    }
-
-                    // Draw the resized bitmap
-                    canvas.drawBitmap(resizedBitmap, posX, posY, null);
-
-                    // Recycle the resized bitmap to free memory
-                    resizedBitmap.recycle();
+                    triggerEffectVibration(); // Call the refactored vibration method
+                    canvas.drawBitmap(resizedEffectBitmap, posX, posY, null);
                 }
                 else
                 {
                     showEffect = false;
-                    vibrationTriggered = false; // Reset flag for next effect
+                    vibrationTriggered = false;
                 }
             }
+            else if (showEffect)
+            {
+                System.err.println("Error: resizedEffectBitmap is null. Effect will not be rendered.");
+            }
+
             holder.unlockCanvasAndPost(canvas); // Ensure canvas is posted correctly
         }
     }
 
-    public void setVibrator()
+    public void setVibrator(long[] timings, int[] amplitudes)
     {
         if (CONTEXT != null)
         {
             Vibrator vibrator = (Vibrator) CONTEXT.getSystemService(Context.VIBRATOR_SERVICE);
-            long[] timings = new long[]{500};
-            int[] amplitudes = new int[]{30};
-            vibrator.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1));
+            if (vibrator != null && vibrator.hasVibrator())
+            {
+                vibrator.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1));
+            }
+        }
+    }
+
+    public void triggerEffectVibration()
+    {
+        if (!vibrationTriggered) {
+            setVibrator(new long[]{0, 500}, new int[]{0, 30}); // Example vibration pattern
+            vibrationTriggered = true;
         }
     }
 
