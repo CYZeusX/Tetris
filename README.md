@@ -7,10 +7,10 @@
 ---
 > [!TIP]
 > ### * Incommensurably Innovative Features
-    - able to play on both orientation    >> potrait | landscape
+    - able to play on both orientation                                                >> potrait | landscape
     - blocks can be emojis, letters, symbols, or even sentence(NOT Recommended)!
-    - can change the blocks of the game   >> because the blocks formed with symbols (String)
-    - can change the particles of the background  >> because the background forms with symbols (char)
+    - can change the blocks of the game                                               >> because the blocks formed with symbols (String)
+    - can change the particles of the background                                      >> because the background forms with symbols (char)
     - has shoulder buttons, can use index figers to rotate blocks
 
     
