@@ -9,7 +9,7 @@
 ### Purpose
     it is totally for personal uses
     
-    <ins>Why not just download one on app store?</ins>
+    -Why not just download one on app store?-
         Because I have high demand. 
         I have found LACK OF FEATURES on most of the Tetris games on Android.
     > lack of blocks anti-clockwise rotation
