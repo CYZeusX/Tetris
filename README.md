@@ -38,11 +38,10 @@
     - save block for later
     - 3 next following blocks
     - sync monitor between potrait and landscape mode
-    - ~~block shadow~~
 
 ### * Completed features / fixes
 - fixed blocks unaligned with monitor
 - fixed freezed "Tetris!" effect when triggered the second time
-- Implemented block shadow
-- Implemented "Tetris!" effect when cleared 4 rows at once
-- Implemented "Tetris!" effect with vibration
++ Implemented block shadow
++ Implemented "Tetris!" effect when cleared 4 rows at once
++ Implemented "Tetris!" effect with vibration
