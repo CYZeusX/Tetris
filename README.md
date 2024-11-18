@@ -1,6 +1,6 @@
 > [!IMPORTANT]
-> HONEST DISCLAIMER:  NOT quite the result of my knowledge. 
-> <ins>AI contributed a LOT</ins>
+> ## HONEST DISCLAIMER:  NOT quite the result of my knowledge. 
+> ## <ins>AI contributed a LOT</ins>
 
 > [!NOTE]
 > IMPORTANT: meant for Android ONLY
