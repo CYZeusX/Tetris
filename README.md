@@ -1,4 +1,4 @@
-# [!IMPORTANT] HONEST DISCLAIMER:  NOT quite the result of my knowledge. 
+> [!IMPORTANT] HONEST DISCLAIMER:  NOT quite the result of my knowledge. 
 # <ins>AI contributed a LOT</ins>
 ### IMPORTANT: meant for Android ONLY
 ---
