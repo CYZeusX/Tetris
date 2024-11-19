@@ -1,5 +1,7 @@
 package com.cyzco.game;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.os.Bundle;
 import android.view.View;
@@ -24,13 +26,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity
 {
-    Button a, s, d, A, X, Y, l1, r1, orientPortrait, orientLandscape, setting;
+    Button a, s, d,  A, X, Y, l1, r1, orientPortrait, orientLandscape, setting;
     Vibrator vibrator;
     TextView scores, lines;
     SurfaceView monitor;
     TetrisGame tetrisGame = new TetrisGame(this);  // 'this' refers to the Activity context
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint({"MissingInflatedId", "UseCompatLoadingForDrawables"})
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -77,7 +79,7 @@ public class MainActivity extends AppCompatActivity
         r1 = findViewById(R.id.r1);
         orientPortrait = findViewById(R.id.orient_at_portrait);
         orientLandscape = findViewById(R.id.orient_at_land);
-        setting = findViewById(R.id.setting);
+        setting = findViewById(R.id.pause);
         scores = findViewById(R.id.scores);
         lines = findViewById(R.id.lines);
         monitor = findViewById(R.id.mon);
@@ -239,6 +241,15 @@ public class MainActivity extends AppCompatActivity
             return true;
         });
     }
+
+    public void buttonSetUp(Button button, String text)
+    {
+        button.setText(text);
+        button.setTextSize(25);
+        button.setTypeface(null, Typeface.BOLD);
+        button.setTextColor(Color.parseColor("#6D274F"));
+    }
+
 
     @SuppressLint("ClickableViewAccessibility")
     private void setupContinuousMovement(View button, Runnable moveAction)

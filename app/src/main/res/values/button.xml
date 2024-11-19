@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="button" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">60dp</item>
-        <item name="background">@color/btn</item>
+    <style name="NoThemeButton">
+        <item name="android:background">@null</item> <!-- Prevent theme background override -->
+        <item name="android:insetTop">0dp</item> <!-- Remove unwanted padding -->
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
     </style>
 </resources>

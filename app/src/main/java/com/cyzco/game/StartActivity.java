@@ -1,7 +1,7 @@
 package com.cyzco.game;
 
-import android.os.Bundle;
 import android.util.Log;
+import android.os.Bundle;
 import android.widget.Button;
 import android.content.Intent;
 import android.view.WindowInsets;
@@ -16,6 +16,7 @@ public class StartActivity extends AppCompatActivity
 {
     Button orient_p;
     Button orient_l;
+    Button A;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -50,16 +51,24 @@ public class StartActivity extends AppCompatActivity
 
         orient_p = findViewById(R.id.orient_at_portrait);
         orient_l = findViewById(R.id.orient_at_land);
-        Button btnP = findViewById(R.id.start);
-        Button btnL = findViewById(R.id.start);
+        A = findViewById(R.id.A);
 
-        btnP.setOnClickListener(v ->
+        Button portraitStart = findViewById(R.id.start);
+        Button landscapeStart = findViewById(R.id.start);
+
+        A.setOnClickListener(v ->
         {
             startActivity(intent);
             overridePendingTransition(R.anim.zero_ani, R.anim.zero_ani);
         });
 
-        btnL.setOnClickListener(v ->
+        portraitStart.setOnClickListener(v ->
+        {
+            startActivity(intent);
+            overridePendingTransition(R.anim.zero_ani, R.anim.zero_ani);
+        });
+
+        landscapeStart.setOnClickListener(v ->
         {
             startActivity(intent);
             overridePendingTransition(R.anim.zero_ani, R.anim.zero_ani);

@@ -1,7 +1,12 @@
 package com.cyzco.game;
 
+import static java.sql.Types.NULL;
+
+import android.app.appsearch.PackageIdentifier;
 import android.graphics.BitmapFactory;
 import android.content.res.Resources;
+import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
 import android.os.VibrationEffect;
 import android.view.SurfaceHolder;
 import android.graphics.Typeface;
@@ -324,15 +329,19 @@ public class TetrisGame
             initEffects(CONTEXT.getResources());
         }
 
+        monitor.setZOrderOnTop(true);
         SurfaceHolder holder = monitor.getHolder();
+        holder.setFormat(PixelFormat.TRANSLUCENT);
         Canvas canvas = holder.lockCanvas();
 
         if (canvas != null)
         {
+            //background colour
+            canvas.drawColor(Color.argb(0,255,255,255), PorterDuff.Mode.CLEAR); // Background color
+
             Paint paint = new Paint();
             paint.setTextSize(28);       // Adjust size as needed
             paint.setTypeface(Typeface.MONOSPACE); // Monospace font for alignment
-            canvas.drawColor(Color.rgb(167, 179, 75)); // Background color
 
             // Calculate block size dynamically based on monitor dimensions
             int canvasWidth = canvas.getWidth();
@@ -348,10 +357,9 @@ public class TetrisGame
             {
                 for (int x = 0; x < BOARD_WIDTH; x++)
                 {
-                    paint.setColor(Color.argb(150, 100, 100, 100)); // Light gray for shadow
-                    paint.setAlpha(100);
+                    paint.setColor(Color.argb(60, 100, 100, 100)); // Light gray for shadow
 
-                    float posX = paddingLeft + (x+0.1f) * blockSize;
+                    float posX = paddingLeft + (x + 0.2f) * blockSize;
                     float posY = paddingTop + (y + 1) * blockSize;
                     canvas.drawText(String.valueOf(Shapes.space), posX, posY, paint);  // Draw space as background
                 }
