@@ -6,12 +6,12 @@
     android:id="@+id/start_p"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dmg">
+    android:background="@color/mainBackgroundLight">
 
     <RelativeLayout
         android:id="@+id/mon_back"
-        android:layout_width="350dp"
-        android:layout_height="290dp"
+        android:layout_width="386.2dp"
+        android:layout_height="320dp"
         android:background="@drawable/mon_back"
         android:elevation="5dp"
         app:layout_constraintHorizontal_bias="0.5"
@@ -23,15 +23,15 @@
 
         <TextView
             android:id="@+id/textView"
-            android:layout_width="226dp"
-            android:layout_height="207dp"
+            android:layout_width="294.44dp"
+            android:layout_height="265dp"
             android:layout_centerInParent="true"
             android:background="@drawable/monitor"
             android:elevation="1dp"/>
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="200dp"
+            android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/textView"
             android:layout_centerHorizontal="true"
@@ -43,86 +43,52 @@
 
         <Button
             android:id="@+id/start"
-            android:layout_width="80dp"
-            android:layout_height="40dp"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
             android:layout_alignBottom="@+id/textView"
             android:layout_centerHorizontal="true"
             android:layout_marginVertical="17dp"
             android:backgroundTint="#555B27"
-            android:elevation="12dp"
+            android:elevation="10dp"
             android:text="@string/start"
+            android:textSize="20sp"
             android:textAlignment="center"
-            android:paddingVertical="10dp"
+            android:paddingVertical="17dp"
             android:textColor="@color/white"
             android:textStyle="bold"
-            app:cornerRadius="25dp"/>
+            app:cornerRadius="30dp"/>
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/gb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="-6dp"
-        android:text="@string/game_face2"
-        android:textColor="@color/game_text"
-        android:textSize="28sp"
-        android:textStyle="italic"
-        app:layout_constraintStart_toEndOf="@+id/nin"
-        app:layout_constraintTop_toTopOf="@+id/nin" />
-
-    <TextView
-        android:id="@+id/nin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/game_face"
-        android:textColor="@color/game_text"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/mon_back"
-        app:layout_constraintTop_toBottomOf="@+id/mon_back" />
-
-    <TextView
-        android:id="@+id/sm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginBottom="3dp"
-        android:text="@string/game_face3"
-        android:textColor="@color/game_text"
-        app:layout_constraintBottom_toBottomOf="@+id/gb"
-        app:layout_constraintStart_toEndOf="@+id/gb" />
 
     <RelativeLayout
         android:id="@+id/pad_right"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        app:layout_constraintEnd_toEndOf="@+id/mon_back"
+        app:layout_constraintVertical_bias="0"
         app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintTop_toTopOf="@+id/relativeLayout"
-        app:layout_constraintVertical_bias="0">
+        app:layout_constraintEnd_toEndOf="@+id/mon_back"
+        app:layout_constraintTop_toTopOf="@+id/relativeLayout">
 
         <RelativeLayout
             android:id="@+id/pad_cent"
             android:layout_width="40dp"
             android:layout_height="25dp"
             android:layout_centerInParent="true"
-            android:background="@color/dmg" />
+            android:background="@color/mainBackgroundLight" />
 
         <Button
             android:id="@+id/Y"
             style="@style/NoThemeButton"
             android:layout_width="55dp"
             android:layout_height="55dp"
+            android:layout_above="@+id/pad_cent"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/btn_r"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/button_right"
             android:elevation="2dp"
             android:gravity="center"
             android:padding="0dp"
             android:text="@string/btn_Y"
-            android:textColor="@color/btn_txt"
+            android:textColor="@color/rightButtonText"
             android:textSize="25sp"
             android:textStyle="bold" />
 
@@ -135,12 +101,12 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="47dp"
-            android:background="@drawable/btn_r"
+            android:background="@drawable/button_right"
             android:elevation="2dp"
             android:gravity="center"
             android:padding="0dp"
             android:text="@string/btn_A"
-            android:textColor="@color/btn_txt"
+            android:textColor="@color/rightButtonText"
             android:textSize="25sp"
             android:textStyle="bold" />
 
@@ -152,12 +118,12 @@
             android:layout_height="55dp"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/pad_cent"
-            android:background="@drawable/btn_r"
+            android:background="@drawable/button_right"
             android:elevation="2dp"
             android:gravity="center"
             android:padding="0dp"
             android:text="@string/btn_X"
-            android:textColor="@color/btn_txt"
+            android:textColor="@color/rightButtonText"
             android:textSize="25sp"
             android:textStyle="bold" />
 
@@ -168,12 +134,12 @@
             android:layout_height="55dp"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/pad_cent"
-            android:background="@drawable/btn_r"
+            android:background="@drawable/button_right"
             android:elevation="2dp"
             android:gravity="center"
             android:padding="0dp"
             android:text="@string/btn_B"
-            android:textColor="@color/btn_txt"
+            android:textColor="@color/rightButtonText"
             android:textSize="25sp"
             android:textStyle="bold" />
     </RelativeLayout>
@@ -183,10 +149,9 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:background="@color/nul"
-        app:layout_constraintHorizontal_bias="0"
+        android:layout_marginTop="40dp"
         app:layout_constraintStart_toStartOf="@+id/mon_back"
-        app:layout_constraintTop_toBottomOf="@+id/nin"
-        app:layout_constraintVertical_bias="0">
+        app:layout_constraintTop_toBottomOf="@+id/mon_back">
 
         <Button
             android:id="@+id/a"
@@ -195,12 +160,9 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="-8dp"
             android:layout_toStartOf="@id/pad_mid"
-            android:backgroundTint="@color/pad"
-            android:elevation="5dp"
-            android:outlineAmbientShadowColor="@color/nul"
-            android:rotation="-90"
-            app:cornerRadius="5dp"
-            tools:ignore="RtlSymmetry" />
+            android:background="@drawable/button_left"
+            android:elevation="2dp"
+            android:rotation="-90" />
 
         <Button
             android:id="@+id/d"
@@ -209,12 +171,9 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="-8dp"
             android:layout_toEndOf="@id/pad_mid"
-            android:backgroundTint="@color/pad"
-            android:elevation="5dp"
-            android:outlineAmbientShadowColor="@color/nul"
-            android:rotation="-90"
-            app:cornerRadius="5dp"
-            tools:ignore="RtlSymmetry" />
+            android:background="@drawable/button_left"
+            android:elevation="2dp"
+            android:rotation="90" />
 
         <Button
             android:id="@+id/w"
@@ -223,10 +182,8 @@
             android:layout_above="@id/pad_mid"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="-8dp"
-            android:backgroundTint="@color/pad"
-            android:elevation="5dp"
-            android:outlineAmbientShadowColor="@color/nul"
-            app:cornerRadius="5dp" />
+            android:background="@drawable/button_left"
+            android:elevation="2dp" />
 
         <Button
             android:id="@+id/s"
@@ -235,19 +192,19 @@
             android:layout_below="@id/pad_mid"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="-8dp"
-            android:backgroundTint="@color/pad"
-            android:elevation="5dp"
-            android:outlineAmbientShadowColor="@color/pad"
-            app:cornerRadius="5dp" />
+            android:background="@drawable/button_left"
+            android:elevation="2dp"
+            android:rotation="180" />
 
         <RelativeLayout
             android:id="@+id/pad_mid"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerInParent="true"
-            android:background="@color/pad"
-            android:elevation="5dp">
-        </RelativeLayout>
+            android:elevation="3dp"
+            android:foreground="@drawable/button_left_middle"
+            android:outlineAmbientShadowColor="@color/nul"
+            android:outlineSpotShadowColor="@color/nul" />
     </RelativeLayout>
 
     <Button
@@ -255,7 +212,7 @@
         android:layout_width="60dp"
         android:layout_height="40dp"
         android:layout_marginTop="230dp"
-        android:backgroundTint="@color/func"
+        android:backgroundTint="@color/functionButton"
         app:flow_horizontalBias="0.5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

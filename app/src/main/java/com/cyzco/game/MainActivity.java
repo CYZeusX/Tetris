@@ -1,17 +1,17 @@
 package com.cyzco.game;
 
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.util.Log;
 import android.os.Bundle;
 import android.view.View;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.widget.Button;
+import android.graphics.Color;
 import android.widget.TextView;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
+import android.graphics.Typeface;
 import android.view.WindowInsets;
 import android.os.VibrationEffect;
 import androidx.activity.EdgeToEdge;
@@ -23,6 +23,8 @@ import android.content.SharedPreferences;
 import android.view.WindowInsetsController;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -170,13 +172,10 @@ public class MainActivity extends AppCompatActivity
         // Drop the block immediately
         A.setOnTouchListener((v, event) ->
         {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                if (vibrator != null)
-                {
-                    vibrator.vibrate(VibrationEffect.createOneShot(5, VibrationEffect.DEFAULT_AMPLITUDE));
-                }
+            if (event.getAction() == MotionEvent.ACTION_DOWN)
+            {
                 tetrisGame.dropPiece();
-                tetrisGame.renderGame(monitor);
+                setVibrateAndRender();
             }
             return true;
         });
@@ -186,12 +185,8 @@ public class MainActivity extends AppCompatActivity
         {
             if (event.getAction() == MotionEvent.ACTION_DOWN)
             {
-                if (vibrator != null)
-                {
-                    vibrator.vibrate(VibrationEffect.createOneShot(5, VibrationEffect.DEFAULT_AMPLITUDE));
-                }
                 tetrisGame.rotatePieceCounterClockwise();
-                tetrisGame.renderGame(monitor);
+                setVibrateAndRender();
             }
             return true;
         });
@@ -201,12 +196,8 @@ public class MainActivity extends AppCompatActivity
         {
             if (event.getAction() == MotionEvent.ACTION_DOWN)
             {
-                if (vibrator != null)
-                {
-                    vibrator.vibrate(VibrationEffect.createOneShot(5, VibrationEffect.DEFAULT_AMPLITUDE));
-                }
                 tetrisGame.rotatePieceClockwise();
-                tetrisGame.renderGame(monitor);
+                setVibrateAndRender();
             }
             return true;
         });
@@ -216,12 +207,8 @@ public class MainActivity extends AppCompatActivity
         {
             if (event.getAction() == MotionEvent.ACTION_DOWN)
             {
-                if (vibrator != null)
-                {
-                    vibrator.vibrate(VibrationEffect.createOneShot(5, VibrationEffect.DEFAULT_AMPLITUDE));
-                }
                 tetrisGame.rotatePieceCounterClockwise();
-                tetrisGame.renderGame(monitor);
+                setVibrateAndRender();
             }
             return true;
         });
@@ -231,28 +218,21 @@ public class MainActivity extends AppCompatActivity
         {
             if (event.getAction() == MotionEvent.ACTION_DOWN)
             {
-                if (vibrator != null)
-                {
-                    vibrator.vibrate(VibrationEffect.createOneShot(5, VibrationEffect.DEFAULT_AMPLITUDE));
-                }
                 tetrisGame.rotatePieceClockwise();
-                tetrisGame.renderGame(monitor);
+                setVibrateAndRender();
             }
             return true;
         });
     }
 
-    public void buttonSetUp(Button button, String text)
+    private void setVibrateAndRender()
     {
-        button.setText(text);
-        button.setTextSize(25);
-        button.setTypeface(null, Typeface.BOLD);
-        button.setTextColor(Color.parseColor("#6D274F"));
+        tetrisGame.setVibrator(new long[]{0, 5}, new int[]{0, 125});
+        tetrisGame.renderGame(monitor);
     }
 
-
-    @SuppressLint("ClickableViewAccessibility")
-    private void setupContinuousMovement(View button, Runnable moveAction)
+    @SuppressLint({"ClickableViewAccessibility", "ResourceAsColor"})
+    private void setupContinuousMovement(Button button, Runnable moveAction)
     {
         Handler movementHandler = new Handler(); // Create a new Handler for this button
         Runnable movementRunnable = new Runnable()
@@ -310,7 +290,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run()
             {
-                moveHandler.postDelayed(this, 50); // Movement speed interval
+                moveHandler.postDelayed(this, 50);
+                // Movement speed interval
             }
         };
 

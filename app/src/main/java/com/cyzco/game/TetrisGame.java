@@ -1,8 +1,5 @@
 package com.cyzco.game;
 
-import static java.sql.Types.NULL;
-
-import android.app.appsearch.PackageIdentifier;
 import android.graphics.BitmapFactory;
 import android.content.res.Resources;
 import android.graphics.PixelFormat;
@@ -33,7 +30,7 @@ public class TetrisGame
     private int scoreGained = 0;
     private final int REMOVE_LINE_SCORE = 100;
     private boolean showEffect = false;
-    private long effectEndTime = 500; // Timestamp for when the effect ends
+    private long effectEndTime = 135; // Timestamp for when the effect ends
     private final Context CONTEXT;
     private boolean vibrationTriggered = false;
     private Bitmap effectBitmap; // Class member for reuse
@@ -255,7 +252,7 @@ public class TetrisGame
         {
             scoreGained += REMOVE_LINE_SCORE * 2; // Double the score for clearing 4 rows
             showEffect = true;
-            effectEndTime = System.currentTimeMillis() + 500;
+            effectEndTime = System.currentTimeMillis() + 140;
         }
         else
         {
@@ -340,7 +337,7 @@ public class TetrisGame
             canvas.drawColor(Color.argb(0,255,255,255), PorterDuff.Mode.CLEAR); // Background color
 
             Paint paint = new Paint();
-            paint.setTextSize(28);       // Adjust size as needed
+            paint.setTextSize(36);       // Adjust size as needed
             paint.setTypeface(Typeface.MONOSPACE); // Monospace font for alignment
 
             // Calculate block size dynamically based on monitor dimensions
@@ -357,10 +354,10 @@ public class TetrisGame
             {
                 for (int x = 0; x < BOARD_WIDTH; x++)
                 {
-                    paint.setColor(Color.argb(60, 100, 100, 100)); // Light gray for shadow
+                    paint.setColor(Color.argb(200, 100, 100, 100)); // Light gray for shadow
 
-                    float posX = paddingLeft + (x + 0.2f) * blockSize;
-                    float posY = paddingTop + (y + 1) * blockSize;
+                    float posX = paddingLeft + (x + 0f) * blockSize;
+                    float posY = paddingTop + (y + 1f) * blockSize;
                     canvas.drawText(String.valueOf(Shapes.space), posX, posY, paint);  // Draw space as background
                 }
             }
@@ -423,8 +420,15 @@ public class TetrisGame
                 {
                     if (shape[i][j] != Shapes.space)
                     {
-                        paint.setColor(Color.argb(150, 100, 100, 100)); // Light gray for shadow
-                        paint.setAlpha(150);
+                        char blockChar = shape[i][j]; // Get block type
+                        Integer color = blockColors.get(blockChar); // Get the color for the block
+                        if (color != null)
+                        {
+                            paint.setColor(color); // Set the block color
+                            paint.setFakeBoldText(true);
+                        }
+
+                        paint.setAlpha(100);
 
                         // Calculate shadow block positions
                         float blockX = paddingLeft + (pieceX + j) * blockSize;
@@ -477,7 +481,7 @@ public class TetrisGame
     public void triggerEffectVibration()
     {
         if (!vibrationTriggered) {
-            setVibrator(new long[]{0, 500}, new int[]{0, 30}); // Example vibration pattern
+            setVibrator(new long[]{0, 210}, new int[]{0, 30});
             vibrationTriggered = true;
         }
     }

@@ -1,38 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="red">#FF0000</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-
-    <color name="nul">#00000000</color>
     <color name="black">#FF000000</color>
-    <color name="cool_gray">#0F0F0F</color>
     <color name="gray">#808080</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="monitor">#a7b34b</color>
-    <color name="monitor2">#97A244</color>
-    <color name="mon_edge">#858392</color>
-    <color name="mon_back">#928fa2</color>
-    <color name="mon_back_edge">#848192</color>
-    <color name="dmg">#D4D3D7</color>
-    <color name="dmg_B">#0F0F0F</color>
-    <color name="dmg_w">#D4D3D7</color>
-    <color name="func">#C3C3C8</color>
-    <color name="btm_btn">#121212</color>
+
+    <color name="nul">#00000000</color>
     <color name="matte">#050505</color>
+    <color name="monitorEdge">#6E6D7A</color>
+    <color name="monitorPlate">#928fa2</color>
+    <color name="monitorPlateEdge">#848192</color>
+    <color name="mainBackgroundLight">#D4D3D7</color>
+    <color name="mainBackgroundDark">#0F0F0F</color>
+    <color name="functionButton">#C3C3C8</color>
     <color name="game_text">#444299</color>
-    <color name="btn">#9c3671</color>
-    <color name="btn_txt">#6D274F</color>
-    <color name="st_btn">#757E35</color>
-    <color name="score">#5D613E</color>
-    <color name="score_text">#5E6435</color>
-    <color name="block">#232323</color>
-    <color name="shadow">#3C3C3C</color>
-    <color name="pad">#1D1C23</color>
-    <color name="pad_release">#302F38</color>
-    <color name="red">#FF0000</color>
+    <color name="rightButton">#B4347E</color>
+    <color name="rightButtonText">#6D274F</color>
+    <color name="score_text">#3D4220</color>
+    <color name="leftButton">#19181D</color>
     <color name="I">#00FFFF</color>
     <color name="O">#FFEB3B</color>
     <color name="T">#9500FF</color>

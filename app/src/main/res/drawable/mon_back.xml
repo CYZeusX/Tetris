@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/mon_back"/>
+    <solid android:color="@color/monitorPlate"/>
     <corners
         android:bottomRightRadius="50dp"
         android:radius="18dp">
     </corners>
     <stroke
-        android:color="@color/mon_back_edge"
+        android:color="@color/monitorPlateEdge"
         android:width="1dp">
     </stroke>
 </shape>

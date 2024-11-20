@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.GAME" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:windowBackground">@color/dmg</item>
+        <item name="android:windowBackground">@color/mainBackgroundLight</item>
         <item name="materialButtonStyle">@style/NoThemeButton</item>
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
