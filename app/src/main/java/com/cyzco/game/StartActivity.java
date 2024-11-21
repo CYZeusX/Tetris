@@ -96,10 +96,15 @@ public class StartActivity extends AppCompatActivity
         // Determine the new mode (light or dark)
         int newMode = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
                 ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES;
+
         // Set the new theme mode
         AppCompatDelegate.setDefaultNightMode(newMode);
+
         // Save the selected theme mode in SharedPreferences
-        getSharedPreferences("AppPreferences", MODE_PRIVATE).edit().putInt("theme_mode", newMode).apply();
+        SharedPreferences sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
+        sharedPreferences.edit().putInt("theme_mode", newMode).apply();
+
+        // Recreate activity to apply changes
         recreate();
     }
 

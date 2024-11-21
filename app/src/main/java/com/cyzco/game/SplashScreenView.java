@@ -1,21 +1,29 @@
 package com.cyzco.game;
 
 import android.view.Gravity;
-import android.graphics.Color;
 import android.content.Context;
-import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import androidx.appcompat.app.AppCompatDelegate;
 
 @SuppressLint("CustomSplashScreen")
-public final class SplashScreenView extends FrameLayout {
-    public SplashScreenView(@NonNull Context context) {
+public final class SplashScreenView extends FrameLayout
+{
+    public SplashScreenView(@NonNull Context context)
+    {
         super(context);
 
-        // Set the background color (dark mode, light mode, etc.)
-        setBackgroundColor(getResources().getColor(R.color.mainBackgroundLight));
+        SharedPreferences sharedPreferences = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE);
+        int savedThemeMode = sharedPreferences.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        AppCompatDelegate.setDefaultNightMode(savedThemeMode);
+
+        int backgroundColor = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+                ? R.color.mainBackgroundDark : R.color.mainBackgroundLight;
+        setBackgroundColor(getResources().getColor(backgroundColor));
 
         // Add an ImageView for the app icon
         ImageView appIcon = new ImageView(context);
@@ -23,31 +31,6 @@ public final class SplashScreenView extends FrameLayout {
         iconParams.gravity = Gravity.CENTER;
         appIcon.setImageResource(R.drawable.app_icon); // Replace with your drawable
         appIcon.setLayoutParams(iconParams);
-
-        // Add a TextView for a loading message (optional)
-        TextView loadingText = new TextView(context);
-        loadingText.setText("Loading...");
-        loadingText.setTextColor(Color.WHITE);
-        loadingText.setTextSize(18);
-        LayoutParams textParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        textParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
-        textParams.bottomMargin = 100; // Margin from bottom in dp
-        loadingText.setLayoutParams(textParams);
-
-        // Add the views to the SplashScreenView
         addView(appIcon);
-        addView(loadingText);
-
-        fadeInAnimation(this);
-    }
-
-    private void fadeInAnimation(FrameLayout splashScreenView)
-    {
-        // Fade-in animation for the entire view
-        splashScreenView.setAlpha(0f); // Start invisible
-        splashScreenView.animate()
-                .alpha(1f) // End fully visible
-                .setDuration(1000) // Duration in 1/1000 seconds
-                .start();
     }
 }

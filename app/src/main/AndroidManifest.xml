@@ -17,10 +17,11 @@
         tools:targetApi="35">
 
         <activity
-            android:theme="@style/Base.Theme.GAME"
             android:name=".SplashActivity"
+            android:theme="@style/Base.Theme.GAME"
             android:screenOrientation="unspecified"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -28,15 +29,12 @@
         </activity>
 
         <activity
-            android:theme="@style/Base.Theme.GAME"
             android:name=".StartActivity"
             android:screenOrientation="unspecified"
             android:exported="true">
-
         </activity>
 
         <activity
-            android:theme="@style/Base.Theme.GAME"
             android:name=".MainActivity"
             android:screenOrientation="unspecified"
             android:exported="true">
