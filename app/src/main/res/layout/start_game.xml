@@ -38,7 +38,7 @@
             android:layout_marginTop="30dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/tetris"
-            android:src="@drawable/tetrisnew"
+            android:src="@drawable/tetris_max"
             android:elevation="10dp"/>
 
         <Button

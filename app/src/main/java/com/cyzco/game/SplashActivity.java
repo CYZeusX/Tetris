@@ -11,7 +11,6 @@ import android.content.res.Configuration;
 import android.view.WindowInsetsController;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.splashscreen.SplashScreen;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity
@@ -23,7 +22,7 @@ public class SplashActivity extends AppCompatActivity
     {
         Log.d(TAG, "fadeInAndOut: Starting fade-in animation");
 
-        splashScreenView.setAlpha(0f); // Start invisible
+        splashScreenView.setAlpha(0.9f); // Start invisible
         splashScreenView.animate()
                 .alpha(1f) // Fade-in animation
                 .setDuration(1000) // 1 second duration
@@ -34,7 +33,7 @@ public class SplashActivity extends AppCompatActivity
                     // Start fade-out after fade-in completes.
                     splashScreenView.animate()
                             .alpha(0f) // Fade-out animation
-                            .setDuration(1000) // 1 second duration
+                            .setDuration(500) // 1 second duration
                             .withEndAction(() -> startNextActivity(splashScreenView)) // Transition after fade-out
                             .start();
                 })

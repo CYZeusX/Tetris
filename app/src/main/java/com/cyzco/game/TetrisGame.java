@@ -293,10 +293,10 @@ public class TetrisGame
     {
         if (effectBitmap == null)
         {
-            effectBitmap = BitmapFactory.decodeResource(resources, R.drawable.tetris_boom);
+            effectBitmap = BitmapFactory.decodeResource(resources, R.drawable.tetris_boom_max);
             if (effectBitmap != null)
             {
-                resizedEffectBitmap = Bitmap.createScaledBitmap(effectBitmap, 250, 120, true);
+                resizedEffectBitmap = Bitmap.createScaledBitmap(effectBitmap, 250, 101, true);
                 System.out.println("Effect bitmaps initialized.");
             }
             else

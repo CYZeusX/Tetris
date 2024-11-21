@@ -20,8 +20,7 @@
             android:name=".SplashActivity"
             android:theme="@style/Base.Theme.GAME"
             android:screenOrientation="unspecified"
-            android:exported="true"
-            android:launchMode="singleTask">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
