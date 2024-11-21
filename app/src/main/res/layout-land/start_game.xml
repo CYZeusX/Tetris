@@ -6,13 +6,13 @@
     android:id="@+id/start_l"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mainBackgroundLight">
+    android:background="?attr/colorOnBackground">
 
     <RelativeLayout
         android:id="@+id/mon_back"
         android:layout_width="386.2dp"
         android:layout_height="320dp"
-        android:background="@drawable/mon_back"
+        android:background="@drawable/monitor_plate"
         android:elevation="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -141,7 +141,7 @@
             android:id="@+id/pad_cent"
             android:layout_width="40dp"
             android:layout_height="25dp"
-            android:background="@color/mainBackgroundLight"
+            android:background="@color/nul"
             android:layout_centerInParent="true"/>
 
         <Button
@@ -218,9 +218,10 @@
         android:layout_width="140dp"
         android:layout_height="55dp"
         android:layout_marginTop="-10dp"
-        android:backgroundTint="@color/mainBackgroundLight"
+        android:backgroundTint="@color/nul"
         android:elevation="3dp"
         android:layout_marginEnd="27.5dp"
+        android:outlineSpotShadowColor="@color/nul"
         app:cornerRadius="5dp"
         app:layout_constraintEnd_toEndOf="@+id/pad_left"
         app:layout_constraintTop_toTopOf="parent"
@@ -233,8 +234,9 @@
         android:layout_height="55dp"
         android:layout_marginTop="-10dp"
         android:layout_marginStart="27.5dp"
-        android:backgroundTint="@color/mainBackgroundLight"
+        android:backgroundTint="@color/nul"
         android:elevation="3dp"
+        android:outlineSpotShadowColor="@color/nul"
         app:cornerRadius="5dp"
         app:layout_constraintStart_toStartOf="@+id/pad_right"
         app:layout_constraintTop_toTopOf="parent"
@@ -244,9 +246,8 @@
     <Button
         android:id="@+id/orient_at_land"
         android:layout_width="40dp"
-        android:layout_height="70dp"
-        android:backgroundTint="@color/functionButton"
-        app:cornerRadius="120dp"
+        android:layout_height="60dp"
+        android:background="@drawable/function_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="@+id/pad_right"
@@ -261,6 +262,30 @@
         app:layout_constraintEnd_toEndOf="@+id/orient_at_land"
         app:layout_constraintStart_toStartOf="@+id/orient_at_land"
         app:layout_constraintTop_toTopOf="@+id/orient_at_land" />
+
+    <Button
+        android:id="@+id/lightDark"
+        android:layout_width="40dp"
+        android:layout_height="60dp"
+        android:background="@drawable/function_button"
+        android:elevation="2dp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@+id/orient_at_land"
+        app:layout_constraintTop_toTopOf="@+id/orient_at_land" />
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/nul"
+        android:elevation="2dp"
+        android:src="@drawable/light_dark"
+        app:layout_constraintBottom_toBottomOf="@+id/lightDark"
+        app:layout_constraintEnd_toEndOf="@+id/lightDark"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/lightDark"
+        app:layout_constraintTop_toTopOf="@+id/lightDark"/>
 
     <Button
         android:id="@+id/orient_at_portrait"

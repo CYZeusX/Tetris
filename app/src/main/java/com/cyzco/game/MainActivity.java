@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity
 
     private void setVibrateAndRender()
     {
-        tetrisGame.setVibrator(new long[]{0, 5}, new int[]{0, 125});
+        tetrisGame.setVibrator(new long[]{0, 8}, new int[]{0, 80});
         tetrisGame.renderGame(monitor);
     }
 

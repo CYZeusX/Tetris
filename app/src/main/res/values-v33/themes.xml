@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Base.Theme.GAME" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorOnBackground">@color/mainBackgroundLight</item>
+        <item name="android:windowSplashScreenBackground">@color/mainBackgroundLight</item>
+
+        <item name="android:windowSplashScreenAnimatedIcon">@null</item>
+        <item name="android:windowSplashScreenBrandingImage">@null</item>
+        <item name="android:windowSplashScreenBehavior">icon_preferred</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@null</item>
+
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="materialButtonStyle">@style/NoThemeButton</item>
+    </style>
+</resources>

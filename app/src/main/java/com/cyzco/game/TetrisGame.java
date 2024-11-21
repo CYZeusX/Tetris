@@ -105,6 +105,7 @@ public class TetrisGame
         if (canMove(currentPiece, currentPiece.getX() - 1, currentPiece.getY()))
         {
             currentPiece.setPosition(currentPiece.getX() - 1, currentPiece.getY());
+            setVibrator(new long[]{0, 3}, new int[]{0, 25});
         }
     }
 
@@ -113,6 +114,7 @@ public class TetrisGame
         if (canMove(currentPiece, currentPiece.getX() + 1, currentPiece.getY()))
         {
             currentPiece.setPosition(currentPiece.getX() + 1, currentPiece.getY());
+            setVibrator(new long[]{0, 3}, new int[]{0, 25});
         }
     }
 
@@ -132,6 +134,7 @@ public class TetrisGame
         {
             // Move the piece down by one row
             currentPiece.setPosition(currentX, currentY + 1);
+            setVibrator(new long[]{0, 2}, new int[]{0, 25});
         } else
         {
             // Lock the piece in place and spawn a new one
@@ -333,136 +336,159 @@ public class TetrisGame
 
         if (canvas != null)
         {
-            //background colour
-            canvas.drawColor(Color.argb(0,255,255,255), PorterDuff.Mode.CLEAR); // Background color
+            // Clear the canvas with a transparent background
+            clearCanvas(canvas);
 
-            Paint paint = new Paint();
-            paint.setTextSize(36);       // Adjust size as needed
-            paint.setTypeface(Typeface.MONOSPACE); // Monospace font for alignment
-
-            // Calculate block size dynamically based on monitor dimensions
+            // Calculate block size and padding
             int canvasWidth = canvas.getWidth();
             int canvasHeight = canvas.getHeight();
-            int blockSize = Math.min(canvasWidth / BOARD_WIDTH, canvasHeight / BOARD_HEIGHT); // Square blocks
-
-            // Calculate padding for centering the board
+            int blockSize = Math.min(canvasWidth / BOARD_WIDTH, canvasHeight / BOARD_HEIGHT);
             int paddingLeft = (canvasWidth - (BOARD_WIDTH * blockSize)) / 2;
             int paddingTop = (canvasHeight - (BOARD_HEIGHT * blockSize)) / 2;
 
-            // Render the board with characters
-            for (int y = 0; y < BOARD_HEIGHT; y++)
-            {
-                for (int x = 0; x < BOARD_WIDTH; x++)
-                {
-                    paint.setColor(Color.argb(200, 100, 100, 100)); // Light gray for shadow
+            // Paint for drawing
+            Paint paint = createPaint();
 
-                    float posX = paddingLeft + (x + 0f) * blockSize;
-                    float posY = paddingTop + (y + 1f) * blockSize;
-                    canvas.drawText(String.valueOf(Shapes.space), posX, posY, paint);  // Draw space as background
-                }
-            }
+            // Render the board background
+            renderBoardBackground(canvas, paint, blockSize, paddingLeft, paddingTop);
 
-            // Render fixed blocks
-            for (int y = 0; y < BOARD.length; y++)
-            {
-                for (int x = 0; x < BOARD[y].length; x++)
-                {
-                    char blockChar = BOARD[y][x]; // Get the block type
-                    if (blockChar != Shapes.space)
-                    {
-                        Integer color = blockColors.get(blockChar); // Get the color for the block
-                        if (color != null) {
-                            paint.setColor(color); // Set the block color
-                            paint.setFakeBoldText(true);
-                        }
-
-                        float posX = paddingLeft + x * blockSize;
-                        float posY = paddingTop + (y + 1) * blockSize;
-                        canvas.drawText(BLOCK_PIECE, posX, posY, paint);
-                    }
-                }
-            }
-
+            // Render fixed blocks on the board
+            renderFixedBlocks(canvas, paint, blockSize, paddingLeft, paddingTop);
 
             // Render the current piece
-            char[][] shape = currentPiece.getShape();
-            int pieceX = currentPiece.getX();
-            int pieceY = currentPiece.getY();
-
-            for (int i = 0; i < shape.length; i++)
-            {
-                for (int j = 0; j < shape[i].length; j++)
-                {
-                    if (shape[i][j] != Shapes.space)
-                    {
-                        char blockChar = shape[i][j]; // Get block type
-                        Integer color = blockColors.get(blockChar); // Get the color for the block
-                        if (color != null) {
-                            paint.setColor(color); // Set the block color
-                            paint.setFakeBoldText(true);
-                        }
-
-                        // Draw current piece blocks
-                        float blockX = paddingLeft + (pieceX + j) * blockSize;
-                        float blockY = paddingTop + (pieceY + i) * blockSize;
-                        canvas.drawText(BLOCK_PIECE, blockX, blockY, paint);
-                    }
-                }
-            }
-
+            renderCurrentPiece(canvas, paint, blockSize, paddingLeft, paddingTop);
 
             // Render the shadow
-            int shadowY = calculateShadowPosition();
+            renderShadow(canvas, paint, blockSize, paddingLeft, paddingTop);
 
-            for (int i = 0; i < shape.length; i++)
-            {
-                for (int j = 0; j < shape[i].length; j++)
-                {
-                    if (shape[i][j] != Shapes.space)
-                    {
-                        char blockChar = shape[i][j]; // Get block type
-                        Integer color = blockColors.get(blockChar); // Get the color for the block
-                        if (color != null)
-                        {
-                            paint.setColor(color); // Set the block color
-                            paint.setFakeBoldText(true);
-                        }
-
-                        paint.setAlpha(100);
-
-                        // Calculate shadow block positions
-                        float blockX = paddingLeft + (pieceX + j) * blockSize;
-                        float blockY = paddingTop + (shadowY + i + 1) * blockSize;
-                        canvas.drawText(BLOCK_PIECE, blockX, blockY, paint);
-                    }
-                }
-            }
-
-
-            // Handle the effect
-            if (showEffect && resizedEffectBitmap != null)
-            {
-                long currentTime = System.currentTimeMillis();
-                if (currentTime <= effectEndTime)
-                {
-                    float posX = (canvasWidth - resizedEffectBitmap.getWidth()) / 2.0f;
-                    float posY = (canvasHeight - resizedEffectBitmap.getHeight()) / 2.0f;
-
-                    triggerEffectVibration(); // Call the refactored vibration method
-                    canvas.drawBitmap(resizedEffectBitmap, posX, posY, null);
-                }
-                else
-                {
-                    showEffect = false;
-                    vibrationTriggered = false;
-                }
-            }
-            else if (showEffect)
-            {
-                System.err.println("Error: resizedEffectBitmap is null. Effect will not be rendered.");
-            }
+            // Render any effects
+            renderEffect(canvas, canvasWidth, canvasHeight);
 
             holder.unlockCanvasAndPost(canvas); // Ensure canvas is posted correctly
+        }
+    }
+
+    private void clearCanvas(Canvas canvas)
+    {
+        canvas.drawColor(Color.argb(0, 255, 255, 255), PorterDuff.Mode.CLEAR);
+    }
+
+    private Paint createPaint()
+    {
+        Paint paint = new Paint();
+        paint.setTextSize(36); // Adjust size as needed
+        paint.setTypeface(Typeface.MONOSPACE); // Monospace font for alignment
+        return paint;
+    }
+
+    private void renderBoardBackground(Canvas canvas, Paint paint, int blockSize, int paddingLeft, int paddingTop)
+    {
+        paint.setColor(Color.argb(200, 100, 100, 100)); // Light gray for shadow
+        for (int y = 0; y < BOARD_HEIGHT; y++)
+        {
+            for (int x = 0; x < BOARD_WIDTH; x++)
+            {
+                float posX = paddingLeft + (x + 0f) * blockSize;
+                float posY = paddingTop + (y + 1f) * blockSize;
+                paint.setAlpha(130);
+                canvas.drawText(String.valueOf(Shapes.space), posX, posY, paint); // Draw space as background
+            }
+        }
+    }
+
+    private void renderFixedBlocks(Canvas canvas, Paint paint, int blockSize, int paddingLeft, int paddingTop)
+    {
+        for (int y = 0; y < BOARD.length; y++)
+        {
+            for (int x = 0; x < BOARD[y].length; x++)
+            {
+                char blockChar = BOARD[y][x];
+                if (blockChar != Shapes.space)
+                {
+                    Integer color = blockColors.get(blockChar);
+                    if (color != null)
+                    {
+                        paint.setColor(color);
+                        paint.setFakeBoldText(true);
+                    }
+                    float posX = paddingLeft + x * blockSize;
+                    float posY = paddingTop + (y + 1) * blockSize;
+                    canvas.drawText(BLOCK_PIECE, posX, posY, paint);
+                }
+            }
+        }
+    }
+
+    private void renderCurrentPiece(Canvas canvas, Paint paint, int blockSize, int paddingLeft, int paddingTop)
+    {
+        char[][] shape = currentPiece.getShape();
+        int pieceX = currentPiece.getX();
+        int pieceY = currentPiece.getY();
+
+        for (int i = 0; i < shape.length; i++)
+        {
+            for (int j = 0; j < shape[i].length; j++)
+            {
+                if (shape[i][j] != Shapes.space)
+                {
+                    drawBlock(canvas, paint, shape[i][j], pieceX + j, pieceY + i, blockSize, paddingLeft, paddingTop, 255);
+                }
+            }
+        }
+    }
+
+    private void renderShadow(Canvas canvas, Paint paint, int blockSize, int paddingLeft, int paddingTop)
+    {
+        int shadowY = calculateShadowPosition();
+        char[][] shape = currentPiece.getShape();
+        int pieceX = currentPiece.getX();
+
+        for (int i = 0; i < shape.length; i++)
+        {
+            for (int j = 0; j < shape[i].length; j++)
+            {
+                if (shape[i][j] != Shapes.space)
+                {
+                    drawBlock(canvas, paint, shape[i][j], pieceX + j, shadowY + i + 1, blockSize, paddingLeft, paddingTop, 120);
+                }
+            }
+        }
+    }
+
+    private void drawBlock(Canvas canvas, Paint paint, char blockChar, int x, int y, int blockSize, int paddingLeft, int paddingTop, int alpha)
+    {
+        Integer color = blockColors.get(blockChar);
+        if (color != null)
+        {
+            paint.setColor(color);
+            paint.setFakeBoldText(true);
+            paint.setAlpha(alpha); // Explicitly set the alpha
+        }
+        float blockX = paddingLeft + x * blockSize;
+        float blockY = paddingTop + y * blockSize;
+        canvas.drawText(BLOCK_PIECE, blockX, blockY, paint);
+    }
+
+    private void renderEffect(Canvas canvas, int canvasWidth, int canvasHeight)
+    {
+        if (showEffect && resizedEffectBitmap != null)
+        {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime <= effectEndTime)
+            {
+                float posX = (canvasWidth - resizedEffectBitmap.getWidth()) / 2.0f;
+                float posY = (canvasHeight - resizedEffectBitmap.getHeight()) / 2.0f;
+
+                setVibrator(new long[]{0, 210}, new int[]{0, 30});
+                canvas.drawBitmap(resizedEffectBitmap, posX, posY, null);
+            } else
+            {
+                showEffect = false;
+                vibrationTriggered = false;
+            }
+        } else if (showEffect)
+        {
+            System.err.println("Error: resizedEffectBitmap is null. Effect will not be rendered.");
         }
     }
 
@@ -475,14 +501,6 @@ public class TetrisGame
             {
                 vibrator.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1));
             }
-        }
-    }
-
-    public void triggerEffectVibration()
-    {
-        if (!vibrationTriggered) {
-            setVibrator(new long[]{0, 210}, new int[]{0, 30});
-            vibrationTriggered = true;
         }
     }
 

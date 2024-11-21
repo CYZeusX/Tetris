@@ -31,12 +31,14 @@ android {
     }
 }
 
-dependencies {
 
+dependencies {
+    implementation(libs.core.splashscreen.v100)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.core.splashscreen)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
