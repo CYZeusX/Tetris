@@ -33,34 +33,30 @@ public class Shapes
 
     public static final char[][] S_SHAPE =
             {
-             {space, space, space, space},
-             {space, S_BLOCK, S_BLOCK, space},
-             {S_BLOCK, S_BLOCK, space, space},
-             {space, space, space, space},
+             {space, space, space},
+             {space, S_BLOCK, S_BLOCK},
+             {S_BLOCK, S_BLOCK, space},
             };
 
     public static final char[][] Z_SHAPE =
             {
-             {space, space, space, space},
-             {Z_BLOCK, Z_BLOCK, space, space},
-             {space, Z_BLOCK, Z_BLOCK, space},
-             {space, space, space, space},
+             {space, space, space},
+             {Z_BLOCK, Z_BLOCK, space},
+             {space, Z_BLOCK, Z_BLOCK},
             };
 
     public static final char[][] J_SHAPE =
             {
-             {space, space, space, space},
-             {space, space, J_BLOCK, space},
-             {space, space, J_BLOCK, space},
-             {space, J_BLOCK, J_BLOCK, space},
+             {J_BLOCK, space, space},
+             {J_BLOCK, J_BLOCK, J_BLOCK},
+             {space, space, space},
             };
 
     public static final char[][] L_SHAPE =
             {
-             {space, space, space, space},
-             {space, L_BLOCK, space, space},
-             {space, L_BLOCK, space, space},
-             {space, L_BLOCK, L_BLOCK, space}
+             {space, space, L_BLOCK},
+             {L_BLOCK, L_BLOCK, L_BLOCK},
+             {space, space, space}
             };
 
     public static final char[][][] SHAPES =
