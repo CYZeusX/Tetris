@@ -2,11 +2,11 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
     <gradient
-        android:startColor="@color/rightButton"
-        android:centerColor="@color/rightButton"
-        android:endColor="#DC51A2"
+        android:startColor="?attr/colorOnPrimary"
+        android:centerColor="?attr/colorOnPrimary"
+        android:endColor="?attr/colorOnTertiary"
         android:angle="45" />
     <stroke
-        android:color="@color/rightButtonText"
+        android:color="?attr/colorOnSecondary"
         android:width="2dp"/>
 </shape>

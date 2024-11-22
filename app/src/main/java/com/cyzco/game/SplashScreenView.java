@@ -1,5 +1,6 @@
 package com.cyzco.game;
 
+import android.graphics.Color;
 import android.view.Gravity;
 import android.content.Context;
 import android.widget.ImageView;
@@ -21,9 +22,9 @@ public final class SplashScreenView extends FrameLayout
         int savedThemeMode = sharedPreferences.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         AppCompatDelegate.setDefaultNightMode(savedThemeMode);
 
-        int backgroundColor = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-                ? R.color.mainBackgroundDark : R.color.mainBackgroundLight;
-        setBackgroundColor(getResources().getColor(backgroundColor));
+        int backgroundColor = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES ?
+                Color.parseColor("#0F0F0F") : Color.parseColor("#D4D3D7");
+        setBackgroundColor(backgroundColor);
 
         // Add an ImageView for the app icon
         ImageView appIcon = new ImageView(context);

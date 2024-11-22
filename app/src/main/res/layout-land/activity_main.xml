@@ -171,7 +171,7 @@
             android:gravity="center"
             android:padding="0dp"
             android:text="@string/btn_Y"
-            android:textColor="@color/rightButtonText"
+            android:textColor="?attr/colorOnSecondary"
             android:textSize="25sp"
             android:textStyle="bold" />
 
@@ -184,7 +184,7 @@
             android:layout_marginTop="2dp"
             android:layout_marginEnd="47dp"
             android:text="@string/btn_A"
-            android:textColor="@color/rightButtonText"
+            android:textColor="?attr/colorOnSecondary"
             android:textSize="25sp"
             android:textStyle="bold"
             android:padding="0dp"
@@ -201,7 +201,7 @@
             android:layout_toStartOf="@id/pad_cent"
             android:layout_centerVertical="true"
             android:text="@string/btn_X"
-            android:textColor="@color/rightButtonText"
+            android:textColor="?attr/colorOnSecondary"
             android:textSize="25sp"
             android:textStyle="bold"
             android:padding="0dp"
@@ -217,7 +217,7 @@
             android:layout_toEndOf="@id/pad_cent"
             android:layout_centerVertical="true"
             android:text="@string/btn_B"
-            android:textColor="@color/rightButtonText"
+            android:textColor="?attr/colorOnSecondary"
             android:textSize="25sp"
             android:textStyle="bold"
             android:padding="0dp"
@@ -235,10 +235,12 @@
         android:backgroundTint="@color/nul"
         android:elevation="3dp"
         android:layout_marginEnd="27.5dp"
+        android:outlineSpotShadowColor="@color/nul"
+        android:outlineAmbientShadowColor="@color/nul"
         app:cornerRadius="5dp"
         app:layout_constraintEnd_toEndOf="@+id/pad_left"
         app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="@color/leftButton"
+        app:strokeColor="?attr/colorSecondary"
         app:strokeWidth="2.3dp" />
 
     <Button
@@ -249,10 +251,12 @@
         android:backgroundTint="@color/nul"
         android:elevation="3dp"
         android:layout_marginStart="27.5dp"
+        android:outlineSpotShadowColor="@color/nul"
+        android:outlineAmbientShadowColor="@color/nul"
         app:cornerRadius="5dp"
         app:layout_constraintStart_toStartOf="@+id/pad_right"
         app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="@color/leftButton"
+        app:strokeColor="?attr/colorSecondary"
         app:strokeWidth="2.3dp" />
 
     <Button
@@ -265,6 +269,7 @@
         android:id="@+id/orient_at_land"
         android:layout_width="40dp"
         android:layout_height="60dp"
+        android:layout_marginTop="27.5dp"
         android:background="@drawable/function_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
@@ -285,21 +290,35 @@
     <Button
         android:id="@+id/pause"
         android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="12dp"
+        android:layout_height="60dp"
         android:background="@drawable/function_button"
-        app:layout_constraintVertical_bias="0.5"
-        app:layout_constraintBottom_toBottomOf="@+id/orient_at_land"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@+id/lightDark"
+        app:layout_constraintTop_toTopOf="@+id/lightDark" />
+
+    <Button
+        android:id="@+id/lightDark"
+        android:layout_width="40dp"
+        android:layout_height="60dp"
+        android:background="@drawable/function_button"
+        android:elevation="2dp"
+        android:layout_marginStart="20dp"
         app:layout_constraintStart_toEndOf="@+id/orient_at_land"
         app:layout_constraintTop_toTopOf="@+id/orient_at_land" />
 
-    <Button
-        android:id="@+id/setting"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/function_button"
-        android:layout_marginStart="12dp"
-        app:layout_constraintStart_toEndOf="@+id/pause"
-        app:layout_constraintTop_toTopOf="@+id/pause" />
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/nul"
+        android:elevation="2dp"
+        android:src="@drawable/light_dark"
+        app:layout_constraintBottom_toBottomOf="@+id/lightDark"
+        app:layout_constraintEnd_toEndOf="@+id/lightDark"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/lightDark"
+        app:layout_constraintTop_toTopOf="@+id/lightDark"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

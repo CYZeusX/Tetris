@@ -157,7 +157,7 @@
             android:gravity="center"
             android:padding="0dp"
             android:text="@string/btn_Y"
-            android:textColor="@color/rightButtonText"
+            android:textColor="?attr/colorOnSecondary"
             android:textSize="25sp"
             android:textStyle="bold" />
 
@@ -170,7 +170,7 @@
             android:layout_marginTop="2dp"
             android:layout_marginEnd="47dp"
             android:text="@string/btn_A"
-            android:textColor="@color/rightButtonText"
+            android:textColor="?attr/colorOnSecondary"
             android:textSize="25sp"
             android:textStyle="bold"
             android:padding="0dp"
@@ -187,7 +187,7 @@
             android:layout_toStartOf="@id/pad_cent"
             android:layout_centerVertical="true"
             android:text="@string/btn_X"
-            android:textColor="@color/rightButtonText"
+            android:textColor="?attr/colorOnSecondary"
             android:textSize="25sp"
             android:textStyle="bold"
             android:padding="0dp"
@@ -203,7 +203,7 @@
             android:layout_toEndOf="@id/pad_cent"
             android:layout_centerVertical="true"
             android:text="@string/btn_B"
-            android:textColor="@color/rightButtonText"
+            android:textColor="?attr/colorOnSecondary"
             android:textSize="25sp"
             android:textStyle="bold"
             android:padding="0dp"
@@ -225,7 +225,7 @@
         app:cornerRadius="5dp"
         app:layout_constraintEnd_toEndOf="@+id/pad_left"
         app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="@color/leftButton"
+        app:strokeColor="?attr/colorSecondary"
         app:strokeWidth="2.3dp" />
 
     <Button
@@ -240,13 +240,14 @@
         app:cornerRadius="5dp"
         app:layout_constraintStart_toStartOf="@+id/pad_right"
         app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="@color/leftButton"
+        app:strokeColor="?attr/colorSecondary"
         app:strokeWidth="2.3dp" />
 
     <Button
         android:id="@+id/orient_at_land"
         android:layout_width="40dp"
         android:layout_height="60dp"
+        android:layout_marginTop="27.5dp"
         android:background="@drawable/function_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"

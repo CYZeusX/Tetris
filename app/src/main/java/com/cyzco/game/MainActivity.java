@@ -2,19 +2,17 @@ package com.cyzco.game;
 
 import android.util.Log;
 import android.os.Bundle;
-import android.view.View;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.widget.Button;
-import android.graphics.Color;
 import android.widget.TextView;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
-import android.graphics.Typeface;
 import android.view.WindowInsets;
-import android.os.VibrationEffect;
+
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import android.content.pm.ActivityInfo;
@@ -24,15 +22,16 @@ import android.view.WindowInsetsController;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MainActivity extends AppCompatActivity
 {
-    Button a, s, d,  A, X, Y, l1, r1, orientPortrait, orientLandscape, setting;
+    Button a, s, d,  A, X, Y, l1, r1, orientPortrait, orientLandscape, setting, lightDark;
     Vibrator vibrator;
     TextView scores, lines;
     SurfaceView monitor;
     TetrisGame tetrisGame = new TetrisGame(this);  // 'this' refers to the Activity context
+    StartActivity startActivity;
 
     @SuppressLint({"MissingInflatedId", "UseCompatLoadingForDrawables"})
     @Override
@@ -82,6 +81,7 @@ public class MainActivity extends AppCompatActivity
         orientPortrait = findViewById(R.id.orient_at_portrait);
         orientLandscape = findViewById(R.id.orient_at_land);
         setting = findViewById(R.id.pause);
+        lightDark = findViewById(R.id.lightDark);
         scores = findViewById(R.id.scores);
         lines = findViewById(R.id.lines);
         monitor = findViewById(R.id.mon);
@@ -131,8 +131,8 @@ public class MainActivity extends AppCompatActivity
     @SuppressLint("ClickableViewAccessibility")
     private void setButtonListeners()
     {
-        SharedPreferences sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        AtomicReference<SharedPreferences> sharedPreferences = new AtomicReference<>(getSharedPreferences("AppPreferences", MODE_PRIVATE));
+        SharedPreferences.Editor editor = sharedPreferences.get().edit();
 
         orientPortrait.setOnClickListener(v ->
         {
@@ -153,6 +153,20 @@ public class MainActivity extends AppCompatActivity
         {
             tetrisGame.togglePause();
         });
+
+        lightDark.setOnClickListener(v ->
+        {
+            // Toggle theme mode directly in MainActivity
+            sharedPreferences.set(getSharedPreferences("AppPreferences", MODE_PRIVATE));
+            int currentMode = sharedPreferences.get().getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_NO);
+            int newMode = currentMode == AppCompatDelegate.MODE_NIGHT_YES ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES;
+            AppCompatDelegate.setDefaultNightMode(newMode);
+
+            sharedPreferences.get().edit().putInt("theme_mode", newMode).apply();
+            recreate();
+        });
+
+
 
         // Move the block left
         setupContinuousMovement(a, () ->

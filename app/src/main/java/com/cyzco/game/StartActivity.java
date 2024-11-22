@@ -77,6 +77,12 @@ public class StartActivity extends AppCompatActivity
             overridePendingTransition(R.anim.zero_ani, R.anim.zero_ani);
         });
 
+        A.setOnClickListener(v ->
+        {
+            startActivity(intent);
+            overridePendingTransition(R.anim.zero_ani, R.anim.zero_ani);
+        });
+
         // Handle orientation change buttons
         orient_p.setOnClickListener(v ->
         {
@@ -91,7 +97,7 @@ public class StartActivity extends AppCompatActivity
         });
     }
 
-    private void toggleTheme()
+    public void toggleTheme()
     {
         // Determine the new mode (light or dark)
         int newMode = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES

@@ -15,12 +15,10 @@ import androidx.appcompat.app.AppCompatDelegate;
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity
 {
-    private static final String TAG = "SplashActivity"; // Tag for logging
     private boolean isTransitionStarted = false; // Prevent transition from being triggered multiple times.
 
     private void fadeInAndOut(FrameLayout splashScreenView)
     {
-        Log.d(TAG, "fadeInAndOut: Starting fade-in animation");
 
         splashScreenView.setAlpha(0.9f); // Start invisible
         splashScreenView.animate()
@@ -28,8 +26,6 @@ public class SplashActivity extends AppCompatActivity
                 .setDuration(1000) // 1 second duration
                 .withEndAction(() ->
                 {
-                    Log.d(TAG, "fadeInAndOut: Fade-in complete, starting fade-out");
-
                     // Start fade-out after fade-in completes.
                     splashScreenView.animate()
                             .alpha(0f) // Fade-out animation
@@ -42,8 +38,6 @@ public class SplashActivity extends AppCompatActivity
 
     private void startNextActivity(FrameLayout splashScreenView)
     {
-        Log.d(TAG, "startNextActivity: Transitioning to StartActivity");
-
         // Only trigger transition once
         if (!isTransitionStarted)
         {
@@ -71,10 +65,6 @@ public class SplashActivity extends AppCompatActivity
                 }
             });
         }
-        else
-        {
-            Log.d(TAG, "startNextActivity: Transition already started, skipping.");
-        }
     }
 
     @Override
@@ -85,22 +75,12 @@ public class SplashActivity extends AppCompatActivity
         if (savedInstanceState != null)
         {
             isTransitionStarted = savedInstanceState.getBoolean("isTransitionStarted", false);
-            Log.d(TAG, "onCreate: Restored isTransitionStarted = " + isTransitionStarted);
         }
 
         // Check current theme (light/dark) and apply it
         int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        int mode;
-        if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES)
-        {
-            mode = AppCompatDelegate.MODE_NIGHT_YES;
-            Log.d(TAG, "onCreate: Dark Mode detected");
-        }
-        else
-        {
-            mode = AppCompatDelegate.MODE_NIGHT_NO;
-            Log.d(TAG, "onCreate: Light Mode detected");
-        }
+        int mode = nightModeFlags == Configuration.UI_MODE_NIGHT_YES ?
+                AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
         AppCompatDelegate.setDefaultNightMode(mode);
 
         // Set custom splash screen view
@@ -122,7 +102,6 @@ public class SplashActivity extends AppCompatActivity
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-        Log.d(TAG, "onSaveInstanceState: Saving isTransitionStarted = " + isTransitionStarted);
         outState.putBoolean("isTransitionStarted", isTransitionStarted);
     }
 

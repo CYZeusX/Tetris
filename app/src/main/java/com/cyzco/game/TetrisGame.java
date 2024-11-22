@@ -105,7 +105,7 @@ public class TetrisGame
         if (canMove(currentPiece, currentPiece.getX() - 1, currentPiece.getY()))
         {
             currentPiece.setPosition(currentPiece.getX() - 1, currentPiece.getY());
-            setVibrator(new long[]{0, 3}, new int[]{0, 25});
+            setVibrator(new long[]{0, 3}, new int[]{0, 50});
         }
     }
 
@@ -114,7 +114,7 @@ public class TetrisGame
         if (canMove(currentPiece, currentPiece.getX() + 1, currentPiece.getY()))
         {
             currentPiece.setPosition(currentPiece.getX() + 1, currentPiece.getY());
-            setVibrator(new long[]{0, 3}, new int[]{0, 25});
+            setVibrator(new long[]{0, 3}, new int[]{0, 50});
         }
     }
 
@@ -134,7 +134,7 @@ public class TetrisGame
         {
             // Move the piece down by one row
             currentPiece.setPosition(currentX, currentY + 1);
-            setVibrator(new long[]{0, 2}, new int[]{0, 25});
+            setVibrator(new long[]{0, 2}, new int[]{0, 50});
         } else
         {
             // Lock the piece in place and spawn a new one
@@ -296,7 +296,7 @@ public class TetrisGame
             effectBitmap = BitmapFactory.decodeResource(resources, R.drawable.tetris_boom_max);
             if (effectBitmap != null)
             {
-                resizedEffectBitmap = Bitmap.createScaledBitmap(effectBitmap, 250, 101, true);
+                resizedEffectBitmap = Bitmap.createScaledBitmap(effectBitmap, 250, 95, true);
                 System.out.println("Effect bitmaps initialized.");
             }
             else

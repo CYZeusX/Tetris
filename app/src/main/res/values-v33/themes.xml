@@ -2,11 +2,15 @@
 <resources>
     <style name="Base.Theme.GAME" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorOnBackground">@color/mainBackgroundLight</item>
+        <item name="colorContainer">@color/monitorPlate</item>
+        <item name="colorPrimary">@color/monitorEdge</item>
+        <item name="colorSecondary">@color/leftButton</item>
+        <item name="colorOnPrimary">@color/rightButton</item>
+        <item name="colorOnSecondary">@color/rightButtonText</item>
+        <item name="colorOnTertiary">@color/rightButtonHalf</item>
 
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorOnPrimary">@color/white</item>
+
         <item name="materialButtonStyle">@style/NoThemeButton</item>
-
         <item name="android:windowIsTranslucent">true</item>
     </style>
 </resources>
