@@ -64,7 +64,18 @@ public class TetrisGame
         return scoreGained;
     }
 
-    private void spawnNewPiece() {
+    public void setLinesCleared(int linesCleared)
+    {
+        this.linesCleared = linesCleared;
+    }
+
+    public void setScoreGained(int scoreGained)
+    {
+        this.scoreGained = scoreGained;
+    }
+
+    private void spawnNewPiece()
+    {
         int randomIndex = (int) (Math.random() * Shapes.SHAPES.length);  // Random index for shapes
         char[][] randomShape = Shapes.SHAPES[randomIndex];  // Get the random shape from the Shapes array
 

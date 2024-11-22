@@ -5,21 +5,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.widget.Button;
+import android.os.Parcelable;
 import android.widget.TextView;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.WindowInsets;
-
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import android.content.pm.ActivityInfo;
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.content.SharedPreferences;
 import android.view.WindowInsetsController;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -30,8 +31,7 @@ public class MainActivity extends AppCompatActivity
     Vibrator vibrator;
     TextView scores, lines;
     SurfaceView monitor;
-    TetrisGame tetrisGame = new TetrisGame(this);  // 'this' refers to the Activity context
-    StartActivity startActivity;
+    TetrisGame tetrisGame = new TetrisGame(this);
 
     @SuppressLint({"MissingInflatedId", "UseCompatLoadingForDrawables"})
     @Override
@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity
         TetrisGame tetrisGame;
         // Retrieve the orientation from SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
+
         int orientation = sharedPreferences.getInt("orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         Log.d("MainActivity", "Retrieved orientation: " + orientation);
         if (orientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
@@ -91,6 +92,46 @@ public class MainActivity extends AppCompatActivity
         tetrisGame.initEffects(getResources());
         startGameLoop();
         setButtonListeners();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        //??
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // Restore the game state
+        int linesCleared = savedInstanceState.getInt("linesCleared", 0);
+        int scoreGained = savedInstanceState.getInt("scoreGained", 0);
+        Parcelable gameState = savedInstanceState.getParcelable("gameState");
+
+        tetrisGame.setLinesCleared(linesCleared);
+        tetrisGame.setScoreGained(scoreGained);
+
+        // Ensure the game is rendered correctly
+        tetrisGame.renderGame(monitor);
+    }   //??
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        super.onConfigurationChanged(newConfig);
+
+        // Handle the configuration change (e.g., update UI if necessary)
+        tetrisGame.renderGame(monitor); // Ensure the game is re-rendered
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        // Resume rendering or related operations on SurfaceView
+        // Ensure the SurfaceView has been recreated before using it
+        SurfaceView surfaceView = findViewById(R.id.mon);
+        if (surfaceView != null) {
+            // Initialize or resume rendering logic
+        }
     }
 
     @Override
@@ -165,8 +206,6 @@ public class MainActivity extends AppCompatActivity
             sharedPreferences.get().edit().putInt("theme_mode", newMode).apply();
             recreate();
         });
-
-
 
         // Move the block left
         setupContinuousMovement(a, () ->
