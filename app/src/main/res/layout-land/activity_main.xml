@@ -45,7 +45,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:textAlignment="center"
-            android:textColor="@color/score_text"
+            android:textColor="?attr/colorAccent"
             android:elevation="10dp"/>
 
         <TextView
@@ -63,7 +63,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:textAlignment="center"
-            android:textColor="@color/score_text"
+            android:textColor="?attr/colorAccent"
             android:elevation="10dp"/>
 
         <SurfaceView

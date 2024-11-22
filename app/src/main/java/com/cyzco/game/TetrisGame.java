@@ -394,14 +394,14 @@ public class TetrisGame
 
     private void renderBoardBackground(Canvas canvas, Paint paint, int blockSize, int paddingLeft, int paddingTop)
     {
-        paint.setColor(Color.argb(200, 100, 100, 100)); // Light gray for shadow
+        paint.setColor(Color.rgb(110, 110, 110));
         for (int y = 0; y < BOARD_HEIGHT; y++)
         {
             for (int x = 0; x < BOARD_WIDTH; x++)
             {
                 float posX = paddingLeft + (x + 0f) * blockSize;
                 float posY = paddingTop + (y + 1f) * blockSize;
-                paint.setAlpha(130);
+                paint.setAlpha(220);
                 canvas.drawText(String.valueOf(Shapes.space), posX, posY, paint); // Draw space as background
             }
         }

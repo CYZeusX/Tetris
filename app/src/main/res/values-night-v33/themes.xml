@@ -8,6 +8,9 @@
         <item name="colorOnPrimary">@color/rightButtonDark</item>
         <item name="colorOnSecondary">@color/rightButtonTextDark</item>
         <item name="colorOnTertiary">@color/rightButtonHalfDark</item>
+        <item name="colorSurface">@color/monitorSideDark</item>
+        <item name="colorOnSurface">@color/monitorMidDark</item>
+        <item name="colorAccent">@color/score_textDark</item>
 
         <item name="materialButtonStyle">@style/NoThemeButton</item>
         <item name="android:windowIsTranslucent">true</item>
