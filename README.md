@@ -22,10 +22,10 @@
          - I have found LACK OF FEATURES on most of the Tetris games on Android.
                 > lack of blocks anti-clockwise rotation
                 > lack of landscape orientation mode
+                > lack of immersive experience (vibration)
 
     
 ### * Comming soon features
-    - light|dark mode
     - supports controllers  >> testing with: ROG Tessen , RAZER Kishi Ultra
     - background music
     - audio effect
@@ -37,13 +37,12 @@
     - restart
     - quit app
     - setting menu
-    - change light|dark mode
     - buton for customize character for blocks
     - button for return to default character for blocks
     - save block for later
     - 3 next following blocks
     - sync monitor between potrait and landscape mode
-
+    - sync monitor between switching light|dark theme
 
 ### * Completed features / fixes
     - fixed blocks unaligned with monitor
@@ -53,3 +52,4 @@
     + Implemented "Tetris!" effect with vibration
     + Implemented having colours for each blocks
     + Implemented customization for particles of the blocks and background
+    + Implemented light|dark mode
