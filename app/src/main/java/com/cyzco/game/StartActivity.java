@@ -3,6 +3,7 @@ package com.cyzco.game;
 import android.util.Log;
 import android.os.Bundle;
 import android.view.View;
+import android.view.KeyEvent;
 import android.widget.Button;
 import android.content.Intent;
 import android.view.WindowInsets;
@@ -65,23 +66,11 @@ public class StartActivity extends AppCompatActivity
         Button portraitStart = findViewById(R.id.start);
         Button landscapeStart = findViewById(R.id.start);
 
-        portraitStart.setOnClickListener(v ->
-        {
-            startActivity(intent);
-            overridePendingTransition(R.anim.zero_ani, R.anim.zero_ani);
-        });
+        portraitStart.setOnClickListener(v -> startGame(intent));
 
-        landscapeStart.setOnClickListener(v ->
-        {
-            startActivity(intent);
-            overridePendingTransition(R.anim.zero_ani, R.anim.zero_ani);
-        });
+        landscapeStart.setOnClickListener(v -> startGame(intent));
 
-        A.setOnClickListener(v ->
-        {
-            startActivity(intent);
-            overridePendingTransition(R.anim.zero_ani, R.anim.zero_ani);
-        });
+        A.setOnClickListener(v -> startGame(intent));
 
         // Handle orientation change buttons
         orient_p.setOnClickListener(v ->
@@ -95,6 +84,24 @@ public class StartActivity extends AppCompatActivity
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             sharedPreferences.edit().putInt("orientation", ActivityInfo.SCREEN_ORIENTATION_PORTRAIT).apply();
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if (keyCode == KeyEvent.KEYCODE_BUTTON_A)
+        {
+            startGame(new Intent(this, MainActivity.class));
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    private void startGame(Intent intent)
+    {
+        startActivity(intent);
+        overridePendingTransition(R.anim.zero_ani, R.anim.zero_ani);
     }
 
     public void toggleTheme()

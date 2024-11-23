@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.os.VibrationEffect;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.graphics.Typeface;
 import android.view.SurfaceView;
@@ -108,6 +109,7 @@ public class TetrisGame
 
     private void handleGameOver()
     {
+        togglePause();
         //System.out.println("Game Over!");
     }
 
@@ -129,11 +131,28 @@ public class TetrisGame
         }
     }
 
+    // for right buttons controls
+    public void getAction(String action)
+    {
+        switch (action)
+        {
+            // left buttons
+            case "a" -> movePieceLeft();
+            case "s" -> movePieceDown();
+            case "d" -> movePieceRight();
+
+            // right buttons
+            case "A" -> dropPiece();
+            case "X", "l1" -> rotatePieceCounterClockwise();
+            case "Y", "r1" -> rotatePieceClockwise();
+            default -> System.out.println("Unknown action: " + action);
+        };
+    }
+
     public void updateGame()
     {
-        if (!isPaused) {
-            movePieceDown();
-        }
+        if (!isPaused)
+        { movePieceDown();}
     }
 
     public void movePieceDown()

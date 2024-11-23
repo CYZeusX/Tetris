@@ -1,13 +1,17 @@
 package com.cyzco.game;
 
+import java.util.Map;
 import android.util.Log;
+import java.util.HashMap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.view.KeyEvent;
 import android.widget.Button;
 import android.os.Parcelable;
 import android.widget.TextView;
 import android.content.Context;
+import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.WindowInsets;
@@ -22,7 +26,6 @@ import android.view.WindowInsetsController;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MainActivity extends AppCompatActivity
@@ -169,6 +172,7 @@ public class MainActivity extends AppCompatActivity
         Log.d("MainActivity", "Orientation set to: " + requestedOrientation);
     }
 
+    //control actions for each buttons
     @SuppressLint("ClickableViewAccessibility")
     private void setButtonListeners()
     {
@@ -184,7 +188,7 @@ public class MainActivity extends AppCompatActivity
 
         orientLandscape.setOnClickListener(v ->
         {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             editor.putInt("orientation", ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             editor.apply();
         });
@@ -208,74 +212,146 @@ public class MainActivity extends AppCompatActivity
         });
 
         // Move the block left
-        setupContinuousMovement(a, () ->
-        {tetrisGame.movePieceLeft();
-        tetrisGame.renderGame(monitor);});
+        setupContinuousMovement(a, () -> doMovementAction("a"));
 
         // Move the block right
-        setupContinuousMovement(d, () ->
-        {tetrisGame.movePieceRight();
-        tetrisGame.renderGame(monitor);});
+        setupContinuousMovement(d, () -> doMovementAction("d"));
 
         // Move the block down
-        setupContinuousMovement(s, () ->
-        {tetrisGame.movePieceDown();
-        tetrisGame.renderGame(monitor);});
+        setupContinuousMovement(s, () -> doMovementAction("s"));
 
         // Drop the block immediately
-        A.setOnTouchListener((v, event) ->
-        {
-            if (event.getAction() == MotionEvent.ACTION_DOWN)
-            {
-                tetrisGame.dropPiece();
-                setVibrateAndRender();
-            }
-            return true;
-        });
+        A.setOnTouchListener((v, event) -> doControlAction(event, "A"));
 
         // Rotate the block anti-clockwise
-        X.setOnTouchListener((v, event) ->
-        {
-            if (event.getAction() == MotionEvent.ACTION_DOWN)
-            {
-                tetrisGame.rotatePieceCounterClockwise();
-                setVibrateAndRender();
-            }
-            return true;
-        });
+        X.setOnTouchListener((v, event) -> doControlAction(event, "X"));
 
         // Rotate the block clockwise
-        Y.setOnTouchListener((v, event) ->
-        {
-            if (event.getAction() == MotionEvent.ACTION_DOWN)
-            {
-                tetrisGame.rotatePieceClockwise();
-                setVibrateAndRender();
-            }
-            return true;
-        });
+        Y.setOnTouchListener((v, event) -> doControlAction(event, "Y"));
 
         // Rotate the block anti-clockwise
-        l1.setOnTouchListener((v, event) ->
-        {
-            if (event.getAction() == MotionEvent.ACTION_DOWN)
-            {
-                tetrisGame.rotatePieceCounterClockwise();
-                setVibrateAndRender();
-            }
-            return true;
-        });
+        l1.setOnTouchListener((v, event) -> doControlAction(event, "l1"));
 
         // Rotate the block clockwise
-        r1.setOnTouchListener((v, event) ->
+        r1.setOnTouchListener((v, event) -> doControlAction(event, "r1"));
+    }
+
+    // performs control actions for right buttons
+    private boolean doControlAction(MotionEvent event, String action)
+    {
+        setControlAction(event, action);
+        return true;
+    }
+
+    // setup action logics for right control buttons
+    private void setControlAction(MotionEvent event, String action)
+    {
+        if (event.getAction() == MotionEvent.ACTION_DOWN)
         {
-            if (event.getAction() == MotionEvent.ACTION_DOWN)
-            {
-                tetrisGame.rotatePieceClockwise();
-                setVibrateAndRender();
-            }
+            tetrisGame.getAction(action);
+            setVibrateAndRender();
+        }
+    }
+
+    // performs control actions for left buttons
+    private void doMovementAction(String action)
+    {
+        setMovementAction(action);
+        tetrisGame.renderGame(monitor);
+    }
+
+    // setup action logics for left control buttons
+    private void setMovementAction(String action)
+    {
+        tetrisGame.getAction(action);
+    }
+
+    private final Map<String, Boolean> keyState = new HashMap<>();
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        String action = switch (keyCode)
+        {
+            case KeyEvent.KEYCODE_BUTTON_A -> "A";
+            case KeyEvent.KEYCODE_BUTTON_X -> "X";
+            case KeyEvent.KEYCODE_BUTTON_Y -> "Y";
+            case KeyEvent.KEYCODE_BUTTON_L1 -> "l1";
+            case KeyEvent.KEYCODE_BUTTON_R1 -> "r1";
+            default -> null;
+        };
+
+        if (action != null && ( keyState.get(action) == null || Boolean.FALSE.equals(keyState.get(action)) ) )
+        {
+            keyState.put(action, true);
+            tetrisGame.getAction(action);
+            setVibrateAndRender();
             return true;
-        });
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event)
+    {
+        String action = null;
+        switch (keyCode)
+        {
+            case KeyEvent.KEYCODE_BUTTON_A: action = "A"; break;
+            case KeyEvent.KEYCODE_BUTTON_X: action = "X"; break;
+            case KeyEvent.KEYCODE_BUTTON_Y: action = "Y"; break;
+            case KeyEvent.KEYCODE_BUTTON_L1: action = "l1"; break;
+            case KeyEvent.KEYCODE_BUTTON_R1: action = "r1"; break;
+        }
+
+        if (action != null)
+        {
+            keyState.put(action, false);
+            return true;
+        }
+
+        return super.onKeyUp(keyCode, event);
+    }
+
+    private boolean isGamepadConnected()
+    {
+        int[] deviceIds = InputDevice.getDeviceIds();
+        for (int deviceId : deviceIds)
+        {
+            InputDevice device = InputDevice.getDevice(deviceId);
+            assert device != null;
+            if ((device.getSources() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD ||
+                    (device.getSources() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK)
+                return true;
+        }
+        return false;
+    }
+
+
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event)
+    {
+        if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK)
+        {
+            // Joystick movement
+            float leftStickX = event.getAxisValue(MotionEvent.AXIS_X);
+            float leftStickY = event.getAxisValue(MotionEvent.AXIS_Y);
+            float rightStickX = event.getAxisValue(MotionEvent.AXIS_Z);
+            float rightStickY = event.getAxisValue(MotionEvent.AXIS_RZ);
+
+            // Process joystick input
+            processJoystickInput(leftStickX, leftStickY, rightStickX, rightStickY);
+            return true;
+        }
+        return super.onGenericMotionEvent(event);
+    }
+
+    private void processJoystickInput(float lx, float ly, float rx, float ry)
+    {
+        // Handle joystick input
+        Log.d("Gamepad", "Left Stick X: " + lx + " Y: " + ly);
+        Log.d("Gamepad", "Right Stick X: " + rx + " Y: " + ry);
     }
 
     private void setVibrateAndRender()
