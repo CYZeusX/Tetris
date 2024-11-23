@@ -27,7 +27,6 @@
             android:background="@drawable/monitor"
             android:layout_centerInParent="true"
             android:elevation="1dp">
-
         </TextView>
 
         <TextView
@@ -271,6 +270,7 @@
         android:layout_height="60dp"
         android:layout_marginTop="27.5dp"
         android:background="@drawable/function_button"
+        android:elevation="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="@+id/pad_right"
@@ -278,10 +278,12 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="18dp"
-        android:layout_height="28dp"
-        android:background="@drawable/pot"
+        android:layout_width="15dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/pot"
+        android:adjustViewBounds="true"
         android:contentDescription="@string/nul"
+        android:elevation="6dp"
         app:layout_constraintBottom_toBottomOf="@+id/orient_at_land"
         app:layout_constraintEnd_toEndOf="@+id/orient_at_land"
         app:layout_constraintStart_toStartOf="@+id/orient_at_land"
@@ -293,15 +295,28 @@
         android:layout_height="60dp"
         android:background="@drawable/function_button"
         android:layout_marginStart="20dp"
+        android:elevation="5dp"
         app:layout_constraintStart_toEndOf="@+id/lightDark"
         app:layout_constraintTop_toTopOf="@+id/lightDark" />
+
+    <ImageView
+        android:layout_width="22dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/nul"
+        android:elevation="5dp"
+        android:src="@drawable/pause"
+        app:layout_constraintBottom_toBottomOf="@+id/pause"
+        app:layout_constraintEnd_toEndOf="@+id/pause"
+        app:layout_constraintStart_toStartOf="@+id/pause"
+        app:layout_constraintTop_toTopOf="@+id/pause" />
 
     <Button
         android:id="@+id/lightDark"
         android:layout_width="40dp"
         android:layout_height="60dp"
         android:background="@drawable/function_button"
-        android:elevation="2dp"
+        android:elevation="5dp"
         android:layout_marginStart="20dp"
         app:layout_constraintStart_toEndOf="@+id/orient_at_land"
         app:layout_constraintTop_toTopOf="@+id/orient_at_land" />
@@ -311,7 +326,7 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:contentDescription="@string/nul"
-        android:elevation="2dp"
+        android:elevation="7dp"
         android:src="@drawable/light_dark"
         app:layout_constraintBottom_toBottomOf="@+id/lightDark"
         app:layout_constraintEnd_toEndOf="@+id/lightDark"

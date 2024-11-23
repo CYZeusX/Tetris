@@ -233,18 +233,21 @@
         android:layout_height="40dp"
         android:layout_marginTop="228dp"
         android:background="@drawable/function_button"
+        android:elevation="2dp"
         app:flow_horizontalBias="0.5"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mon_back" />
+        app:layout_constraintTop_toBottomOf="@+id/mon_back"/>
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="28dp"
-        android:layout_height="18dp"
-        android:background="@drawable/land"
+        android:layout_width="33dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
         android:contentDescription="@string/nul"
+        android:elevation="2dp"
+        android:src="@drawable/land"
         app:layout_constraintBottom_toBottomOf="@+id/orient_at_portrait"
         app:layout_constraintEnd_toEndOf="@+id/orient_at_portrait"
         app:layout_constraintStart_toStartOf="@+id/orient_at_portrait"
@@ -280,8 +283,21 @@
         android:layout_height="40dp"
         android:background="@drawable/function_button"
         android:layout_marginEnd="40dp"
+        android:elevation="2dp"
         app:layout_constraintEnd_toStartOf="@+id/orient_at_portrait"
         app:layout_constraintTop_toTopOf="@+id/orient_at_portrait" />
+
+    <ImageView
+        android:layout_width="22dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/nul"
+        android:elevation="5dp"
+        android:src="@drawable/pause"
+        app:layout_constraintBottom_toBottomOf="@+id/pause"
+        app:layout_constraintEnd_toEndOf="@+id/pause"
+        app:layout_constraintStart_toStartOf="@+id/pause"
+        app:layout_constraintTop_toTopOf="@+id/pause" />
 
     <Button
         android:layout_width="0dp"

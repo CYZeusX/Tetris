@@ -11,6 +11,7 @@
         <item name="colorSurface">@color/monitorSide</item>
         <item name="colorOnSurface">@color/monitorMid</item>
         <item name="colorAccent">@color/score_text</item>
+        <item name="colorButtonNormal">@color/start_game</item>
 
         <item name="materialButtonStyle">@style/NoThemeButton</item>
         <item name="android:windowIsTranslucent">true</item>
