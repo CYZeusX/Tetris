@@ -12,6 +12,7 @@
     - can change the blocks of the game                                               >> because the blocks formed with symbols (String)
     - can change the particles of the background                                      >> because the background forms with symbols (char)
     - has shoulder buttons, can use index figers to rotate blocks
+    - NO Ads. !!!!
 
     
 ### Purpose
@@ -36,9 +37,8 @@
     - resume
     - restart
     - quit app
-    - setting menu
-    - buton for customize character for blocks
-    - button for return to default character for blocks
+    - button for return to default character for blocks,
+        and add to the setting menu
     - save block for later
     - 3 next following blocks
     - sync monitor between potrait and landscape mode
@@ -53,3 +53,6 @@
     + Implemented having colours for each blocks
     + Implemented customization for particles of the blocks and background
     + Implemented light|dark mode
+    + Implemented the setting menu
+    + Implemented button in setting menu for customize character for blocks
+    + Altered the position of the Light|Dark theme mode button into the setting menu
