@@ -12,4 +12,9 @@
     <string name="btn_X">X</string>
     <string name="btn_Y">Y</string>
     <string name="nul" />
+    <string name="setting">Setting</string>
+    <string name="custom_blocks">custom blocks</string>
+    <string name="theme_light_dark">Light | Dark</string>
+    <string name="custom_shape">custom shape</string>
+    <string name="default_block">\"回\"</string>
 </resources>

@@ -9,8 +9,19 @@ public class Shapes
     public static final char Z_BLOCK = 'Z';
     public static final char J_BLOCK = 'J';
     public static final char L_BLOCK = 'L';
-    public static String block = "回"; //回 ■ □ #
+    public String block = "回"; //回 ■ □ #
     public static char space = '□';
+
+    public String setShape(String shape)
+    {
+        this.block = shape;
+        return block;
+    }
+
+    public String getShape()
+    {
+        return this.block;
+    }
 
     public static final char[][] I_SHAPE =
             {

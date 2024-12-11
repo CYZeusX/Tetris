@@ -228,6 +228,28 @@
         tools:ignore="MissingConstraints" />
 
     <Button
+        android:id="@+id/pause"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:background="@drawable/function_button"
+        android:layout_marginEnd="40dp"
+        android:elevation="2dp"
+        app:layout_constraintEnd_toStartOf="@+id/orient_at_portrait"
+        app:layout_constraintTop_toTopOf="@+id/orient_at_portrait" />
+
+    <ImageView
+        android:layout_width="22dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/nul"
+        android:elevation="5dp"
+        android:src="@drawable/pause"
+        app:layout_constraintBottom_toBottomOf="@+id/pause"
+        app:layout_constraintEnd_toEndOf="@+id/pause"
+        app:layout_constraintStart_toStartOf="@+id/pause"
+        app:layout_constraintTop_toTopOf="@+id/pause" />
+
+    <Button
         android:id="@+id/orient_at_portrait"
         android:layout_width="60dp"
         android:layout_height="40dp"
@@ -254,37 +276,12 @@
         app:layout_constraintTop_toTopOf="@+id/orient_at_portrait" />
 
     <Button
-        android:id="@+id/lightDark"
+        android:id="@+id/setting"
         android:layout_width="60dp"
         android:layout_height="40dp"
         android:background="@drawable/function_button"
-        android:elevation="2dp"
         android:layout_marginStart="40dp"
         app:layout_constraintStart_toEndOf="@+id/orient_at_portrait"
-        app:layout_constraintTop_toTopOf="@+id/orient_at_portrait" />
-
-    <ImageView
-        android:layout_width="25dp"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/nul"
-        android:elevation="2dp"
-        android:src="@drawable/light_dark"
-        app:layout_constraintBottom_toBottomOf="@+id/lightDark"
-        app:layout_constraintEnd_toEndOf="@+id/lightDark"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/lightDark"
-        app:layout_constraintTop_toTopOf="@+id/lightDark"/>
-
-    <Button
-        android:id="@+id/pause"
-        android:layout_width="60dp"
-        android:layout_height="40dp"
-        android:background="@drawable/function_button"
-        android:layout_marginEnd="40dp"
-        android:elevation="2dp"
-        app:layout_constraintEnd_toStartOf="@+id/orient_at_portrait"
         app:layout_constraintTop_toTopOf="@+id/orient_at_portrait" />
 
     <ImageView
@@ -293,11 +290,11 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/nul"
         android:elevation="5dp"
-        android:src="@drawable/pause"
-        app:layout_constraintBottom_toBottomOf="@+id/pause"
-        app:layout_constraintEnd_toEndOf="@+id/pause"
-        app:layout_constraintStart_toStartOf="@+id/pause"
-        app:layout_constraintTop_toTopOf="@+id/pause" />
+        android:src="@drawable/setting"
+        app:layout_constraintBottom_toBottomOf="@+id/setting"
+        app:layout_constraintEnd_toEndOf="@+id/setting"
+        app:layout_constraintStart_toStartOf="@+id/setting"
+        app:layout_constraintTop_toTopOf="@+id/setting" />
 
     <Button
         android:layout_width="0dp"
@@ -310,5 +307,16 @@
         android:layout_height="0dp"
         android:id="@+id/r1"
         tools:ignore="MissingConstraints"/>
+
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

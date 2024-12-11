@@ -290,14 +290,35 @@
         app:layout_constraintTop_toTopOf="@+id/orient_at_land" />
 
     <Button
+        android:id="@+id/setting"
+        android:layout_width="40dp"
+        android:layout_height="60dp"
+        android:background="@drawable/function_button"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@+id/orient_at_land"
+        app:layout_constraintTop_toTopOf="@+id/orient_at_land" />
+
+    <ImageView
+        android:layout_width="22dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/nul"
+        android:elevation="5dp"
+        android:src="@drawable/setting"
+        app:layout_constraintBottom_toBottomOf="@+id/setting"
+        app:layout_constraintEnd_toEndOf="@+id/setting"
+        app:layout_constraintStart_toStartOf="@+id/setting"
+        app:layout_constraintTop_toTopOf="@+id/setting" />
+
+    <Button
         android:id="@+id/pause"
         android:layout_width="40dp"
         android:layout_height="60dp"
         android:background="@drawable/function_button"
         android:layout_marginStart="20dp"
         android:elevation="5dp"
-        app:layout_constraintStart_toEndOf="@+id/lightDark"
-        app:layout_constraintTop_toTopOf="@+id/lightDark" />
+        app:layout_constraintStart_toEndOf="@+id/setting"
+        app:layout_constraintTop_toTopOf="@+id/setting" />
 
     <ImageView
         android:layout_width="22dp"
@@ -311,29 +332,14 @@
         app:layout_constraintStart_toStartOf="@+id/pause"
         app:layout_constraintTop_toTopOf="@+id/pause" />
 
-    <Button
-        android:id="@+id/lightDark"
-        android:layout_width="40dp"
-        android:layout_height="60dp"
-        android:background="@drawable/function_button"
-        android:elevation="5dp"
-        android:layout_marginStart="20dp"
-        app:layout_constraintStart_toEndOf="@+id/orient_at_land"
-        app:layout_constraintTop_toTopOf="@+id/orient_at_land" />
-
-    <ImageView
-        android:layout_width="25dp"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/nul"
-        android:elevation="7dp"
-        android:src="@drawable/light_dark"
-        app:layout_constraintBottom_toBottomOf="@+id/lightDark"
-        app:layout_constraintEnd_toEndOf="@+id/lightDark"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/lightDark"
-        app:layout_constraintTop_toTopOf="@+id/lightDark"/>
-
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class MainActivity extends AppCompatActivity
 {
-    Button a, s, d,  A, X, Y, l1, r1, orientPortrait, orientLandscape, setting, lightDark;
+    Button a, s, d,  A, X, Y, l1, r1, orientPortrait, orientLandscape, pause, lightDark, setting;
     Vibrator vibrator;
     TextView scores, lines;
     SurfaceView monitor;
@@ -84,7 +84,8 @@ public class MainActivity extends AppCompatActivity
         r1 = findViewById(R.id.r1);
         orientPortrait = findViewById(R.id.orient_at_portrait);
         orientLandscape = findViewById(R.id.orient_at_land);
-        setting = findViewById(R.id.pause);
+        pause = findViewById(R.id.pause);
+        setting = findViewById(R.id.setting);
         lightDark = findViewById(R.id.lightDark);
         scores = findViewById(R.id.scores);
         lines = findViewById(R.id.lines);
@@ -182,33 +183,29 @@ public class MainActivity extends AppCompatActivity
         orientPortrait.setOnClickListener(v ->
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            editor.putInt("orientation", ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            editor.apply();
+            editor.putInt("orientation", ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE).apply();
         });
 
         orientLandscape.setOnClickListener(v ->
         {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-            editor.putInt("orientation", ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            editor.apply();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            editor.putInt("orientation", ActivityInfo.SCREEN_ORIENTATION_PORTRAIT).apply();
         });
 
-        //setting
-        setting.setOnClickListener(v ->
+        pause.setOnClickListener(v ->
         {
             tetrisGame.togglePause();
         });
 
-        lightDark.setOnClickListener(v ->
+        setting.setOnClickListener(v ->
         {
-            // Toggle theme mode directly in MainActivity
-            sharedPreferences.set(getSharedPreferences("AppPreferences", MODE_PRIVATE));
-            int currentMode = sharedPreferences.get().getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_NO);
-            int newMode = currentMode == AppCompatDelegate.MODE_NIGHT_YES ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES;
-            AppCompatDelegate.setDefaultNightMode(newMode);
-
-            sharedPreferences.get().edit().putInt("theme_mode", newMode).apply();
-            recreate();
+            tetrisGame.togglePause();
+            tetrisGame.toggleBoardVisible();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, BlankFragment.newInstance("param1", "param2"))
+                    .addToBackStack(null)
+                    .commit();
         });
 
         // Move the block left
