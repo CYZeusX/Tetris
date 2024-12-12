@@ -12,10 +12,9 @@ public class Shapes
     public String block = "回"; //回 ■ □ #
     public static char space = '□';
 
-    public String setShape(String shape)
+    public String setShape(String block)
     {
-        this.block = shape;
-        return block;
+        return this.block = block;
     }
 
     public String getShape()

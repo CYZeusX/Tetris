@@ -1,0 +1,95 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/settings_dialog"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/monitor_plate">
+
+<RelativeLayout
+        android:id="@+id/setting_menu"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@drawable/monitor_plate">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/setting"
+            android:textAlignment="center"
+            android:textSize="35sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/textView2"
+            android:layout_alignStart="@+id/textView"
+            android:layout_alignEnd="@+id/textView"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:elevation="10dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="7dp"
+            android:text="@string/custom_blocks"
+            android:textAlignment="textStart"
+            android:textColor="?attr/colorAccent"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView3"
+            android:layout_alignEnd="@+id/textView"
+            android:layout_marginVertical="13dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="16dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/nul"
+            android:elevation="2dp"
+            android:src="@drawable/light_dark" />
+
+        <TableLayout
+            android:id="@+id/textView"
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/monitor"
+            android:elevation="1dp">
+
+            <EditText
+                android:id="@+id/change_block"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="0"
+                android:background="@drawable/setting_column"
+                android:hint="@string/default_block"
+                android:inputType="text"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="7dp"
+                android:textAlignment="textEnd"
+                android:textColor="?attr/colorOnPrimary"
+                android:textColorHint="?attr/colorOnPrimary"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/lightDark"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/setting_column"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="7dp"
+                android:text="@string/theme_light_dark"
+                android:textAlignment="textStart"
+                android:textColor="?attr/colorAccent"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+        </TableLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

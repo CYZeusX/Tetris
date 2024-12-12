@@ -9,6 +9,7 @@ import android.os.Vibrator;
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.os.Parcelable;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.content.Context;
 import android.view.InputDevice;
@@ -26,6 +27,8 @@ import android.view.WindowInsetsController;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MainActivity extends AppCompatActivity
@@ -35,6 +38,7 @@ public class MainActivity extends AppCompatActivity
     TextView scores, lines;
     SurfaceView monitor;
     TetrisGame tetrisGame = new TetrisGame(this);
+    SettingsDialogFragment settingsFragment = new SettingsDialogFragment();
 
     @SuppressLint({"MissingInflatedId", "UseCompatLoadingForDrawables"})
     @Override
@@ -200,12 +204,7 @@ public class MainActivity extends AppCompatActivity
         setting.setOnClickListener(v ->
         {
             tetrisGame.togglePause();
-            tetrisGame.toggleBoardVisible();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, BlankFragment.newInstance("param1", "param2"))
-                    .addToBackStack(null)
-                    .commit();
+            settingsFragment.show(getSupportFragmentManager(), "settingsDialog");
         });
 
         // Move the block left

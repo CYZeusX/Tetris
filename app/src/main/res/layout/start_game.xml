@@ -39,7 +39,7 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/tetris"
             android:src="@drawable/tetris_max"
-            android:elevation="10dp"/>
+            android:elevation="20dp"/>
 
         <Button
             android:id="@+id/start"

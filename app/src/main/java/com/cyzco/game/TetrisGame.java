@@ -11,16 +11,13 @@ import android.view.SurfaceView;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.content.Context;
+import android.widget.EditText;
 import android.graphics.Paint;
 import android.graphics.Color;
 import android.os.Vibrator;
-import android.view.View;
-import android.widget.EditText;
-
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Scanner;
 
 public class TetrisGame
 {
@@ -34,7 +31,6 @@ public class TetrisGame
     private int scoreGained = 0;
     private boolean showEffect = false;
     private boolean vibrationTriggered = false;
-    private boolean isBoardHidden = false;
     private long effectEndTime = 135; // Timestamp for when the effect ends
     private Tetromino currentPiece;
     private Bitmap effectBitmap; // Class member for reuse
@@ -127,16 +123,6 @@ public class TetrisGame
 
 
     private boolean isPaused = false;
-
-    public void toggleBoardVisible()
-    {
-        isBoardHidden = !isBoardHidden;
-    }
-
-    public boolean isBoardHidden()
-    {
-        return isBoardHidden;
-    }
 
     public void togglePause()
     {
@@ -385,7 +371,6 @@ public class TetrisGame
         blockColors.put(Shapes.space, Color.WHITE); // No color for empty spaces
     }
 
-
     public void renderGame(SurfaceView monitor)
     {
         // Ensure effect bitmaps are initialized
@@ -405,6 +390,8 @@ public class TetrisGame
             // Clear the canvas with a transparent background
             clearCanvas(canvas);
 
+            Paint paint = createPaint();
+
             // Calculate block size and padding
             int canvasWidth = canvas.getWidth();
             int canvasHeight = canvas.getHeight();
@@ -412,22 +399,12 @@ public class TetrisGame
             int paddingLeft = (canvasWidth - (BOARD_WIDTH * blockSize)) / 2;
             int paddingTop = (canvasHeight - (BOARD_HEIGHT * blockSize)) / 2;
 
-            // Paint for drawing
-            Paint paint = createPaint();
-
-            if (isBoardHidden) {
-                paint.setAlpha(0);
-            }
-            else
-            {
-                renderBoardBackground(canvas, paint, blockSize, paddingLeft, paddingTop);
-                renderFixedBlocks(canvas, paint, blockSize, paddingLeft, paddingTop);
-                renderCurrentPiece(canvas, paint, blockSize, paddingLeft, paddingTop);
-                renderShadow(canvas, paint, blockSize, paddingLeft, paddingTop);
-            }
-
+            renderBoardBackground(canvas, paint, blockSize, paddingLeft, paddingTop);
+            renderFixedBlocks(canvas, paint, blockSize, paddingLeft, paddingTop);
+            renderCurrentPiece(canvas, paint, blockSize, paddingLeft, paddingTop);
+            renderShadow(canvas, paint, blockSize, paddingLeft, paddingTop);
             renderEffect(canvas, canvasWidth, canvasHeight);
-            holder.unlockCanvasAndPost(canvas); // Ensure canvas is posted correctly
+            holder.unlockCanvasAndPost(canvas);
         }
     }
 
@@ -439,8 +416,8 @@ public class TetrisGame
     private Paint createPaint()
     {
         Paint paint = new Paint();
-        paint.setTextSize(36); // Adjust size as needed
-        paint.setTypeface(Typeface.MONOSPACE); // Monospace font for alignment
+        paint.setTextSize(36);
+        paint.setTypeface(Typeface.MONOSPACE);
         return paint;
     }
 
@@ -454,7 +431,7 @@ public class TetrisGame
                 float posX = paddingLeft + (x + 0f) * blockSize;
                 float posY = paddingTop + (y + 1f) * blockSize;
                 paint.setAlpha(220);
-                canvas.drawText(String.valueOf(Shapes.space), posX, posY, paint); // Draw space as background
+                canvas.drawText(String.valueOf(Shapes.space), posX, posY, paint);
             }
         }
     }
