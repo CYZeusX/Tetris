@@ -32,12 +32,13 @@
             android:layout_marginEnd="0dp"
             android:elevation="10dp"
             android:paddingHorizontal="10dp"
-            android:paddingVertical="7dp"
-            android:text="@string/custom_blocks"
+            android:paddingVertical="10dp"
+            android:text="@string/set_blocks"
             android:textAlignment="textStart"
             android:textColor="?attr/colorAccent"
-            android:textSize="25sp"
-            android:textStyle="bold" />
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/minecraft_font"/>
 
         <ImageView
             android:layout_width="25dp"
@@ -74,7 +75,7 @@
                 android:textColor="?attr/colorOnPrimary"
                 android:textColorHint="?attr/colorOnPrimary"
                 android:textSize="25sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <Button
                 android:id="@+id/lightDark"
@@ -82,12 +83,13 @@
                 android:layout_height="50dp"
                 android:background="@drawable/setting_column"
                 android:paddingHorizontal="10dp"
-                android:paddingVertical="7dp"
+                android:paddingVertical="10dp"
                 android:text="@string/theme_light_dark"
                 android:textAlignment="textStart"
                 android:textColor="?attr/colorAccent"
-                android:textSize="25sp"
-                android:textStyle="bold" />
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/minecraft_font"/>
 
         </TableLayout>
     </RelativeLayout>
