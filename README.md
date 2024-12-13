@@ -1,6 +1,6 @@
 > [!IMPORTANT]
 > ### HONEST DISCLAIMER:  NOT quite the result of my knowledge. 
-> ### <ins>AI contributed a LOT</ins>
+> ### <ins>AI contributed Half of it</ins>
 
 > [!NOTE]
 > ### meant for Android ONLY
