@@ -1,5 +1,11 @@
 package com.cyzco.game;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.BitmapFactory;
 import android.content.res.Resources;
 import android.graphics.PixelFormat;
@@ -24,8 +30,8 @@ public class TetrisGame
     private final char[][] BOARD;
     private final int BOARD_WIDTH = 10; // 10 blocks wide
     private final int BOARD_HEIGHT = 20; // 20 blocks tall
-    private final int REMOVE_LINE_SCORE = 100;
     private final char BOARD_BLOCK = Shapes.space;
+    private final int REMOVE_LINE_SCORE = 100;
     private final Context CONTEXT;
     private int linesCleared = 0;
     private int scoreGained = 0;
@@ -36,8 +42,8 @@ public class TetrisGame
     private Bitmap effectBitmap; // Class member for reuse
     private Bitmap resizedEffectBitmap;
     private Map<Character, Integer> blockColors = new HashMap<>();
-    private Shapes shapes = new Shapes();
     private EditText stringShape;
+    private Shapes shapes = new Shapes();
 
     public TetrisGame(Context context)
     {
@@ -390,7 +396,7 @@ public class TetrisGame
             // Clear the canvas with a transparent background
             clearCanvas(canvas);
 
-            Paint paint = createPaint();
+            Paint paint = createPaint(monitor.getContext());
 
             // Calculate block size and padding
             int canvasWidth = canvas.getWidth();
@@ -413,13 +419,21 @@ public class TetrisGame
         canvas.drawColor(Color.argb(0, 255, 255, 255), PorterDuff.Mode.CLEAR);
     }
 
-    private Paint createPaint()
+    private Paint createPaint(Context context)
     {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE);
+
+        // Determine the shape size based on orientation
+        int orientation = sharedPreferences.getInt("orientation", ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        int shapeSize = (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) ? 50 : 36;
+
+        // Create and configure the Paint object
         Paint paint = new Paint();
-        paint.setTextSize(36);
+        paint.setTextSize(shapeSize);
         paint.setTypeface(Typeface.MONOSPACE);
         return paint;
     }
+
 
     private void renderBoardBackground(Canvas canvas, Paint paint, int blockSize, int paddingLeft, int paddingTop)
     {
@@ -502,7 +516,7 @@ public class TetrisGame
         {
             paint.setColor(color);
             paint.setFakeBoldText(true);
-            paint.setAlpha(alpha); // Explicitly set the alpha
+            paint.setAlpha(alpha);
         }
         float blockX = paddingLeft + x * blockSize;
         float blockY = paddingTop + y * blockSize;

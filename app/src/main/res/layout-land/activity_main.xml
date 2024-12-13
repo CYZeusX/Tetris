@@ -10,8 +10,8 @@
 
     <RelativeLayout
         android:id="@+id/mon_back"
-        android:layout_width="386.2dp"
-        android:layout_height="320dp"
+        android:layout_width="482.5dp"
+        android:layout_height="400dp"
         android:background="@drawable/monitor_plate"
         android:elevation="5dp"
         app:layout_constraintVertical_bias="0.5"
@@ -22,8 +22,8 @@
 
         <TextView
             android:id="@+id/textView"
-            android:layout_width="294.44dp"
-            android:layout_height="265dp"
+            android:layout_width="383.333dp"
+            android:layout_height="345dp"
             android:background="@drawable/monitor"
             android:layout_centerInParent="true"
             android:elevation="1dp">
@@ -67,8 +67,8 @@
 
         <SurfaceView
             android:id="@+id/mon"
-            android:layout_width="129.5dp"
-            android:layout_height="258dp"
+            android:layout_width="170dp"
+            android:layout_height="340dp"
             android:layout_centerInParent="true"
             android:elevation="10dp"/>
     </RelativeLayout>
@@ -268,7 +268,7 @@
         android:id="@+id/orient_at_land"
         android:layout_width="40dp"
         android:layout_height="60dp"
-        android:layout_marginTop="27.5dp"
+        android:layout_marginTop="60dp"
         android:background="@drawable/function_button"
         android:elevation="5dp"
         app:layout_constraintEnd_toEndOf="parent"
