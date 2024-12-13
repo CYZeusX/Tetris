@@ -1,10 +1,11 @@
 package com.cyzco.game;
 
 import android.os.Bundle;
+import android.system.ErrnoException;
+import android.system.Os;
 import android.view.View;
 import android.widget.Button;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
@@ -14,7 +15,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.appcompat.app.AppCompatDelegate;
 import static android.content.Context.MODE_PRIVATE;
 
-public class SettingsDialogFragment extends DialogFragment
+public class PauseDialogFragment extends DialogFragment
 {
     // to remove the blank space area at the corner of the setting menu
     @Override
@@ -33,39 +34,39 @@ public class SettingsDialogFragment extends DialogFragment
     {
         MainActivity mainActivity = (MainActivity) getActivity();
         assert mainActivity != null;
-        TetrisGame tetrisGame = mainActivity.tetrisGame;
+        final TetrisGame[] tetrisGame = {mainActivity.tetrisGame};
 
         // Inflate the custom layout for the dialog
-        View view = inflater.inflate(R.layout.setting_dialog, container, false);
+        View view = inflater.inflate(R.layout.pause_dialog, container, false);
 
         // Find views from the layout
-        RelativeLayout settings_dialog = view.findViewById(R.id.settings_dialog);
-        RelativeLayout setting_menu = view.findViewById(R.id.setting_menu);
-        EditText change_block = view.findViewById(R.id.change_block);
-        Button lightDark = view.findViewById(R.id.lightDark);
-
-        // Pass the EditText reference to TetrisGame
-        tetrisGame.setStringShape(change_block);
+        RelativeLayout pause_dialog = view.findViewById(R.id.pause_dialog);
+        RelativeLayout pause_menu = view.findViewById(R.id.pause_menu);
+        Button resume = view.findViewById(R.id.resume);
+        Button restart = view.findViewById(R.id.restart);
+        Button quit_app = view.findViewById(R.id.quit_app);
 
         // Set logic for the buttons
-        settings_dialog.setOnClickListener(v ->
+        pause_menu.setOnClickListener(v -> {});
+
+        resume.setOnClickListener(v -> this.dismiss());
+
+        restart.setOnClickListener(v ->
         {
-            tetrisGame.togglePause();
             dismiss();
+            tetrisGame[0].togglePause();
+            tetrisGame[0] = new TetrisGame(mainActivity);
+            mainActivity.tetrisGame = tetrisGame[0];
         });
 
-        setting_menu.setOnClickListener(v -> {});
-
-        change_block.setOnClickListener(v -> tetrisGame.changeBlock());
-
-        lightDark.setOnClickListener(v ->
+        quit_app.setOnClickListener(v ->
         {
-            SharedPreferences sharedPreferences = requireContext().getSharedPreferences("AppPreferences", MODE_PRIVATE);
-            int currentMode = sharedPreferences.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_NO);
-            int newMode = currentMode == AppCompatDelegate.MODE_NIGHT_YES ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES;
-
-            AppCompatDelegate.setDefaultNightMode(newMode);
-            sharedPreferences.edit().putInt("theme_mode", newMode).apply();
+            if (getActivity() != null)
+            {
+                getActivity().finishAffinity();
+                System.exit(0);
+                dismiss();
+            }
         });
 
         // Return the view

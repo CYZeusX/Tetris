@@ -1,0 +1,79 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pause_dialog"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/monitor_plate">
+
+    <RelativeLayout
+        android:id="@+id/pause_menu"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@drawable/monitor_plate">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/pause"
+            android:textAlignment="center"
+            android:textSize="35sp"
+            android:textStyle="bold" />
+
+        <TableLayout
+            android:id="@+id/textView"
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/monitor"
+            android:elevation="1dp">
+
+            <Button
+                android:id="@+id/resume"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/dialog_column"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="10dp"
+                android:elevation="10dp"
+                android:text="@string/resume"
+                android:textAlignment="center"
+                android:textColor="?attr/colorAccent"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/minecraft_font"/>
+
+            <Button
+                android:id="@+id/restart"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/dialog_column"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="10dp"
+                android:elevation="10dp"
+                android:text="@string/restart"
+                android:textAlignment="center"
+                android:textColor="?attr/colorAccent"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/minecraft_font"/>
+
+            <Button
+                android:id="@+id/quit_app"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/dialog_column"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="10dp"
+                android:elevation="10dp"
+                android:text="@string/quit_app"
+                android:textAlignment="center"
+                android:textColor="?attr/colorAccent"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/minecraft_font"/>
+
+        </TableLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

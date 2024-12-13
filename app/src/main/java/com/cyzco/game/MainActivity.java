@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity
     SurfaceView monitor;
     TetrisGame tetrisGame = new TetrisGame(this);
     SettingsDialogFragment settingsFragment = new SettingsDialogFragment();
+    PauseDialogFragment pauseFragment = new PauseDialogFragment();
 
     @SuppressLint({"MissingInflatedId", "UseCompatLoadingForDrawables"})
     @Override
@@ -199,6 +200,7 @@ public class MainActivity extends AppCompatActivity
         pause.setOnClickListener(v ->
         {
             tetrisGame.togglePause();
+            pauseFragment.show(getSupportFragmentManager(), "pauseDialog");
         });
 
         setting.setOnClickListener(v ->

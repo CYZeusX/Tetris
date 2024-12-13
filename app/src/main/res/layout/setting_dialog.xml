@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/monitor_plate">
 
-<RelativeLayout
+    <RelativeLayout
         android:id="@+id/setting_menu"
         android:layout_width="300dp"
         android:layout_height="300dp"
@@ -66,7 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_weight="0"
-                android:background="@drawable/setting_column"
+                android:background="@drawable/dialog_column"
                 android:hint="@string/default_block"
                 android:inputType="text"
                 android:paddingHorizontal="10dp"
@@ -81,7 +81,7 @@
                 android:id="@+id/lightDark"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@drawable/setting_column"
+                android:background="@drawable/dialog_column"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="10dp"
                 android:text="@string/theme_light_dark"
