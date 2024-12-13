@@ -39,7 +39,6 @@ public class SettingsDialogFragment extends DialogFragment
         View view = inflater.inflate(R.layout.setting_dialog, container, false);
 
         // Find views from the layout
-        RelativeLayout settings_dialog = view.findViewById(R.id.settings_dialog);
         RelativeLayout setting_menu = view.findViewById(R.id.setting_menu);
         EditText change_block = view.findViewById(R.id.change_block);
         Button lightDark = view.findViewById(R.id.lightDark);
@@ -48,12 +47,6 @@ public class SettingsDialogFragment extends DialogFragment
         tetrisGame.setStringShape(change_block);
 
         // Set logic for the buttons
-        settings_dialog.setOnClickListener(v ->
-        {
-            tetrisGame.togglePause();
-            dismiss();
-        });
-
         setting_menu.setOnClickListener(v -> {});
 
         change_block.setOnClickListener(v -> tetrisGame.changeBlock());

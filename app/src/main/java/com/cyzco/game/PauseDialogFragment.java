@@ -40,7 +40,6 @@ public class PauseDialogFragment extends DialogFragment
         View view = inflater.inflate(R.layout.pause_dialog, container, false);
 
         // Find views from the layout
-        RelativeLayout pause_dialog = view.findViewById(R.id.pause_dialog);
         RelativeLayout pause_menu = view.findViewById(R.id.pause_menu);
         Button resume = view.findViewById(R.id.resume);
         Button restart = view.findViewById(R.id.restart);
