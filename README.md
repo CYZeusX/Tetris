@@ -16,7 +16,8 @@
 
     
 ### Purpose
-    it is totally for personal uses
+    it is totally for personal uses,
+    and making it as perfect as possible AT ALL COST
     
     Q&A: Why not just download one on app store?
          - Because I have high demand. 
