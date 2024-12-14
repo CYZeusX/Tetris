@@ -22,4 +22,9 @@
     <string name="quit_app">Quit App</string>
     <string name="game_over">GAME OVER</string>
     <string name="haha_you_loose">HaHa, You loose</string>
+    <string name="you_won">You Won</string>
+    <string name="play_again">Play Again ^^</string>
+    <string name="score_gained">Score: </string>
+    <string name="lines_cleared">Lines:</string>
+    <string name="tetris_gained">Tetris: </string>
 </resources>

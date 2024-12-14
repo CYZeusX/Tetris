@@ -4,15 +4,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.view.ViewGroup;
-import com.bumptech.glide.Glide;
-import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.content.DialogInterface;
+import android.annotation.SuppressLint;
+import android.widget.TextView;
+
 import androidx.fragment.app.DialogFragment;
 
-public class GameOverFragment extends DialogFragment
+public class GameWinFragment extends DialogFragment
 {
     @Override
     public void onStart()
@@ -32,15 +33,19 @@ public class GameOverFragment extends DialogFragment
         assert mainActivity != null;
         final TetrisGame[] tetrisGame = {mainActivity.tetrisGame};
 
-        View view = inflater.inflate(R.layout.game_over, container, false);
+        View view = inflater.inflate(R.layout.game_win, container, false);
 
-        RelativeLayout game_over_menu = view.findViewById(R.id.gameOver_menu);
+        RelativeLayout game_win = view.findViewById(R.id.gameWin_menu);
         Button restart = view.findViewById(R.id.restart);
-        ImageView cat_laugh = view.findViewById(R.id.cat_laugh);
+        TextView score_gained = view.findViewById(R.id.score_gained);
+        TextView lines_cleared = view.findViewById(R.id.lines_cleared);
+        TextView tetris_gained = view.findViewById(R.id.tetris_gained);
 
-        game_over_menu.setOnClickListener(v -> {});
+        score_gained.setText(R.string.score_gained + tetrisGame[0].getScoreGained());
+        lines_cleared.setText(R.string.lines_cleared + tetrisGame[0].getLinesCleared());
+        tetris_gained.setText(R.string.tetris_gained + tetrisGame[0].tetrisGained);
 
-        Glide.with(requireContext()).load(R.drawable.cat_laugh).into(cat_laugh);
+        game_win.setOnClickListener(v -> {});
 
         restart.setOnClickListener(v ->
         {

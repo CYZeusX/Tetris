@@ -29,6 +29,7 @@ public class TetrisGame
     private final char BOARD_BLOCK = Shapes.space;
     private final int REMOVE_LINE_SCORE = 100;
     private final Context CONTEXT;
+    public int tetrisGained = 0;
     private int linesCleared = 0;
     private int scoreGained = 0;
     private boolean showEffect = false;
@@ -41,6 +42,7 @@ public class TetrisGame
     private EditText stringShape;
     private Shapes shapes = new Shapes();
     private GameOverFragment gameOverFragment = new GameOverFragment();
+    private  GameWinFragment gameWin = new GameWinFragment();
 
     public TetrisGame(Context context)
     {
@@ -134,7 +136,7 @@ public class TetrisGame
     private void handleGameWin()
     {
         togglePause();
-        //System.out.println("Game Won!");
+        gameWin.show(((MainActivity) CONTEXT).getSupportFragmentManager(), "GameOverFragment");
     }
 
     private void handleGameOver()
@@ -316,6 +318,7 @@ public class TetrisGame
             scoreGained += REMOVE_LINE_SCORE * 2; // Double the score for clearing 4 rows
             showEffect = true;
             effectEndTime = System.currentTimeMillis() + 140;
+            tetrisGained++;
         }
         else
         {
