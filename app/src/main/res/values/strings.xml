@@ -20,4 +20,6 @@
     <string name="resume">Resume</string>
     <string name="restart">Restart</string>
     <string name="quit_app">Quit App</string>
+    <string name="game_over">GAME OVER</string>
+    <string name="haha_you_loose">HaHa, You loose</string>
 </resources>

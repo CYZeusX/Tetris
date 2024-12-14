@@ -1,5 +1,7 @@
 [versions]
 agp = "8.5.0"
+coilGif = "2.4.0"
+compiler = "4.15.1"
 coreSplashscreenVersion = "1.0.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -11,7 +13,11 @@ constraintlayout = "2.1.4"
 coreSplashscreen = "1.0.1"
 
 [libraries]
+coil = { module = "io.coil-kt:coil", version.ref = "coilGif" }
+coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coilGif" }
+compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
 core-splashscreen-v100 = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreenVersion" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "compiler" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

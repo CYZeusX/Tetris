@@ -33,6 +33,10 @@ android {
 
 
 dependencies {
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
+    implementation(libs.coil)
+    implementation(libs.coil.gif)
     implementation(libs.core.splashscreen.v100)
     implementation(libs.appcompat)
     implementation(libs.material)

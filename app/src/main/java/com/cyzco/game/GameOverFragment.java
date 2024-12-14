@@ -1,18 +1,23 @@
 package com.cyzco.game;
 
+import coil.Coil;
+
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.view.ViewGroup;
-import androidx.annotation.NonNull;
+import android.widget.ImageView;
+import coil.request.ImageRequest;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
-import android.content.DialogInterface;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-public class PauseDialogFragment extends DialogFragment
+import com.bumptech.glide.Glide;
+
+public class GameOverFragment extends DialogFragment
 {
-    // to remove the blank space area at the corner of the setting menu
     @Override
     public void onStart()
     {
@@ -31,50 +36,39 @@ public class PauseDialogFragment extends DialogFragment
         assert mainActivity != null;
         final TetrisGame[] tetrisGame = {mainActivity.tetrisGame};
 
-        // Inflate the custom layout for the dialog
-        View view = inflater.inflate(R.layout.pause_dialog, container, false);
+        View view = inflater.inflate(R.layout.game_over, container, false);
 
-        // Find views from the layout
-        RelativeLayout pause_menu = view.findViewById(R.id.pause_menu);
-        Button resume = view.findViewById(R.id.resume);
+        RelativeLayout game_over_menu = view.findViewById(R.id.gameOver_menu);
         Button restart = view.findViewById(R.id.restart);
-        Button quit_app = view.findViewById(R.id.quit_app);
+        ImageView cat_laugh = view.findViewById(R.id.cat_laugh);
 
-        // Set logic for the buttons
-        pause_menu.setOnClickListener(v -> {});
+        game_over_menu.setOnClickListener(v -> {});
 
-        resume.setOnClickListener(v -> this.dismiss());
+        Glide.with(requireContext()).load(R.drawable.cat_laugh).into(cat_laugh);
 
         restart.setOnClickListener(v ->
         {
             dismiss();
-            tetrisGame[0].togglePause();
-            tetrisGame[0] = new TetrisGame(mainActivity);
-            mainActivity.tetrisGame = tetrisGame[0];
+            restart();
         });
 
-        quit_app.setOnClickListener(v ->
-        {
-            if (getActivity() != null)
-            {
-                getActivity().finishAffinity();
-                System.exit(0);
-                dismiss();
-            }
-        });
-
-        // Return the view
         return view;
     }
 
-    // continue the game after closing the setting menu
     @Override
     public void onDismiss(@NonNull DialogInterface dialog)
     {
         super.onDismiss(dialog);
-        MainActivity mainActivity = (MainActivity) getActivity();
-        assert mainActivity != null;
-        mainActivity.tetrisGame.togglePause();
+        restart();
     }
 
+    private void restart()
+    {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        assert mainActivity != null;
+        final TetrisGame[] tetrisGame = {mainActivity.tetrisGame};
+        tetrisGame[0].togglePause();
+        tetrisGame[0] = new TetrisGame(mainActivity);
+        mainActivity.tetrisGame = tetrisGame[0];
+    }
 }

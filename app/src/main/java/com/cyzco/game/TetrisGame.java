@@ -1,9 +1,5 @@
 package com.cyzco.game;
 
-import static android.content.Context.MODE_PRIVATE;
-
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.BitmapFactory;
@@ -44,6 +40,7 @@ public class TetrisGame
     private Map<Character, Integer> blockColors = new HashMap<>();
     private EditText stringShape;
     private Shapes shapes = new Shapes();
+    private GameOverFragment gameOverFragment = new GameOverFragment();
 
     public TetrisGame(Context context)
     {
@@ -127,7 +124,6 @@ public class TetrisGame
         }
     }
 
-
     private boolean isPaused = false;
 
     public void togglePause()
@@ -135,10 +131,16 @@ public class TetrisGame
         isPaused = !isPaused;
     }
 
+    private void handleGameWin()
+    {
+        togglePause();
+        //System.out.println("Game Won!");
+    }
+
     private void handleGameOver()
     {
         togglePause();
-        //System.out.println("Game Over!");
+        gameOverFragment.show(((MainActivity) CONTEXT).getSupportFragmentManager(), "GameOverFragment");
     }
 
     public void movePieceLeft()
@@ -180,7 +182,7 @@ public class TetrisGame
     public void updateGame()
     {
         if (!isPaused)
-        { movePieceDown();}
+        {movePieceDown();}
     }
 
     public void movePieceDown()
@@ -321,6 +323,11 @@ public class TetrisGame
         }
 
         linesCleared += rowsClearedInThisStep; // Update the total lines cleared
+
+        if (linesCleared >= 150)
+        {
+            handleGameWin();
+        }
     }
 
     private void removeLine(int lineIndex)
@@ -433,7 +440,6 @@ public class TetrisGame
         paint.setTypeface(Typeface.MONOSPACE);
         return paint;
     }
-
 
     private void renderBoardBackground(Canvas canvas, Paint paint, int blockSize, int paddingLeft, int paddingTop)
     {
