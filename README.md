@@ -34,12 +34,9 @@
 
 
 ### * Working on
-    - pause menu
-    - resume
-    - restart
-    - quit app
-    - button for return to default character for blocks,
-        and add to the setting menu
+    - game win slide fragment
+    - List of values | default block, choose block, custom block
+    - ^^^^ same, but blocks for background  ^^^^
     - save block for later
     - 3 next following blocks
     - sync monitor between potrait and landscape mode
@@ -56,4 +53,9 @@
     + Implemented light|dark mode
     + Implemented the setting menu
     + Implemented button in setting menu for customize character for blocks
+    + Implemented menu
+    + Implemented resume
+    + Implemented restart
+    + Implemented quit app
+    + Implemented game over page
     + Altered the position of the Light|Dark theme mode button into the setting menu
