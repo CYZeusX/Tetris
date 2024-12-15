@@ -42,7 +42,7 @@ public class TetrisGame
     private EditText stringShape;
     private Shapes shapes = new Shapes();
     private GameOverFragment gameOverFragment = new GameOverFragment();
-    private  GameWinFragment gameWin = new GameWinFragment();
+    private GameWinFragment gameWinFragment = new GameWinFragment();
 
     public TetrisGame(Context context)
     {
@@ -136,7 +136,7 @@ public class TetrisGame
     private void handleGameWin()
     {
         togglePause();
-        gameWin.show(((MainActivity) CONTEXT).getSupportFragmentManager(), "GameOverFragment");
+        gameWinFragment.show(((MainActivity) CONTEXT).getSupportFragmentManager(), "GameWinFragment");
     }
 
     private void handleGameOver()

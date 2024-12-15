@@ -42,21 +42,23 @@
                 <RelativeLayout
                     android:layout_width="260dp"
                     android:layout_height="150dp"
-                    android:layout_centerInParent="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="25dp"
+                    android:layout_centerHorizontal="true"
                     android:background="@drawable/round_rect_mon">
 
                     <TextView
                         android:id="@+id/score_gained"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
+                        android:layout_marginTop="15dp"
+                        android:fontFamily="@font/minecraft_font"
                         android:paddingVertical="5dp"
                         android:text="@string/score_gained"
-                        android:textSize="25sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/monitorSideDark"
                         android:textAlignment="center"
-                        android:fontFamily="@font/minecraft_font"
-                        android:layout_marginTop="15dp"/>
+                        android:textColor="?attr/colorAccent"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/lines_cleared"
@@ -68,7 +70,7 @@
                         android:paddingVertical="5dp"
                         android:text="@string/lines_cleared"
                         android:textAlignment="center"
-                        android:textColor="@color/monitorSideDark"
+                        android:textColor="?attr/colorAccent"
                         android:textSize="25sp"
                         android:textStyle="bold" />
 
@@ -82,7 +84,7 @@
                         android:paddingVertical="5dp"
                         android:text="@string/tetris_gained"
                         android:textAlignment="center"
-                        android:textColor="@color/monitorSideDark"
+                        android:textColor="?attr/colorAccent"
                         android:textSize="25sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
@@ -91,15 +93,16 @@
 
             <Button
                 android:id="@+id/restart"
-                android:layout_width="match_parent"
+                android:layout_width="260dp"
                 android:layout_height="50dp"
-                android:layout_below="@+id/relativeLayout2"
-                android:layout_marginTop="0dp"
-                android:background="@color/nul"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="25dp"
+                android:background="@drawable/round_rect_mon"
                 android:elevation="10dp"
                 android:fontFamily="@font/minecraft_font"
-                android:paddingStart="30dp"
                 android:paddingVertical="6dp"
+                android:paddingStart="30dp"
                 android:text="@string/play_again"
                 android:textAlignment="center"
                 android:textColor="?attr/colorAccent"

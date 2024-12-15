@@ -41,9 +41,9 @@ public class GameWinFragment extends DialogFragment
         TextView lines_cleared = view.findViewById(R.id.lines_cleared);
         TextView tetris_gained = view.findViewById(R.id.tetris_gained);
 
-        score_gained.setText(R.string.score_gained + tetrisGame[0].getScoreGained());
-        lines_cleared.setText(R.string.lines_cleared + tetrisGame[0].getLinesCleared());
-        tetris_gained.setText(R.string.tetris_gained + tetrisGame[0].tetrisGained);
+        score_gained.setText(String.format("Score: %s", tetrisGame[0].getScoreGained()));
+        lines_cleared.setText(String.format("Lines: %s", tetrisGame[0].getLinesCleared()));
+        tetris_gained.setText(String.format("Tetris: %s", tetrisGame[0].tetrisGained));
 
         game_win.setOnClickListener(v -> {});
 

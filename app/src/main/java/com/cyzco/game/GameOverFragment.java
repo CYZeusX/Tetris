@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.content.DialogInterface;
+import android.widget.TextView;
+
 import androidx.fragment.app.DialogFragment;
 
 public class GameOverFragment extends DialogFragment
@@ -37,6 +39,13 @@ public class GameOverFragment extends DialogFragment
         RelativeLayout game_over_menu = view.findViewById(R.id.gameOver_menu);
         Button restart = view.findViewById(R.id.restart);
         ImageView cat_laugh = view.findViewById(R.id.cat_laugh);
+        TextView score_gained = view.findViewById(R.id.score_gained);
+        TextView lines_cleared = view.findViewById(R.id.lines_cleared);
+        TextView tetris_gained = view.findViewById(R.id.tetris_gained);
+
+        score_gained.setText(String.format("Score: %s", tetrisGame[0].getScoreGained()));
+        lines_cleared.setText(String.format("Lines: %s", tetrisGame[0].getLinesCleared()));
+        tetris_gained.setText(String.format("Tetris: %s", tetrisGame[0].tetrisGained));
 
         game_over_menu.setOnClickListener(v -> {});
 
