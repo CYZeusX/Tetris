@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/gameWin_menu"
         android:layout_width="400dp"
-        android:layout_height="400dp"
+        android:layout_height="450dp"
         android:background="@drawable/monitor_plate">
 
         <TextView
@@ -18,97 +18,118 @@
             android:layout_height="50dp"
             android:layout_above="@+id/textView"
             android:layout_alignParentTop="true"
-            android:paddingVertical="10dp"
+            android:paddingVertical="5dp"
             android:fontFamily="@font/rog_font"
             android:text="@string/you_won"
             android:textSize="40sp"
             android:textColor="#00ff00"
             android:textStyle="bold"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:alpha="0.7"/>
 
         <RelativeLayout
             android:id="@+id/textView"
             android:layout_width="300dp"
-            android:layout_height="280dp"
+            android:layout_height="345dp"
             android:layout_centerInParent="true"
             android:background="@drawable/monitor"
             android:elevation="1dp">
 
+            <ImageView
+                android:id="@+id/happy_cat"
+                android:layout_width="230dp"
+                android:layout_height="230dp"
+                android:src="@drawable/happy_cat"
+                android:contentDescription="@string/haha_you_loose"
+                android:adjustViewBounds="true"
+                android:alpha="0.35"
+                android:layout_marginTop="0dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignTop="@+id/infos" />
+
             <RelativeLayout
-                android:id="@+id/relativeLayout2"
-                android:layout_width="match_parent"
-                android:layout_height="180dp">
+                android:id="@+id/infos"
+                android:layout_width="230dp"
+                android:layout_height="150dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/round_rect_mon">
 
-                <RelativeLayout
-                    android:layout_width="260dp"
-                    android:layout_height="150dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="25dp"
-                    android:layout_centerHorizontal="true"
-                    android:background="@drawable/round_rect_mon">
+                <TextView
+                    android:id="@+id/score_gained"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="@font/minecraft_font"
+                    android:paddingVertical="5dp"
+                    android:text="@string/score_gained"
+                    android:textAlignment="center"
+                    android:textColor="?attr/colorAccent"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/score_gained"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="15dp"
-                        android:fontFamily="@font/minecraft_font"
-                        android:paddingVertical="5dp"
-                        android:text="@string/score_gained"
-                        android:textAlignment="center"
-                        android:textColor="?attr/colorAccent"
-                        android:textSize="25sp"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/lines_cleared"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/score_gained"
+                    android:layout_marginTop="0dp"
+                    android:fontFamily="@font/minecraft_font"
+                    android:paddingVertical="5dp"
+                    android:text="@string/lines_cleared"
+                    android:textAlignment="center"
+                    android:textColor="?attr/colorAccent"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/lines_cleared"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_below="@+id/score_gained"
-                        android:layout_marginTop="0dp"
-                        android:fontFamily="@font/minecraft_font"
-                        android:paddingVertical="5dp"
-                        android:text="@string/lines_cleared"
-                        android:textAlignment="center"
-                        android:textColor="?attr/colorAccent"
-                        android:textSize="25sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tetris_gained"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_below="@+id/lines_cleared"
-                        android:layout_marginTop="0dp"
-                        android:fontFamily="@font/minecraft_font"
-                        android:paddingVertical="5dp"
-                        android:text="@string/tetris_gained"
-                        android:textAlignment="center"
-                        android:textColor="?attr/colorAccent"
-                        android:textSize="25sp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
-
+                <TextView
+                    android:id="@+id/tetris_gained"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/lines_cleared"
+                    android:layout_marginTop="0dp"
+                    android:fontFamily="@font/minecraft_font"
+                    android:paddingVertical="5dp"
+                    android:text="@string/tetris_gained"
+                    android:textAlignment="center"
+                    android:textColor="?attr/colorAccent"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <Button
                 android:id="@+id/restart"
-                android:layout_width="260dp"
+                android:layout_width="230dp"
+                android:layout_height="50dp"
+                android:layout_alignBottom="@id/happy_cat"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/button_positive"
+                android:fontFamily="@font/minecraft_font"
+                android:paddingVertical="6dp"
+                android:text="@string/play_again"
+                android:textAlignment="center"
+                android:textColor="#47B832"
+                android:textSize="26sp"
+                android:elevation="10dp" />
+
+            <Button
+                android:id="@+id/quit_app"
+                android:layout_width="230dp"
                 android:layout_height="50dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="25dp"
-                android:background="@drawable/round_rect_mon"
+                android:background="@drawable/button_negative"
                 android:elevation="10dp"
                 android:fontFamily="@font/minecraft_font"
+                android:paddingHorizontal="10dp"
                 android:paddingVertical="6dp"
-                android:paddingStart="30dp"
-                android:text="@string/play_again"
+                android:text="@string/quit_app"
                 android:textAlignment="center"
-                android:textColor="?attr/colorAccent"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                tools:ignore="RtlSymmetry" />
+                android:textColor="#C84B4B"
+                android:textSize="30sp" />
+
         </RelativeLayout>
     </RelativeLayout>
 
