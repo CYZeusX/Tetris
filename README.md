@@ -34,7 +34,6 @@
 
 
 ### * Working on
-    - game win slide fragment
     - List of values | default block, choose block, custom block
     - ^^^^ same, but blocks for background  ^^^^
     - save block for later
@@ -58,4 +57,5 @@
     + Implemented restart
     + Implemented quit app
     + Implemented game over page
+    + Implemented game win slide fragment
     + Altered the position of the Light|Dark theme mode button into the setting menu
