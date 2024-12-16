@@ -50,7 +50,7 @@ public class GameWinFragment extends DialogFragment
 
         game_win.setOnClickListener(v -> {});
 
-        Glide.with(requireContext()).load(R.drawable.cat_laugh).into(happy_cat);
+        Glide.with(requireContext()).load(R.drawable.happy_cat).into(happy_cat);
 
         restart.setOnClickListener(v ->
         {
