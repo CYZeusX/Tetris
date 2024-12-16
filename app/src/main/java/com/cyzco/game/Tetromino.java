@@ -2,10 +2,10 @@ package com.cyzco.game;
 
 public class Tetromino
 {
-    private char[][] shape; // The shape of the piece
+    private String[][] shape; // The shape of the piece
     private int x, y; // Position of the piece
 
-    public Tetromino(char[][] shape)
+    public Tetromino(String[][] shape)
     {
         this.shape = shape;
         this.x = 0;
@@ -28,7 +28,7 @@ public class Tetromino
         return y;
     }
 
-    public char[][] getShape()
+    public String[][] getShape()
     {
         return shape;
     }
@@ -37,7 +37,7 @@ public class Tetromino
     public void rotateClockwise()
     {
         int n = shape.length;
-        char[][] newShape = new char[n][n];
+        String[][] newShape = new String[n][n];
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < n; j++)
@@ -52,7 +52,7 @@ public class Tetromino
     public void rotateCounterClockwise()
     {
         int n = shape.length;
-        char[][] newShape = new char[n][n];
+        String[][] newShape = new String[n][n];
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < n; j++)

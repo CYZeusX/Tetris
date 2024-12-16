@@ -91,6 +91,20 @@
                 android:textStyle="bold"
                 android:fontFamily="@font/minecraft_font"/>
 
+            <Spinner
+                android:id="@+id/choose_block"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="0"
+                android:background="@drawable/dialog_column"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="7dp"
+                android:textAlignment="textEnd"
+                android:textColor="?attr/colorOnPrimary"
+                android:textColorHint="?attr/colorOnPrimary"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
         </TableLayout>
     </RelativeLayout>
 

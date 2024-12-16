@@ -9,7 +9,6 @@ import android.os.Vibrator;
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.os.Parcelable;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.content.Context;
 import android.view.InputDevice;
@@ -25,10 +24,7 @@ import android.content.res.Configuration;
 import android.content.SharedPreferences;
 import android.view.WindowInsetsController;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MainActivity extends AppCompatActivity

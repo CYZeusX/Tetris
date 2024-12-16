@@ -20,35 +20,32 @@ import android.os.Vibrator;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 
 public class TetrisGame
 {
-    private final char[][] BOARD;
+    private final String[][] BOARD;
     private final int BOARD_WIDTH = 10; // 10 blocks wide
     private final int BOARD_HEIGHT = 20; // 20 blocks tall
-    private final char BOARD_BLOCK = Shapes.space;
+    private final String BOARD_BLOCK = Shapes.space;
     private final int REMOVE_LINE_SCORE = 100;
     private final Context CONTEXT;
-    public int tetrisGained = 0;
-    private int linesCleared = 0;
-    private int scoreGained = 0;
+    public int tetrisGained, linesCleared, scoreGained = 0;
     private boolean showEffect = false;
-    private boolean vibrationTriggered = false;
     private long effectEndTime = 135; // Timestamp for when the effect ends
     private Tetromino currentPiece;
-    private Bitmap effectBitmap; // Class member for reuse
-    private Bitmap resizedEffectBitmap;
-    private Map<Character, Integer> blockColors = new HashMap<>();
+    private Bitmap effectBitmap, resizedEffectBitmap;
+    private final Map<String, Integer> blockColors = new HashMap<>();
     private EditText stringShape;
-    private Shapes shapes = new Shapes();
-    private GameOverFragment gameOverFragment = new GameOverFragment();
-    private GameWinFragment gameWinFragment = new GameWinFragment();
+    private final Shapes shapes = new Shapes();
+    private final GameOverFragment gameOverFragment = new GameOverFragment();
+    private final GameWinFragment gameWinFragment = new GameWinFragment();
 
     public TetrisGame(Context context)
     {
         this.CONTEXT = context;
 
-        BOARD = new char[BOARD_HEIGHT][BOARD_WIDTH];
+        BOARD = new String[BOARD_HEIGHT][BOARD_WIDTH];
         for (int y = 0; y < BOARD_HEIGHT; y++)
         {
             for (int x = 0; x < BOARD_WIDTH; x++)
@@ -75,6 +72,11 @@ public class TetrisGame
                 shape = "回";
             shapes.setShape(shape);
         }
+    }
+
+    public void changeBlock(String block)
+    {
+        shapes.setShape(block);
     }
 
     public String getBlock()
@@ -105,11 +107,11 @@ public class TetrisGame
     private void spawnNewPiece()
     {
         int randomIndex = (int) (Math.random() * Shapes.SHAPES.length);  // Random index for shapes
-        char[][] randomShape = Shapes.SHAPES[randomIndex];  // Get the random shape from the Shapes array
+        String[][] randomShape = Shapes.SHAPES[randomIndex];  // Get the random shape from the Shapes array
 
         // Debugging: Print the selected shape
         System.out.println("Random shape index: " + randomIndex);
-        for (char[] row : randomShape) {
+        for (String[] row : randomShape) {
             System.out.println(Arrays.toString(row));  // Print each row of the shape
         }
 
@@ -178,7 +180,7 @@ public class TetrisGame
             case "X", "l1" -> rotatePieceCounterClockwise();
             case "Y", "r1" -> rotatePieceClockwise();
             default -> System.out.println("Unknown action: " + action);
-        };
+        }
     }
 
     public void updateGame()
@@ -241,16 +243,16 @@ public class TetrisGame
 
     public boolean canMove(Tetromino piece, int newX, int newY)
     {
-        char[][] shape = piece.getShape();
+        String[][] shape = piece.getShape();
         for (int i = 0; i < shape.length; i++)
         {
             for (int j = 0; j < shape[i].length; j++)
             {
-                if (shape[i][j] != BOARD_BLOCK)
+                if (!Objects.equals(shape[i][j], BOARD_BLOCK))
                 {
                     int boardX = newX + j;
                     int boardY = newY + i;
-                    if (boardX < 0 || boardX >= BOARD_WIDTH || boardY >= BOARD_HEIGHT || (boardY >= 0 && BOARD[boardY][boardX] != BOARD_BLOCK))
+                    if (boardX < 0 || boardX >= BOARD_WIDTH || boardY >= BOARD_HEIGHT || (boardY >= 0 && !Objects.equals(BOARD[boardY][boardX], BOARD_BLOCK)))
                     {
                         System.out.println("Cannot move: Collision detected at X=" + boardX + " Y=" + boardY); // Debugging log
                         return false; // Blocked, cannot move
@@ -263,7 +265,7 @@ public class TetrisGame
 
     private void lockPiece()
     {
-        char[][] shape = currentPiece.getShape();
+        String[][] shape = currentPiece.getShape();
         int startX = currentPiece.getX();
         int startY = currentPiece.getY();
 
@@ -272,7 +274,7 @@ public class TetrisGame
         {
             for (int j = 0; j < shape[i].length; j++)
             {
-                if (shape[i][j] != BOARD_BLOCK)
+                if (!Objects.equals(shape[i][j], BOARD_BLOCK))
                 {
                     int boardX = startX + j;
                     int boardY = startY + i;
@@ -298,7 +300,7 @@ public class TetrisGame
             boolean lineComplete = true;
             for (int x = 0; x < BOARD_WIDTH; x++)
             {
-                if (BOARD[y][x] == BOARD_BLOCK)
+                if (Objects.equals(BOARD[y][x], BOARD_BLOCK))
                 {
                     lineComplete = false;
                     break;
@@ -327,7 +329,7 @@ public class TetrisGame
 
         linesCleared += rowsClearedInThisStep; // Update the total lines cleared
 
-        if (linesCleared >= 150)
+        if (linesCleared >= 50)
         {
             handleGameWin();
         }
@@ -465,8 +467,8 @@ public class TetrisGame
         {
             for (int x = 0; x < BOARD[y].length; x++)
             {
-                char blockChar = BOARD[y][x];
-                if (blockChar != Shapes.space)
+                String blockChar = BOARD[y][x];
+                if (!Objects.equals(blockChar, Shapes.space))
                 {
                     Integer color = blockColors.get(blockChar);
                     if (color != null)
@@ -484,7 +486,7 @@ public class TetrisGame
 
     private void renderCurrentPiece(Canvas canvas, Paint paint, int blockSize, int paddingLeft, int paddingTop)
     {
-        char[][] shape = currentPiece.getShape();
+        String[][] shape = currentPiece.getShape();
         int pieceX = currentPiece.getX();
         int pieceY = currentPiece.getY();
 
@@ -492,7 +494,7 @@ public class TetrisGame
         {
             for (int j = 0; j < shape[i].length; j++)
             {
-                if (shape[i][j] != Shapes.space)
+                if (!Objects.equals(shape[i][j], Shapes.space))
                 {
                     drawBlock(canvas, paint, shape[i][j], pieceX + j, pieceY + i, blockSize, paddingLeft, paddingTop, 255);
                 }
@@ -503,14 +505,14 @@ public class TetrisGame
     private void renderShadow(Canvas canvas, Paint paint, int blockSize, int paddingLeft, int paddingTop)
     {
         int shadowY = calculateShadowPosition();
-        char[][] shape = currentPiece.getShape();
+        String[][] shape = currentPiece.getShape();
         int pieceX = currentPiece.getX();
 
         for (int i = 0; i < shape.length; i++)
         {
             for (int j = 0; j < shape[i].length; j++)
             {
-                if (shape[i][j] != Shapes.space)
+                if (!Objects.equals(shape[i][j], Shapes.space))
                 {
                     drawBlock(canvas, paint, shape[i][j], pieceX + j, shadowY + i + 1, blockSize, paddingLeft, paddingTop, 120);
                 }
@@ -518,7 +520,7 @@ public class TetrisGame
         }
     }
 
-    private void drawBlock(Canvas canvas, Paint paint, char blockChar, int x, int y, int blockSize, int paddingLeft, int paddingTop, int alpha)
+    private void drawBlock(Canvas canvas, Paint paint, String blockChar, int x, int y, int blockSize, int paddingLeft, int paddingTop, int alpha)
     {
         Integer color = blockColors.get(blockChar);
         if (color != null)
@@ -547,7 +549,6 @@ public class TetrisGame
             } else
             {
                 showEffect = false;
-                vibrationTriggered = false;
             }
         } else if (showEffect)
         {

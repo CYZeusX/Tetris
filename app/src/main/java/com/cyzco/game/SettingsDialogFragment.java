@@ -1,12 +1,17 @@
 package com.cyzco.game;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 import android.widget.EditText;
 import androidx.annotation.NonNull;
+
 import android.view.LayoutInflater;
+import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -34,6 +39,7 @@ public class SettingsDialogFragment extends DialogFragment
         MainActivity mainActivity = (MainActivity) getActivity();
         assert mainActivity != null;
         TetrisGame tetrisGame = mainActivity.tetrisGame;
+        Shapes shapes = new Shapes();
 
         // Inflate the custom layout for the dialog
         View view = inflater.inflate(R.layout.setting_dialog, container, false);
@@ -42,6 +48,7 @@ public class SettingsDialogFragment extends DialogFragment
         RelativeLayout setting_menu = view.findViewById(R.id.setting_menu);
         EditText change_block = view.findViewById(R.id.change_block);
         Button lightDark = view.findViewById(R.id.lightDark);
+        Spinner blockSpinner = view.findViewById(R.id.choose_block);
 
         // Pass the EditText reference to TetrisGame
         tetrisGame.setStringShape(change_block);
@@ -59,6 +66,21 @@ public class SettingsDialogFragment extends DialogFragment
 
             AppCompatDelegate.setDefaultNightMode(newMode);
             sharedPreferences.edit().putInt("theme_mode", newMode).apply();
+        });
+
+        String[] blocks = {"回", "■", "□", String.valueOf(change_block)};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(mainActivity, R.layout.spinner_item, blocks);
+        adapter.setDropDownViewResource(R.layout.dropdown_spinner);
+        blockSpinner.setAdapter(adapter);
+        blockSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                tetrisGame.changeBlock(selectedItem);
+            }
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
 
         // Return the view
