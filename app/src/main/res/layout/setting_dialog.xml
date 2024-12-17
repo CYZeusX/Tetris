@@ -53,6 +53,23 @@
             android:elevation="2dp"
             android:src="@drawable/light_dark" />
 
+        <TextView
+            android:id="@+id/choose_block_text"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_alignStart="@+id/textView"
+            android:layout_alignBottom="@+id/textView"
+            android:layout_marginBottom="50dp"
+            android:fontFamily="@font/minecraft_font"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:text="@string/set_blocks"
+            android:textAlignment="textStart"
+            android:textColor="?attr/colorAccent"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:elevation="10dp"/>
+
         <TableLayout
             android:id="@+id/textView"
             android:layout_width="250dp"
@@ -93,17 +110,13 @@
 
             <Spinner
                 android:id="@+id/choose_block"
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="50dp"
                 android:layout_weight="0"
+                android:layout_gravity="center"
                 android:background="@drawable/dialog_column"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="7dp"
-                android:textAlignment="textEnd"
-                android:textColor="?attr/colorOnPrimary"
-                android:textColorHint="?attr/colorOnPrimary"
-                android:textSize="25sp"
-                android:textStyle="bold"/>
+                android:popupBackground="@drawable/popup_spinner"
+                android:spinnerMode="dropdown"/>
 
         </TableLayout>
     </RelativeLayout>

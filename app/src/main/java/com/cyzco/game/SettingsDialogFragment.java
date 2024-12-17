@@ -1,15 +1,18 @@
 package com.cyzco.game;
 
-import android.annotation.SuppressLint;
+import java.util.List;
+import java.util.Arrays;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
+import java.util.ArrayList;
 import android.widget.Button;
-import android.view.ViewGroup;
+import android.text.Editable;
 import android.widget.Spinner;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.text.TextWatcher;
+import android.widget.AdapterView;
 import androidx.annotation.NonNull;
-
 import android.view.LayoutInflater;
 import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
@@ -21,6 +24,9 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class SettingsDialogFragment extends DialogFragment
 {
+    private List<String> blocks;
+    private ArrayAdapter<String> adapter;
+
     // to remove the blank space area at the corner of the setting menu
     @Override
     public void onStart()
@@ -39,7 +45,6 @@ public class SettingsDialogFragment extends DialogFragment
         MainActivity mainActivity = (MainActivity) getActivity();
         assert mainActivity != null;
         TetrisGame tetrisGame = mainActivity.tetrisGame;
-        Shapes shapes = new Shapes();
 
         // Inflate the custom layout for the dialog
         View view = inflater.inflate(R.layout.setting_dialog, container, false);
@@ -68,10 +73,31 @@ public class SettingsDialogFragment extends DialogFragment
             sharedPreferences.edit().putInt("theme_mode", newMode).apply();
         });
 
-        String[] blocks = {"回", "■", "□", String.valueOf(change_block)};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(mainActivity, R.layout.spinner_item, blocks);
+        blocks = new ArrayList<>(Arrays.asList("回", "■", "□", "•"));
+        adapter = new ArrayAdapter<>(mainActivity, R.layout.spinner_item, blocks);
         adapter.setDropDownViewResource(R.layout.dropdown_spinner);
         blockSpinner.setAdapter(adapter);
+
+        change_block.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                String newBlock = s.toString();
+                if (!newBlock.isEmpty() || !blocks.contains(newBlock))
+                {
+                    blocks.add(newBlock);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+
         blockSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
