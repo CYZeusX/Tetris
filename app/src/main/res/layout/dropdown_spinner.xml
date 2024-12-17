@@ -6,6 +6,6 @@
     android:layout_height="42dp"
     android:paddingStart="206dp"
     android:textSize="25sp"
-    android:textColor="?attr/colorOnPrimary"
+    android:textColor="@color/J"
     android:textStyle="bold"
     tools:ignore="RtlSymmetry" />
