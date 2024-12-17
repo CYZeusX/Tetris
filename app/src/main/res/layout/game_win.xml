@@ -9,11 +9,11 @@
     <RelativeLayout
         android:id="@+id/gameWin_menu"
         android:layout_width="400dp"
-        android:layout_height="450dp"
+        android:layout_height="400dp"
         android:background="@drawable/monitor_plate">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/gameover"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_above="@+id/textView"
@@ -30,8 +30,10 @@
         <RelativeLayout
             android:id="@+id/textView"
             android:layout_width="300dp"
-            android:layout_height="345dp"
-            android:layout_centerInParent="true"
+            android:layout_height="325dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/monitor"
             android:elevation="1dp">
 
@@ -39,13 +41,13 @@
                 android:id="@+id/happy_cat"
                 android:layout_width="230dp"
                 android:layout_height="230dp"
-                android:src="@drawable/happy_cat"
-                android:contentDescription="@string/haha_you_loose"
+                android:layout_alignTop="@+id/infos"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="0dp"
                 android:adjustViewBounds="true"
                 android:alpha="0.35"
-                android:layout_marginTop="0dp"
-                android:layout_centerHorizontal="true"
-                android:layout_alignTop="@+id/infos" />
+                android:contentDescription="@string/haha_you_loose"
+                android:src="@drawable/happy_cat" />
 
             <RelativeLayout
                 android:id="@+id/infos"
@@ -53,7 +55,7 @@
                 android:layout_height="150dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/round_rect_mon">
 
                 <TextView
@@ -101,17 +103,16 @@
             <Button
                 android:id="@+id/restart"
                 android:layout_width="230dp"
-                android:layout_height="50dp"
+                android:layout_height="80dp"
                 android:layout_alignBottom="@id/happy_cat"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/button_positive"
+                android:elevation="10dp"
                 android:fontFamily="@font/minecraft_font"
-                android:paddingVertical="6dp"
+                android:gravity="center"
                 android:text="@string/play_again"
-                android:textAlignment="center"
                 android:textColor="#47B832"
-                android:textSize="26sp"
-                android:elevation="10dp" />
+                android:textSize="26sp" />
 
             <Button
                 android:id="@+id/quit_app"
@@ -119,7 +120,7 @@
                 android:layout_height="50dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="25dp"
+                android:layout_marginBottom="15dp"
                 android:background="@drawable/button_negative"
                 android:elevation="10dp"
                 android:fontFamily="@font/minecraft_font"

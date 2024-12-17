@@ -385,7 +385,6 @@ public class TetrisGame
         blockColors.put(Shapes.Z_BLOCK, Color.parseColor("#FF4D4D")); // Z-shape
         blockColors.put(Shapes.J_BLOCK, Color.parseColor("#3460FF")); // J-shape
         blockColors.put(Shapes.L_BLOCK, Color.parseColor("#FFA621")); // L-shape
-
         blockColors.put(Shapes.space, Color.WHITE); // No color for empty spaces
     }
 

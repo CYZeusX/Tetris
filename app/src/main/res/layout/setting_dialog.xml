@@ -12,7 +12,7 @@
         android:background="@drawable/monitor_plate">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/gameover"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="@string/setting"
@@ -24,7 +24,7 @@
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@+id/textView2"
+            android:layout_below="@+id/gameover"
             android:layout_alignStart="@+id/textView"
             android:layout_alignEnd="@+id/textView"
             android:layout_marginStart="0dp"

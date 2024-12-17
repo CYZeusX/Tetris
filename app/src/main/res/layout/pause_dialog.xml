@@ -12,7 +12,7 @@
         android:background="@drawable/monitor_plate">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/gameover"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="@string/pause"

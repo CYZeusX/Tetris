@@ -3,6 +3,6 @@
     <stroke
         android:color="@color/monitorSide"
         android:width="4dp"/>
-    <solid android:color="#4D3F4515"/>
+    <solid android:color="#99686B52"/>
     <corners android:radius="8dp"/>
 </shape>
