@@ -1,5 +1,8 @@
 package com.cyzco.game;
 
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +15,8 @@ import androidx.fragment.app.DialogFragment;
 
 public class PauseDialogFragment extends DialogFragment
 {
+    private View rootView;
+
     // to remove the blank space area at the corner of the setting menu
     @Override
     public void onStart()
@@ -21,6 +26,13 @@ public class PauseDialogFragment extends DialogFragment
         {
             getDialog().getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+            if (isAdded())
+            {
+                rootView = requireActivity().getWindow().getDecorView().getRootView();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                    rootView.setRenderEffect(RenderEffect.createBlurEffect(20, 20, Shader.TileMode.MIRROR));
+            }
         }
     }
 
@@ -36,6 +48,7 @@ public class PauseDialogFragment extends DialogFragment
 
         // Find views from the layout
         RelativeLayout pause_menu = view.findViewById(R.id.pause_menu);
+        view = view.getRootView();
         Button resume = view.findViewById(R.id.resume);
         Button restart = view.findViewById(R.id.restart);
         Button quit_app = view.findViewById(R.id.quit_app);
@@ -75,6 +88,9 @@ public class PauseDialogFragment extends DialogFragment
         MainActivity mainActivity = (MainActivity) getActivity();
         assert mainActivity != null;
         mainActivity.tetrisGame.togglePause();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && rootView != null)
+            rootView.setRenderEffect(null);
     }
 
 }

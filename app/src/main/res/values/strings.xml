@@ -15,7 +15,7 @@
     <string name="setting">Setting</string>
     <string name="set_blocks">Set Blocks</string>
     <string name="theme_light_dark">Light | Dark</string>
-    <string name="default_block">\"回\"</string>
+    <string name="default_block">\"■\"</string>
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>
     <string name="restart">Restart &lt;&lt;</string>

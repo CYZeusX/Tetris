@@ -193,7 +193,9 @@ public class TetrisGame
             // Move the piece down by one row
             currentPiece.setPosition(currentX, currentY + 1);
             setVibrator(new long[]{0, 2}, new int[]{0, 50});
-        } else
+        }
+
+        else
         {
             // Lock the piece in place and spawn a new one
             lockPiece();
@@ -415,7 +417,7 @@ public class TetrisGame
 
     private void renderBoardBackground(Canvas canvas, Paint paint, int blockSize, int paddingLeft, int paddingTop)
     {
-        paint.setColor(Color.rgb(110, 110, 110));
+        paint.setColor(Color.rgb(0, 0, 0));
         for (int y = 0; y < BOARD_HEIGHT; y++)
         {
             for (int x = 0; x < BOARD_WIDTH; x++)

@@ -300,15 +300,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event)
     {
-        String action = null;
-        switch (keyCode)
-        {
-            case KeyEvent.KEYCODE_BUTTON_A: action = "A"; break;
-            case KeyEvent.KEYCODE_BUTTON_X: action = "X"; break;
-            case KeyEvent.KEYCODE_BUTTON_Y: action = "Y"; break;
-            case KeyEvent.KEYCODE_BUTTON_L1: action = "l1"; break;
-            case KeyEvent.KEYCODE_BUTTON_R1: action = "r1"; break;
-        }
+        String action = switch (keyCode) {
+            case KeyEvent.KEYCODE_BUTTON_A -> "A";
+            case KeyEvent.KEYCODE_BUTTON_X -> "X";
+            case KeyEvent.KEYCODE_BUTTON_Y -> "Y";
+            case KeyEvent.KEYCODE_BUTTON_L1 -> "l1";
+            case KeyEvent.KEYCODE_BUTTON_R1 -> "r1";
+            default -> null;
+        };
 
         if (action != null)
         {
@@ -332,7 +331,6 @@ public class MainActivity extends AppCompatActivity
         }
         return false;
     }
-
 
     @Override
     public boolean onGenericMotionEvent(MotionEvent event)

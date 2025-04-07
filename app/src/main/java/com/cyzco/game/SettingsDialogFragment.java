@@ -2,6 +2,10 @@ package com.cyzco.game;
 
 import java.util.List;
 import java.util.Arrays;
+
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import java.util.ArrayList;
@@ -26,6 +30,7 @@ public class SettingsDialogFragment extends DialogFragment
 {
     private List<String> blocks;
     private ArrayAdapter<String> adapter;
+    private View rootView;
 
     // to remove the blank space area at the corner of the setting menu
     @Override
@@ -36,6 +41,13 @@ public class SettingsDialogFragment extends DialogFragment
         {
             getDialog().getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+            if (isAdded())
+            {
+                rootView = requireActivity().getWindow().getDecorView().getRootView();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                    rootView.setRenderEffect(RenderEffect.createBlurEffect(20, 20, Shader.TileMode.MIRROR));
+            }
         }
     }
 
@@ -51,6 +63,7 @@ public class SettingsDialogFragment extends DialogFragment
 
         // Find views from the layout
         RelativeLayout setting_menu = view.findViewById(R.id.setting_menu);
+        rootView = view.getRootView();
         EditText change_block = view.findViewById(R.id.change_block);
         Button lightDark = view.findViewById(R.id.lightDark);
         Spinner blockSpinner = view.findViewById(R.id.choose_block);
@@ -71,10 +84,9 @@ public class SettingsDialogFragment extends DialogFragment
 
             AppCompatDelegate.setDefaultNightMode(newMode);
             sharedPreferences.edit().putInt("theme_mode", newMode).apply();
-            tetrisGame.togglePause();
         });
 
-        blocks = new ArrayList<>(Arrays.asList("回", "■", "□", "•"));
+        blocks = new ArrayList<>(Arrays.asList("■", "回", "□", "•"));
         adapter = new ArrayAdapter<>(mainActivity, R.layout.spinner_item, blocks);
         adapter.setDropDownViewResource(R.layout.dropdown_spinner);
         blockSpinner.setAdapter(adapter);
@@ -122,6 +134,8 @@ public class SettingsDialogFragment extends DialogFragment
         MainActivity mainActivity = (MainActivity) getActivity();
         assert mainActivity != null;
         mainActivity.tetrisGame.togglePause();
-    }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && rootView != null)
+            rootView.setRenderEffect(null);
+    }
 }
