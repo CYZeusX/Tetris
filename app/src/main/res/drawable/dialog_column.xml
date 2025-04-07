@@ -7,7 +7,7 @@
     </item>
 
     <item
-        android:top="49dp">
+        android:top="46dp">
         <shape>
             <solid android:color="#656D2C"/>
         </shape>

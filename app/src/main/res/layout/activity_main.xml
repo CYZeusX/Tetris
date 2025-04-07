@@ -33,50 +33,117 @@
             android:id="@+id/scores"
             android:layout_width="30dp"
             android:layout_height="60dp"
+            android:layout_centerVertical="true"
             android:layout_alignStart="@+id/textView"
-            android:layout_alignTop="@+id/textView"
-            android:layout_marginStart="3dp"
-            android:layout_marginTop="22dp"
-            android:layout_marginEnd="3dp"
             android:layout_toStartOf="@+id/mon"
             android:background="@drawable/monitor_layouts"
             android:elevation="10dp"
-            android:textSize="20sp"
-            android:textStyle="bold"
             android:text="@string/score"
             android:textAlignment="center"
-            android:textColor="?attr/colorAccent"/>
+            android:textColor="?attr/colorAccent"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/lines"
             android:layout_width="30dp"
             android:layout_height="60dp"
-            android:layout_alignTop="@+id/textView"
+            android:layout_centerVertical="true"
             android:layout_alignEnd="@+id/textView"
-            android:layout_marginStart="3dp"
-            android:layout_marginTop="22dp"
-            android:layout_marginEnd="3dp"
             android:layout_toEndOf="@+id/mon"
             android:background="@drawable/monitor_layouts"
             android:elevation="10dp"
-            android:textSize="20sp"
-            android:textStyle="bold"
             android:text="@string/lines"
             android:textAlignment="center"
-            android:textColor="?attr/colorAccent"/>
+            android:textColor="?attr/colorAccent"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <SurfaceView
             android:id="@+id/mon"
             android:layout_width="129.5dp"
-            android:layout_height="258dp"
+            android:layout_height="250dp"
             android:layout_centerInParent="true"
-            android:elevation="10dp"/>
+            android:elevation="10dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:background="@color/nul"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="@+id/mon_back"
+        app:layout_constraintTop_toBottomOf="@+id/mon_back">
+
+        <RelativeLayout
+            android:layout_width="170dp"
+            android:layout_height="60dp"
+            android:elevation="2dp"
+            android:background="@drawable/button_left"
+            android:layout_centerInParent="true"/>
+
+        <RelativeLayout
+            android:layout_width="60dp"
+            android:layout_height="170dp"
+            android:elevation="2dp"
+            android:background="@drawable/button_left"
+            android:layout_centerInParent="true" />
+
+        <RelativeLayout
+            android:id="@+id/pad_mid"
+            android:layout_width="160dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:elevation="2dp"
+            android:foreground="@drawable/button_left_middle"
+            android:outlineAmbientShadowColor="@color/nul"
+            android:outlineSpotShadowColor="@color/nul" />
+
+        <Button
+            android:id="@+id/a"
+            android:layout_width="60dp"
+            android:layout_height="70dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="5dp"
+            android:background="@color/nul"
+            android:rotation="-90" />
+
+        <Button
+            android:id="@+id/d"
+            android:layout_width="60dp"
+            android:layout_height="70dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@color/nul"
+            android:layout_marginEnd="5dp"
+            android:rotation="90" />
+
+        <Button
+            android:id="@+id/w"
+            android:layout_width="60dp"
+            android:layout_height="75dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="0dp"
+            android:background="@color/nul"/>
+
+        <Button
+            android:id="@+id/s"
+            android:layout_width="60dp"
+            android:layout_height="75dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="0dp"
+            android:background="@color/nul"
+            android:rotation="180" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/pad_right"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintVertical_bias="0"
         app:layout_constraintEnd_toEndOf="@+id/mon_back"
@@ -84,21 +151,21 @@
 
         <RelativeLayout
             android:id="@+id/pad_cent"
-            android:layout_width="40dp"
-            android:layout_height="25dp"
+            android:layout_width="48dp"
+            android:layout_height="30.5dp"
             android:layout_centerInParent="true"
             android:background="@color/nul" />
 
         <Button
             android:id="@+id/Y"
             style="@style/NoThemeButton"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_above="@+id/pad_cent"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="2dp"
             android:background="@drawable/button_right"
-            android:elevation="2dp"
+            android:elevation="5dp"
             android:gravity="center"
             android:padding="0dp"
             android:text="@string/btn_Y"
@@ -109,14 +176,13 @@
         <Button
             android:id="@+id/A"
             style="@style/NoThemeButton"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_below="@id/pad_cent"
-            android:layout_alignParentEnd="true"
             android:layout_marginTop="2dp"
-            android:layout_marginEnd="47dp"
+            android:layout_centerHorizontal="true"
             android:background="@drawable/button_right"
-            android:elevation="2dp"
+            android:elevation="5dp"
             android:gravity="center"
             android:padding="0dp"
             android:text="@string/btn_A"
@@ -128,12 +194,12 @@
         <Button
             android:id="@+id/X"
             style="@style/NoThemeButton"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/pad_cent"
             android:background="@drawable/button_right"
-            android:elevation="2dp"
+            android:elevation="5dp"
             android:gravity="center"
             android:padding="0dp"
             android:text="@string/btn_X"
@@ -144,12 +210,12 @@
         <Button
             android:id="@+id/B"
             style="@style/NoThemeButton"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/pad_cent"
             android:background="@drawable/button_right"
-            android:elevation="2dp"
+            android:elevation="5dp"
             android:gravity="center"
             android:padding="0dp"
             android:text="@string/btn_B"
@@ -158,143 +224,93 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:background="@color/nul"
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="60dp"
         android:layout_marginTop="40dp"
-        app:layout_constraintStart_toStartOf="@+id/mon_back"
-        app:layout_constraintTop_toBottomOf="@+id/mon_back">
-
-        <Button
-            android:id="@+id/a"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="-8dp"
-            android:layout_toStartOf="@id/pad_mid"
-            android:background="@drawable/button_left"
-            android:elevation="2dp"
-            android:rotation="-90" />
-
-        <Button
-            android:id="@+id/d"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="-8dp"
-            android:layout_toEndOf="@id/pad_mid"
-            android:background="@drawable/button_left"
-            android:elevation="2dp"
-            android:rotation="90" />
-
-        <Button
-            android:id="@+id/w"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_above="@id/pad_mid"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="-8dp"
-            android:background="@drawable/button_left"
-            android:elevation="2dp" />
-
-        <Button
-            android:id="@+id/s"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_below="@id/pad_mid"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="-8dp"
-            android:background="@drawable/button_left"
-            android:elevation="2dp"
-            android:rotation="180" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
         <RelativeLayout
-            android:id="@+id/pad_mid"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerInParent="true"
-            android:elevation="3dp"
-            android:foreground="@drawable/button_left_middle"
-            android:outlineAmbientShadowColor="@color/nul"
-            android:outlineSpotShadowColor="@color/nul" />
-    </RelativeLayout>
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/pause"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/function_button"
+                android:layout_marginEnd="40dp"
+                android:elevation="2dp" />
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/nul"
+                android:elevation="5dp"
+                android:src="@drawable/pause"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/orient_at_portrait"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="255dp"
+                android:background="@drawable/function_button"
+                android:elevation="2dp"
+                android:layout_centerInParent="true"/>
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="33dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/nul"
+                android:elevation="5dp"
+                android:src="@drawable/land"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/setting"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:background="@drawable/function_button"
+                android:elevation="2dp"
+                android:layout_marginStart="40dp"
+                android:layout_centerInParent="true"/>
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/nul"
+                android:elevation="5dp"
+                android:src="@drawable/setting"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+    </LinearLayout>
 
     <Button
         android:id="@+id/orient_at_land"
         android:layout_width="0dp"
         android:layout_height="0dp"
         tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/pause"
-        android:layout_width="60dp"
-        android:layout_height="40dp"
-        android:background="@drawable/function_button"
-        android:layout_marginEnd="40dp"
-        android:elevation="2dp"
-        app:layout_constraintEnd_toStartOf="@+id/orient_at_portrait"
-        app:layout_constraintTop_toTopOf="@+id/orient_at_portrait" />
-
-    <ImageView
-        android:layout_width="22dp"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/nul"
-        android:elevation="5dp"
-        android:src="@drawable/pause"
-        app:layout_constraintBottom_toBottomOf="@+id/pause"
-        app:layout_constraintEnd_toEndOf="@+id/pause"
-        app:layout_constraintStart_toStartOf="@+id/pause"
-        app:layout_constraintTop_toTopOf="@+id/pause" />
-
-    <Button
-        android:id="@+id/orient_at_portrait"
-        android:layout_width="60dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="228dp"
-        android:background="@drawable/function_button"
-        android:elevation="2dp"
-        app:flow_horizontalBias="0.5"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mon_back"/>
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="33dp"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/nul"
-        android:elevation="2dp"
-        android:src="@drawable/land"
-        app:layout_constraintBottom_toBottomOf="@+id/orient_at_portrait"
-        app:layout_constraintEnd_toEndOf="@+id/orient_at_portrait"
-        app:layout_constraintStart_toStartOf="@+id/orient_at_portrait"
-        app:layout_constraintTop_toTopOf="@+id/orient_at_portrait" />
-
-    <Button
-        android:id="@+id/setting"
-        android:layout_width="60dp"
-        android:layout_height="40dp"
-        android:background="@drawable/function_button"
-        android:layout_marginStart="40dp"
-        app:layout_constraintStart_toEndOf="@+id/orient_at_portrait"
-        app:layout_constraintTop_toTopOf="@+id/orient_at_portrait" />
-
-    <ImageView
-        android:layout_width="22dp"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/nul"
-        android:elevation="5dp"
-        android:src="@drawable/setting"
-        app:layout_constraintBottom_toBottomOf="@+id/setting"
-        app:layout_constraintEnd_toEndOf="@+id/setting"
-        app:layout_constraintStart_toStartOf="@+id/setting"
-        app:layout_constraintTop_toTopOf="@+id/setting" />
 
     <Button
         android:layout_width="0dp"

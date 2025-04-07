@@ -1,12 +1,15 @@
 package com.cyzco.game;
 
 import java.util.Map;
+
+import android.graphics.Color;
 import android.util.Log;
 import java.util.HashMap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.view.KeyEvent;
+import android.view.Window;
 import android.widget.Button;
 import android.os.Parcelable;
 import android.widget.TextView;
@@ -15,6 +18,7 @@ import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.WindowInsets;
+import android.view.WindowManager;
 import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -50,13 +54,12 @@ public class MainActivity extends AppCompatActivity
         int orientation = sharedPreferences.getInt("orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         Log.d("MainActivity", "Retrieved orientation: " + orientation);
         if (orientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-        {
             setRequestedOrientation(orientation);
-        }
 
         setContentView(R.layout.activity_main);
 
-        WindowInsetsController insetsController = getWindow().getInsetsController();
+        Window window = getWindow();
+        WindowInsetsController insetsController = window.getInsetsController();
         if (insetsController != null)
         {
             // Hide the status bar and navigation bar
@@ -65,8 +68,12 @@ public class MainActivity extends AppCompatActivity
             // Enable gestures for immersive experience (if needed)
             insetsController.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
         }
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
 
         EdgeToEdge.enable(this);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) ->
         {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -146,9 +153,7 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
         int orientation = sharedPreferences.getInt("orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         if (orientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-        {
             setRequestedOrientation(orientation);
-        }
     }
 
     @Override
@@ -215,36 +220,42 @@ public class MainActivity extends AppCompatActivity
         setupContinuousMovement(s, () -> doMovementAction("s"));
 
         // Drop the block immediately
-        A.setOnTouchListener((v, event) -> doControlAction(event, "A"));
+        buttonOnTouch(A, "A");
 
         // Rotate the block anti-clockwise
-        X.setOnTouchListener((v, event) -> doControlAction(event, "X"));
+        buttonOnTouch(X, "X");
 
         // Rotate the block clockwise
-        Y.setOnTouchListener((v, event) -> doControlAction(event, "Y"));
+        buttonOnTouch(Y, "Y");
 
         // Rotate the block anti-clockwise
-        l1.setOnTouchListener((v, event) -> doControlAction(event, "l1"));
+        buttonOnTouch(l1, "l1");
 
         // Rotate the block clockwise
-        r1.setOnTouchListener((v, event) -> doControlAction(event, "r1"));
+        buttonOnTouch(r1, "r1");
     }
 
-    // performs control actions for right buttons
-    private boolean doControlAction(MotionEvent event, String action)
+    @SuppressLint("ClickableViewAccessibility")
+    private void buttonOnTouch(Button button, String action)
     {
-        setControlAction(event, action);
-        return true;
-    }
-
-    // setup action logics for right control buttons
-    private void setControlAction(MotionEvent event, String action)
-    {
-        if (event.getAction() == MotionEvent.ACTION_DOWN)
+        button.setOnTouchListener((v, event) ->
         {
-            tetrisGame.getAction(action);
-            setVibrateAndRender();
-        }
+            switch (event.getAction())
+            {
+                case MotionEvent.ACTION_DOWN:
+                    button.setElevation(0f);
+                    tetrisGame.getAction(action);
+                    setVibrateAndRender();
+                    button.setTextColor(Color.WHITE);
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                    button.setElevation(15f);
+                    button.setTextColor(com.google.android.material.R.attr.colorOnSecondary);
+                    break;
+            }
+            return true;
+        });
     }
 
     // performs control actions for left buttons
@@ -370,11 +381,12 @@ public class MainActivity extends AppCompatActivity
 
         button.setOnTouchListener((v, event) ->
         {
-            switch (event.getAction())
+            switch (event.getAction() & MotionEvent.ACTION_MASK)
             {
                 case MotionEvent.ACTION_DOWN:
                     movementHandler.post(movementRunnable); // Start the movement
                     break;
+
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
                     movementHandler.removeCallbacks(movementRunnable); // Stop the movement
@@ -413,8 +425,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run()
             {
-                moveHandler.postDelayed(this, 50);
                 // Movement speed interval
+                moveHandler.postDelayed(this, 50);
             }
         };
 

@@ -41,9 +41,7 @@ public class Tetromino
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < n; j++)
-            {
                 newShape[j][n - 1 - i] = shape[i][j];
-            }
         }
         shape = newShape;
     }
@@ -56,9 +54,7 @@ public class Tetromino
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < n; j++)
-            {
                 newShape[n - 1 - j][i] = shape[i][j];
-            }
         }
         shape = newShape;
     }

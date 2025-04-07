@@ -1,5 +1,5 @@
 [versions]
-agp = "8.5.0"
+agp = "8.8.0"
 coilGif = "2.4.0"
 compiler = "4.15.1"
 coreSplashscreenVersion = "1.0.0"

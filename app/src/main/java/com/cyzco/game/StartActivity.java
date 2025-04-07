@@ -4,6 +4,8 @@ import android.util.Log;
 import android.os.Bundle;
 import android.view.View;
 import android.view.KeyEvent;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.content.Intent;
 import android.view.WindowInsets;
@@ -38,15 +40,20 @@ public class StartActivity extends AppCompatActivity
         Log.d("StartActivity", "Retrieved orientation: " + orientation);
         if (orientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {setRequestedOrientation(orientation);}
 
-        // Hide status bar and navigation bar
-        WindowInsetsController insetsController = getWindow().getInsetsController();
+        Window window = getWindow();
+        WindowInsetsController insetsController = window.getInsetsController();
         if (insetsController != null)
         {
+            // Hide the status bar and navigation bar
             insetsController.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+
+            // Enable gestures for immersive experience (if needed)
             insetsController.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
         }
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
 
-        // Enable Edge-to-Edge mode
         EdgeToEdge.enable(this);
 
         // Get references to buttons and views
@@ -97,7 +104,6 @@ public class StartActivity extends AppCompatActivity
         return super.onKeyDown(keyCode, event);
     }
 
-
     private void startGame(Intent intent)
     {
         startActivity(intent);
@@ -107,8 +113,9 @@ public class StartActivity extends AppCompatActivity
     public void toggleTheme()
     {
         // Determine the new mode (light or dark)
-        int newMode = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-                ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES;
+        int newMode = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                == Configuration.UI_MODE_NIGHT_YES ?
+                AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES;
 
         // Set the new theme mode
         AppCompatDelegate.setDefaultNightMode(newMode);
@@ -120,5 +127,4 @@ public class StartActivity extends AppCompatActivity
         // Recreate activity to apply changes
         recreate();
     }
-
 }

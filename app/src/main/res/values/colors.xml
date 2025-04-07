@@ -13,7 +13,7 @@
     <color name="nul">#00000000</color>
     <color name="matte">#050505</color>
     <color name="monitorEdge">#6E6D7A</color>
-    <color name="monitorEdgeDark">#58585B</color>
+    <color name="monitorEdgeDark">#656568</color>
     <color name="monitorPlate">#928fa2</color>
     <color name="monitorPlateDark">#4D4D55</color>
     <color name="monitorPlateEdge">#848192</color>

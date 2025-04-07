@@ -1,9 +1,10 @@
 package com.cyzco.game;
 
-import android.util.Log;
 import android.os.Bundle;
 import android.content.Intent;
+import android.view.Window;
 import android.view.WindowInsets;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.view.ViewTreeObserver;
 import android.annotation.SuppressLint;
@@ -21,7 +22,8 @@ public class SplashActivity extends AppCompatActivity
     {
 
         splashScreenView.setAlpha(0.9f); // Start invisible
-        splashScreenView.animate()
+        splashScreenView
+                .animate()
                 .alpha(1f) // Fade-in animation
                 .setDuration(1000) // 1 second duration
                 .withEndAction(() ->
@@ -73,9 +75,7 @@ public class SplashActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null)
-        {
             isTransitionStarted = savedInstanceState.getBoolean("isTransitionStarted", false);
-        }
 
         // Check current theme (light/dark) and apply it
         int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
@@ -89,13 +89,19 @@ public class SplashActivity extends AppCompatActivity
 
         fadeInAndOut(splashScreenView);
 
-        // Hide status bar and navigation bar
-        WindowInsetsController insetsController = getWindow().getInsetsController();
+        Window window = getWindow();
+        WindowInsetsController insetsController = window.getInsetsController();
         if (insetsController != null)
         {
+            // Hide the status bar and navigation bar
             insetsController.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+
+            // Enable gestures for immersive experience (if needed)
             insetsController.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
         }
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
     }
 
     @Override

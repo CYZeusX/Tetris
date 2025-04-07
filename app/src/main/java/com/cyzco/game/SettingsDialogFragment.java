@@ -71,6 +71,7 @@ public class SettingsDialogFragment extends DialogFragment
 
             AppCompatDelegate.setDefaultNightMode(newMode);
             sharedPreferences.edit().putInt("theme_mode", newMode).apply();
+            tetrisGame.togglePause();
         });
 
         blocks = new ArrayList<>(Arrays.asList("回", "■", "□", "•"));

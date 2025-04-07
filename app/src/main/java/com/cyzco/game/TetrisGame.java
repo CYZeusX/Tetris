@@ -1,5 +1,6 @@
 package com.cyzco.game;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.BitmapFactory;
@@ -7,6 +8,7 @@ import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.os.VibrationEffect;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.graphics.Typeface;
 import android.view.SurfaceView;
@@ -49,9 +51,7 @@ public class TetrisGame
         for (int y = 0; y < BOARD_HEIGHT; y++)
         {
             for (int x = 0; x < BOARD_WIDTH; x++)
-            {
                 BOARD[y][x] = BOARD_BLOCK;
-            }
         }
 
         initializeBlockColorsAndCharacters();
@@ -69,13 +69,12 @@ public class TetrisGame
         {
             String shape = stringShape.getText().toString().strip();
             if (shape.isEmpty())
-                shape = "回";
+                shape = "■";
             shapes.setShape(shape);
         }
     }
 
-    public void changeBlock(String block)
-    {
+    public void changeBlock(String block) {
         shapes.setShape(block);
     }
 
@@ -84,23 +83,19 @@ public class TetrisGame
         return shapes.getShape();
     }
 
-    public int getLinesCleared()
-    {
+    public int getLinesCleared() {
         return linesCleared;
     }
 
-    public int getScoreGained()
-    {
+    public int getScoreGained() {
         return scoreGained;
     }
 
-    public void setLinesCleared(int linesCleared)
-    {
+    public void setLinesCleared(int linesCleared) {
         this.linesCleared = linesCleared;
     }
 
-    public void setScoreGained(int scoreGained)
-    {
+    public void setScoreGained(int scoreGained) {
         this.scoreGained = scoreGained;
     }
 
@@ -111,9 +106,8 @@ public class TetrisGame
 
         // Debugging: Print the selected shape
         System.out.println("Random shape index: " + randomIndex);
-        for (String[] row : randomShape) {
+        for (String[] row : randomShape)
             System.out.println(Arrays.toString(row));  // Print each row of the shape
-        }
 
         currentPiece = new Tetromino(randomShape);  // Pass the shape to the Tetromino constructor
 
@@ -123,9 +117,8 @@ public class TetrisGame
         currentPiece.setPosition(startX, startY);
 
         // Check if the piece can be placed
-        if (!canMove(currentPiece, startX, startY)) {
+        if (!canMove(currentPiece, startX, startY))
             handleGameOver();  // Handle game over if the piece can't fit
-        }
     }
 
     private boolean isPaused = false;
@@ -144,7 +137,8 @@ public class TetrisGame
     private void handleGameOver()
     {
         togglePause();
-        gameOverFragment.show(((MainActivity) CONTEXT).getSupportFragmentManager(), "GameOverFragment");
+        MainActivity activity = ((MainActivity) CONTEXT);
+        gameOverFragment.show(activity.getSupportFragmentManager(), "GameOverFragment");
     }
 
     public void movePieceLeft()
@@ -186,7 +180,7 @@ public class TetrisGame
     public void updateGame()
     {
         if (!isPaused)
-        {movePieceDown();}
+            movePieceDown();
     }
 
     public void movePieceDown()
@@ -213,9 +207,7 @@ public class TetrisGame
         int newY = currentPiece.getY();
 
         while (canMove(currentPiece, currentPiece.getX(), newY + 1))
-        {
             newY++; // Keep moving down until we can't
-        }
 
         // Set the piece to the final position
         currentPiece.setPosition(currentPiece.getX(), newY);
@@ -227,18 +219,14 @@ public class TetrisGame
     {
         currentPiece.rotateClockwise();
         if (!canMove(currentPiece, currentPiece.getX(), currentPiece.getY()))
-        {
             currentPiece.rotateCounterClockwise(); // Undo rotation if invalid
-        }
     }
 
     public void rotatePieceCounterClockwise()
     {
         currentPiece.rotateCounterClockwise();
         if (!canMove(currentPiece, currentPiece.getX(), currentPiece.getY()))
-        {
             currentPiece.rotateClockwise(); // Undo rotation if invalid
-        }
     }
 
     public boolean canMove(Tetromino piece, int newX, int newY)
@@ -253,13 +241,11 @@ public class TetrisGame
                     int boardX = newX + j;
                     int boardY = newY + i;
                     if (boardX < 0 || boardX >= BOARD_WIDTH || boardY >= BOARD_HEIGHT || (boardY >= 0 && !Objects.equals(BOARD[boardY][boardX], BOARD_BLOCK)))
-                    {
-                        System.out.println("Cannot move: Collision detected at X=" + boardX + " Y=" + boardY); // Debugging log
                         return false; // Blocked, cannot move
-                    }
                 }
             }
         }
+
         return true; // No collisions, can move
     }
 
@@ -279,9 +265,7 @@ public class TetrisGame
                     int boardX = startX + j;
                     int boardY = startY + i;
                     if (boardY >= 0 && boardY < BOARD_HEIGHT && boardX >= 0 && boardX < BOARD_WIDTH)
-                    {
                         BOARD[boardY][boardX] = shape[i][j];
-                    }
                 }
             }
         }
@@ -323,28 +307,20 @@ public class TetrisGame
             tetrisGained++;
         }
         else
-        {
             scoreGained += REMOVE_LINE_SCORE * rowsClearedInThisStep; // Normal score for other cases
-        }
 
         linesCleared += rowsClearedInThisStep; // Update the total lines cleared
 
         if (linesCleared >= 50)
-        {
             handleGameWin();
-        }
     }
 
     private void removeLine(int lineIndex)
     {
         for (int y = lineIndex; y > 0; y--)
-        {
             System.arraycopy(BOARD[y - 1], 0, BOARD[y], 0, BOARD_WIDTH);
-        }
         for (int x = 0; x < BOARD_WIDTH; x++)
-        {
             BOARD[0][x] = BOARD_BLOCK;
-        }
         linesCleared++;
         scoreGained += REMOVE_LINE_SCORE;
     }
@@ -353,9 +329,7 @@ public class TetrisGame
     {
         int shadowY = currentPiece.getY();
         while (canMove(currentPiece, currentPiece.getX(), shadowY + 1))
-        {
             shadowY++;
-        }
         return shadowY; // The Y-coordinate where the shadow will rest
     }
 
@@ -370,9 +344,7 @@ public class TetrisGame
                 System.out.println("Effect bitmaps initialized.");
             }
             else
-            {
                 System.err.println("Error: Could not decode resource for tetris_boom.");
-            }
         }
     }
 
@@ -494,9 +466,7 @@ public class TetrisGame
             for (int j = 0; j < shape[i].length; j++)
             {
                 if (!Objects.equals(shape[i][j], Shapes.space))
-                {
                     drawBlock(canvas, paint, shape[i][j], pieceX + j, pieceY + i, blockSize, paddingLeft, paddingTop, 255);
-                }
             }
         }
     }
@@ -512,9 +482,7 @@ public class TetrisGame
             for (int j = 0; j < shape[i].length; j++)
             {
                 if (!Objects.equals(shape[i][j], Shapes.space))
-                {
                     drawBlock(canvas, paint, shape[i][j], pieceX + j, shadowY + i + 1, blockSize, paddingLeft, paddingTop, 120);
-                }
             }
         }
     }
@@ -545,14 +513,12 @@ public class TetrisGame
 
                 setVibrator(new long[]{0, 210}, new int[]{0, 30});
                 canvas.drawBitmap(resizedEffectBitmap, posX, posY, null);
-            } else
-            {
-                showEffect = false;
             }
-        } else if (showEffect)
-        {
-            System.err.println("Error: resizedEffectBitmap is null. Effect will not be rendered.");
+            else
+                showEffect = false;
         }
+        else if (showEffect)
+            System.err.println("Error: resizedEffectBitmap is null. Effect will not be rendered.");
     }
 
     public void setVibrator(long[] timings, int[] amplitudes)
@@ -561,10 +527,7 @@ public class TetrisGame
         {
             Vibrator vibrator = (Vibrator) CONTEXT.getSystemService(Context.VIBRATOR_SERVICE);
             if (vibrator != null && vibrator.hasVibrator())
-            {
                 vibrator.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1));
-            }
         }
     }
-
 }

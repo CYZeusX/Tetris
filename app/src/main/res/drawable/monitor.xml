@@ -4,8 +4,8 @@
         android:startColor="?attr/colorSurface"
         android:endColor="?attr/colorSurface"
         android:centerColor="?attr/colorOnSurface" />
-   <corners android:radius="2dp"/>
+   <corners android:radius="5dp"/>
     <stroke
         android:color="?attr/colorPrimary"
-        android:width="0.8dp" />
+        android:width="5dp" />
 </shape>

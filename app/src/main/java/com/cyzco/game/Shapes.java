@@ -9,7 +9,7 @@ public class Shapes
     public static final String Z_BLOCK = "\uD83D\uDFE5";
     public static final String J_BLOCK = "\uD83D\uDFE7";
     public static final String L_BLOCK = "\uD83D\uDFE6";
-    public String block = "回";
+    public String block = "■";
     public static String space = "□";
 
     public void setShape(String block)
