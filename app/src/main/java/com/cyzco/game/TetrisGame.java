@@ -30,8 +30,8 @@ public class TetrisGame
     private final int BOARD_WIDTH = 10; // 10 blocks wide
     private final int BOARD_HEIGHT = 20; // 20 blocks tall
     private final String BOARD_BLOCK = Shapes.space;
-    private final int REMOVE_LINE_SCORE = 100;
     private final Context CONTEXT;
+    private final int REMOVE_LINE_SCORE = 100;
     public int tetrisGained, linesCleared, scoreGained = 0;
     private boolean showEffect = false;
     private long effectEndTime = 135; // Timestamp for when the effect ends
@@ -306,8 +306,7 @@ public class TetrisGame
             effectEndTime = System.currentTimeMillis() + 140;
             tetrisGained++;
         }
-        else
-            scoreGained += REMOVE_LINE_SCORE * rowsClearedInThisStep; // Normal score for other cases
+        else scoreGained += REMOVE_LINE_SCORE * rowsClearedInThisStep; // Normal score for other cases
 
         linesCleared += rowsClearedInThisStep; // Update the total lines cleared
 
@@ -321,8 +320,6 @@ public class TetrisGame
             System.arraycopy(BOARD[y - 1], 0, BOARD[y], 0, BOARD_WIDTH);
         for (int x = 0; x < BOARD_WIDTH; x++)
             BOARD[0][x] = BOARD_BLOCK;
-        linesCleared++;
-        scoreGained += REMOVE_LINE_SCORE;
     }
 
     public int calculateShadowPosition()
