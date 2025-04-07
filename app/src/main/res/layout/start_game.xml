@@ -57,7 +57,7 @@
             android:textColor="?attr/colorAccent"
             android:textStyle="bold"
             app:cornerRadius="30dp"
-            app:strokeColor="@color/score_textDark"
+            app:strokeColor="?attr/colorAccent"
             app:strokeWidth="5dp" />
     </RelativeLayout>
 

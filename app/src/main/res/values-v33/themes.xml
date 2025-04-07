@@ -7,7 +7,7 @@
         <item name="colorSecondary">@color/leftButton</item>
         <item name="colorOnPrimary">@color/rightButton</item>
         <item name="colorOnSecondary">@color/rightButtonText</item>
-        <item name="colorOnTertiary">@color/rightButtonHalf</item>
+        <item name="colorTertiary">@color/shoulderButton</item>
         <item name="colorSurface">@color/monitorSide</item>
         <item name="colorOnSurface">@color/monitorMid</item>
         <item name="colorAccent">@color/score_text</item>

@@ -57,7 +57,7 @@
             android:textSize="40sp"
             android:textStyle="bold"
             app:cornerRadius="30dp"
-            app:strokeColor="@color/score_textDark"
+            app:strokeColor="?attr/colorAccent"
             app:strokeWidth="5dp" />
     </RelativeLayout>
 
@@ -197,7 +197,7 @@
         app:layout_constraintEnd_toEndOf="@+id/dpad"
         app:layout_constraintTop_toTopOf="parent"
         app:cornerRadius="15dp"
-        app:strokeColor="?attr/colorSecondary"
+        app:strokeColor="?attr/colorTertiary"
         app:strokeWidth="5dp" />
 
     <Button
@@ -213,7 +213,7 @@
         app:layout_constraintStart_toStartOf="@+id/pad_right"
         app:layout_constraintTop_toTopOf="parent"
         app:cornerRadius="15dp"
-        app:strokeColor="?attr/colorSecondary"
+        app:strokeColor="?attr/colorTertiary"
         app:strokeWidth="5dp" />
 
     <LinearLayout

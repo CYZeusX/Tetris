@@ -36,12 +36,13 @@
             android:layout_centerVertical="true"
             android:layout_alignStart="@+id/textView"
             android:layout_toStartOf="@+id/mon"
+            android:layout_marginStart="5dp"
             android:background="@drawable/monitor_layouts"
             android:elevation="10dp"
             android:text="@string/score"
             android:textAlignment="center"
             android:textColor="?attr/colorAccent"
-            android:textSize="20sp"
+            android:textSize="26sp"
             android:textStyle="bold" />
 
         <TextView
@@ -51,18 +52,19 @@
             android:layout_centerVertical="true"
             android:layout_alignEnd="@+id/textView"
             android:layout_toEndOf="@+id/mon"
+            android:layout_marginEnd="5dp"
             android:background="@drawable/monitor_layouts"
             android:elevation="10dp"
             android:text="@string/lines"
             android:textAlignment="center"
             android:textColor="?attr/colorAccent"
-            android:textSize="20sp"
+            android:textSize="26sp"
             android:textStyle="bold" />
 
         <SurfaceView
             android:id="@+id/mon"
             android:layout_width="170dp"
-            android:layout_height="340dp"
+            android:layout_height="335dp"
             android:layout_centerInParent="true"
             android:elevation="10dp"/>
     </RelativeLayout>
@@ -203,7 +205,7 @@
         app:layout_constraintEnd_toEndOf="@+id/dpad"
         app:layout_constraintTop_toTopOf="parent"
         app:cornerRadius="15dp"
-        app:strokeColor="?attr/colorSecondary"
+        app:strokeColor="?attr/colorTertiary"
         app:strokeWidth="5dp" />
 
     <Button
@@ -219,7 +221,7 @@
         app:layout_constraintStart_toStartOf="@+id/pad_right"
         app:layout_constraintTop_toTopOf="parent"
         app:cornerRadius="15dp"
-        app:strokeColor="?attr/colorSecondary"
+        app:strokeColor="?attr/colorTertiary"
         app:strokeWidth="5dp" />
 
     <Button

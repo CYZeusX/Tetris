@@ -138,7 +138,15 @@ public class TetrisGame
     {
         togglePause();
         MainActivity activity = ((MainActivity) CONTEXT);
-        gameOverFragment.show(activity.getSupportFragmentManager(), "GameOverFragment");
+
+        try {
+            gameOverFragment.show(activity.getSupportFragmentManager(), "GameOverFragment");
+        }
+
+        catch (Exception e) {
+            Log.e("GameOverFragment", "Error showing GameOverFragment", e);
+        }
+
     }
 
     public void movePieceLeft()

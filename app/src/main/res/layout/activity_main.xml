@@ -36,12 +36,13 @@
             android:layout_centerVertical="true"
             android:layout_alignStart="@+id/textView"
             android:layout_toStartOf="@+id/mon"
+            android:layout_marginStart="5dp"
             android:background="@drawable/monitor_layouts"
             android:elevation="10dp"
             android:text="@string/score"
             android:textAlignment="center"
             android:textColor="?attr/colorAccent"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:textStyle="bold" />
 
         <TextView
@@ -51,18 +52,19 @@
             android:layout_centerVertical="true"
             android:layout_alignEnd="@+id/textView"
             android:layout_toEndOf="@+id/mon"
+            android:layout_marginEnd="5dp"
             android:background="@drawable/monitor_layouts"
             android:elevation="10dp"
             android:text="@string/lines"
             android:textAlignment="center"
             android:textColor="?attr/colorAccent"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:textStyle="bold" />
 
         <SurfaceView
             android:id="@+id/mon"
             android:layout_width="129.5dp"
-            android:layout_height="250dp"
+            android:layout_height="255dp"
             android:layout_centerInParent="true"
             android:elevation="10dp" />
     </RelativeLayout>
