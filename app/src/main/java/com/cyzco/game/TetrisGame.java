@@ -394,8 +394,7 @@ public class TetrisGame
         }
     }
 
-    private void clearCanvas(Canvas canvas)
-    {
+    private void clearCanvas(Canvas canvas) {
         canvas.drawColor(Color.argb(0, 255, 255, 255), PorterDuff.Mode.CLEAR);
     }
 
@@ -511,8 +510,7 @@ public class TetrisGame
                 setVibrator(new long[]{0, 210}, new int[]{0, 30});
                 canvas.drawBitmap(resizedEffectBitmap, posX, posY, null);
             }
-            else
-                showEffect = false;
+            else showEffect = false;
         }
         else if (showEffect)
             System.err.println("Error: resizedEffectBitmap is null. Effect will not be rendered.");

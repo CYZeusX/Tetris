@@ -3,15 +3,18 @@ package com.cyzco.game;
 import java.util.Map;
 
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.util.Log;
 import java.util.HashMap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.os.Parcelable;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.content.Context;
 import android.view.InputDevice;
@@ -29,11 +32,14 @@ import android.content.SharedPreferences;
 import android.view.WindowInsetsController;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MainActivity extends AppCompatActivity
 {
-    Button a, s, d,  A, X, Y, l1, r1, orientPortrait, orientLandscape, pause, lightDark, setting;
+    Button A, X, Y, l1, r1, orientPortrait, orientLandscape, pause, lightDark, setting;
+    RelativeLayout pad_mid, upDown, dpad;
     Vibrator vibrator;
     TextView scores, lines;
     SurfaceView monitor;
@@ -82,14 +88,14 @@ public class MainActivity extends AppCompatActivity
         });
 
         // Initialize views and game logic
-        a = findViewById(R.id.a);
-        s = findViewById(R.id.s);
-        d = findViewById(R.id.d);
         A = findViewById(R.id.A);
         X = findViewById(R.id.X);
         Y = findViewById(R.id.Y);
         l1 = findViewById(R.id.l1);
         r1 = findViewById(R.id.r1);
+        dpad = findViewById(R.id.dpad);
+        pad_mid = findViewById(R.id.pad_mid);
+        upDown = findViewById(R.id.up_down);
         orientPortrait = findViewById(R.id.orient_at_portrait);
         orientLandscape = findViewById(R.id.orient_at_land);
         pause = findViewById(R.id.pause);
@@ -210,14 +216,8 @@ public class MainActivity extends AppCompatActivity
             settingsFragment.show(getSupportFragmentManager(), "settingsDialog");
         });
 
-        // Move the block left
-        setupContinuousMovement(a, () -> doMovementAction("a"));
-
-        // Move the block right
-        setupContinuousMovement(d, () -> doMovementAction("d"));
-
-        // Move the block down
-        setupContinuousMovement(s, () -> doMovementAction("s"));
+        // Set up d-pad buttons
+        setupContinuousMovement();
 
         // Drop the block immediately
         buttonOnTouch(A, "A");
@@ -366,30 +366,61 @@ public class MainActivity extends AppCompatActivity
     }
 
     @SuppressLint({"ClickableViewAccessibility", "ResourceAsColor"})
-    private void setupContinuousMovement(Button button, Runnable moveAction)
+    private void setupContinuousMovement()
     {
-        Handler movementHandler = new Handler(); // Create a new Handler for this button
-        Runnable movementRunnable = new Runnable()
-        {
+        // Create a new Handler for this button
+        Handler movementHandler = new Handler();
+
+        // Tracks which direction is active
+        final String[] currentDirection = {null};
+        Runnable movementRunnable = new Runnable() {
             @Override
-            public void run()
-            {
-                moveAction.run(); // Execute the specific movement action
-                movementHandler.postDelayed(this, 100); // Adjust delay for speed
+            public void run() {
+                if (currentDirection[0] != null) {
+                    doMovementAction(currentDirection[0]); // Use current direction
+                    movementHandler.postDelayed(this, 100); // Repeat
+                }
             }
         };
 
-        button.setOnTouchListener((v, event) ->
+        dpad.setOnTouchListener((v, event) ->
         {
-            switch (event.getAction() & MotionEvent.ACTION_MASK)
+            float x = event.getX();
+            float y = event.getY();
+
+            float centerX = v.getWidth() / 2f;
+            float centerY = v.getHeight() / 2f;
+
+            float dx = x - centerX;
+            float dy = y - centerY;
+
+            String newDirection = null;
+
+            switch (event.getActionMasked())
             {
                 case MotionEvent.ACTION_DOWN:
-                    movementHandler.post(movementRunnable); // Start the movement
+                case MotionEvent.ACTION_MOVE:
+                    double distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance > 20) // Minimum distance for movement (dead zone)
+                    {
+                        if (Math.abs(dx) > Math.abs(dy))
+                            newDirection = dx < 0 ? "a" : "d";
+                        else newDirection = dy < 0 ? "w" : "s";
+                    }
+
+                    if (!Objects.equals(currentDirection[0], newDirection)) {
+                        currentDirection[0] = newDirection;
+                        movementHandler.removeCallbacks(movementRunnable);
+                        if (newDirection != null)
+                            movementHandler.post(movementRunnable);
+                    }
                     break;
 
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
-                    movementHandler.removeCallbacks(movementRunnable); // Stop the movement
+                    currentDirection[0] = null;
+                    movementHandler.removeCallbacks(movementRunnable);
                     break;
             }
             return true;

@@ -18,13 +18,13 @@
             android:layout_height="50dp"
             android:layout_above="@+id/textView"
             android:layout_alignParentTop="true"
-            android:paddingVertical="5dp"
+            android:paddingTop="8dp"
             android:fontFamily="@font/rog_font"
+            android:gravity="center"
             android:text="@string/you_won"
             android:textSize="40sp"
             android:textColor="#00ff00"
             android:textStyle="bold"
-            android:textAlignment="center"
             android:alpha="0.7"/>
 
         <RelativeLayout
@@ -67,7 +67,7 @@
                     android:paddingVertical="5dp"
                     android:text="@string/score_gained"
                     android:textAlignment="center"
-                    android:textColor="?attr/colorAccent"
+                    android:textColor="@color/score_textDark"
                     android:textSize="25sp"
                     android:textStyle="bold" />
 
@@ -81,7 +81,7 @@
                     android:paddingVertical="5dp"
                     android:text="@string/lines_cleared"
                     android:textAlignment="center"
-                    android:textColor="?attr/colorAccent"
+                    android:textColor="@color/score_textDark"
                     android:textSize="25sp"
                     android:textStyle="bold" />
 
@@ -95,7 +95,7 @@
                     android:paddingVertical="5dp"
                     android:text="@string/tetris_gained"
                     android:textAlignment="center"
-                    android:textColor="?attr/colorAccent"
+                    android:textColor="@color/score_textDark"
                     android:textSize="25sp"
                     android:textStyle="bold" />
             </RelativeLayout>

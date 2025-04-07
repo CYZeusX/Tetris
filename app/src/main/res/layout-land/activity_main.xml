@@ -68,7 +68,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/pad_left"
+        android:id="@+id/dpad"
         android:layout_width="180dp"
         android:layout_height="180dp"
         android:background="@color/nul"
@@ -81,16 +81,16 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
+            android:id="@+id/left_right"
             android:layout_width="170dp"
             android:layout_height="60dp"
-            android:elevation="2dp"
             android:background="@drawable/button_left"
             android:layout_centerInParent="true"/>
 
         <RelativeLayout
+            android:id="@+id/up_down"
             android:layout_width="60dp"
             android:layout_height="170dp"
-            android:elevation="2dp"
             android:background="@drawable/button_left"
             android:layout_centerInParent="true" />
 
@@ -99,49 +99,9 @@
             android:layout_width="160dp"
             android:layout_height="50dp"
             android:layout_centerInParent="true"
-            android:elevation="2dp"
             android:foreground="@drawable/button_left_middle"
             android:outlineAmbientShadowColor="@color/nul"
             android:outlineSpotShadowColor="@color/nul" />
-
-        <Button
-            android:id="@+id/a"
-            android:layout_width="60dp"
-            android:layout_height="70dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="5dp"
-            android:background="@color/nul"
-            android:rotation="-90" />
-
-        <Button
-            android:id="@+id/d"
-            android:layout_width="60dp"
-            android:layout_height="70dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:background="@color/nul"
-            android:layout_marginEnd="5dp"
-            android:rotation="90" />
-
-        <Button
-            android:id="@+id/w"
-            android:layout_width="60dp"
-            android:layout_height="75dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="0dp"
-            android:background="@color/nul"/>
-
-        <Button
-            android:id="@+id/s"
-            android:layout_width="60dp"
-            android:layout_height="75dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="0dp"
-            android:background="@color/nul"
-            android:rotation="180" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -240,7 +200,7 @@
         android:layout_marginEnd="27.5dp"
         android:outlineSpotShadowColor="@color/nul"
         android:outlineAmbientShadowColor="@color/nul"
-        app:layout_constraintEnd_toEndOf="@+id/pad_left"
+        app:layout_constraintEnd_toEndOf="@+id/dpad"
         app:layout_constraintTop_toTopOf="parent"
         app:cornerRadius="15dp"
         app:strokeColor="?attr/colorSecondary"
