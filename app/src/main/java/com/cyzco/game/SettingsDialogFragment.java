@@ -9,6 +9,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import java.util.ArrayList;
+import java.util.Objects;
+
 import android.widget.Button;
 import android.text.Editable;
 import android.widget.Spinner;
@@ -37,17 +39,22 @@ public class SettingsDialogFragment extends DialogFragment
     public void onStart()
     {
         super.onStart();
-        if (getDialog() != null && getDialog().getWindow() != null)
-        {
-            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        if (getDialog() == null && getDialog().getWindow() == null)
+            return;
 
-            if (isAdded())
-            {
-                rootView = requireActivity().getWindow().getDecorView().getRootView();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    rootView.setRenderEffect(RenderEffect.createBlurEffect(20, 20, Shader.TileMode.MIRROR));
-            }
+        Objects.requireNonNull(getDialog().getWindow()).setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        MainActivity mainActivity = (MainActivity) getActivity();
+        assert mainActivity != null;
+        if (!mainActivity.tetrisGame.isPaused)
+            mainActivity.tetrisGame.togglePause();
+
+        if (isAdded())
+        {
+            rootView = requireActivity().getWindow().getDecorView().getRootView();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                rootView.setRenderEffect(RenderEffect.createBlurEffect(20, 20, Shader.TileMode.MIRROR));
         }
     }
 

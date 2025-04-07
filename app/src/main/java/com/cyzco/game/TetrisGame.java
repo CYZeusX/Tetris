@@ -121,7 +121,7 @@ public class TetrisGame
             handleGameOver();  // Handle game over if the piece can't fit
     }
 
-    private boolean isPaused = false;
+    public boolean isPaused = false;
 
     public void togglePause()
     {
