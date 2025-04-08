@@ -1,13 +1,12 @@
 package com.cyzco.game;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.BitmapFactory;
 import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -21,8 +20,6 @@ import android.graphics.Paint;
 import android.graphics.Color;
 import android.os.Vibrator;
 
-import com.bumptech.glide.Glide;
-
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.Map;
@@ -30,7 +27,7 @@ import java.util.Objects;
 
 public class TetrisGame
 {
-    private final String[][] BOARD;
+    private String[][] BOARD;
     private final int BOARD_WIDTH = 10; // 10 blocks wide
     private final int BOARD_HEIGHT = 20; // 20 blocks tall
     private final String BOARD_BLOCK = Shapes.space;
@@ -74,17 +71,17 @@ public class TetrisGame
             String shape = stringShape.getText().toString().strip();
             if (shape.isEmpty())
                 shape = "■";
-            shapes.setShape(shape);
+            shapes.setBlock(shape);
         }
     }
 
     public void changeBlock(String block) {
-        shapes.setShape(block);
+        shapes.setBlock(block);
     }
 
     public String getBlock()
     {
-        return shapes.getShape();
+        return shapes.getBlock();
     }
 
     public int getLinesCleared() {
@@ -107,11 +104,6 @@ public class TetrisGame
     {
         int randomIndex = (int) (Math.random() * Shapes.SHAPES.length);  // Random index for shapes
         String[][] randomShape = Shapes.SHAPES[randomIndex];  // Get the random shape from the Shapes array
-
-        // Debugging: Print the selected shape
-        System.out.println("Random shape index: " + randomIndex);
-        for (String[] row : randomShape)
-            System.out.println(Arrays.toString(row));  // Print each row of the shape
 
         currentPiece = new Tetromino(randomShape);  // Pass the shape to the Tetromino constructor
 
@@ -553,5 +545,78 @@ public class TetrisGame
             if (vibrator != null && vibrator.hasVibrator())
                 vibrator.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1));
         }
+    }
+
+    public Bundle saveGameState()
+    {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("boardGrid", BOARD);
+        bundle.putString("currentBlock", getBlock());
+        bundle.putInt("linesCleared", linesCleared);
+        bundle.putInt("scoreGained", scoreGained);
+
+        // Flatten String[][] to String[]
+        int rows = BOARD.length;
+        int cols = BOARD[0].length;
+        String[] flatGrid = new String[rows * cols];
+        for (int i = 0; i < rows; i++)
+            System.arraycopy(BOARD[i], 0, flatGrid, i * cols, cols);
+
+        bundle.putStringArray("boardGrid", flatGrid);
+        bundle.putInt("rows", rows);
+        bundle.putInt("cols", cols);
+
+
+        // Flatten Tetromino shape
+        String[][] shape = currentPiece.getShape();
+        int size = shape.length;
+        String[] flatShape = new String[size * size];
+        for (int i = 0; i < size; i++)
+            System.arraycopy(shape[i], 0, flatShape, i * size, size);
+
+        bundle.putInt("tetrominoSize", size);
+        bundle.putStringArray("currentPieceShape", flatShape);
+        bundle.putInt("currentPieceX", currentPiece.getX());
+        bundle.putInt("currentPieceY", currentPiece.getY());
+
+
+        return bundle;
+    }
+
+    public void restoreGameState(Bundle bundle)
+    {
+        // Rebuild game from the saved data
+        if (bundle == null) return;
+
+        linesCleared = bundle.getInt("linesCleared", 0);
+        scoreGained = bundle.getInt("scoreGained", 0);
+
+        changeBlock(bundle.getString("currentBlock", "■"));
+
+        int rows = bundle.getInt("rows", 20);
+        int cols = bundle.getInt("cols", 10);
+        String[] flatGrid = bundle.getStringArray("boardGrid");
+
+        if (flatGrid != null)
+        {
+            BOARD = new String[rows][cols];
+            for (int i = 0; i < rows; i++)
+                System.arraycopy(flatGrid, i * cols, BOARD[i], 0, cols);
+        }
+
+        int size = bundle.getInt("tetrominoSize", 4); // default size
+        String[] flatShape = bundle.getStringArray("currentPieceShape");
+        if (flatShape != null) {
+            String[][] shape = new String[size][size];
+            for (int i = 0; i < size; i++)
+                System.arraycopy(flatShape, i * size, shape[i], 0, size);
+
+            currentPiece = new Tetromino(shape);
+            currentPiece.setPosition(
+                    bundle.getInt("currentPieceX", 0),
+                    bundle.getInt("currentPieceY", 0)
+            );
+        }
+
     }
 }

@@ -3,6 +3,7 @@ package com.cyzco.game;
 import java.util.Map;
 
 import android.os.Build;
+import android.os.PersistableBundle;
 import android.util.Log;
 import java.util.HashMap;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.view.WindowManager;
 import androidx.activity.EdgeToEdge;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -103,43 +105,43 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    public void onSaveInstanceState(@NonNull Bundle outState)
     {
-        //??
+        super.onSaveInstanceState(outState);
+        outState.putInt("linesCleared", tetrisGame.getLinesCleared());
+        outState.putInt("scoreGained", tetrisGame.getScoreGained());
+        outState.putBundle("gameState", tetrisGame.saveGameState());
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState)
+    {
         super.onRestoreInstanceState(savedInstanceState);
+        Log.d("on Restore", "onRestoreInstanceState: in on restore");
 
         // Restore the game state
-        int linesCleared = savedInstanceState.getInt("linesCleared", 0);
-        int scoreGained = savedInstanceState.getInt("scoreGained", 0);
-        Parcelable gameState = savedInstanceState.getParcelable("gameState");
+        int linesCleared = savedInstanceState.getInt("linesCleared");
+        int scoreGained = savedInstanceState.getInt("scoreGained");
+        Bundle gameState = savedInstanceState.getBundle("gameState");
+        if (gameState != null) {
+            tetrisGame.restoreGameState(gameState);
+            tetrisGame.renderGame(monitor);
+        }
 
         tetrisGame.setLinesCleared(linesCleared);
         tetrisGame.setScoreGained(scoreGained);
 
-        // Ensure the game is rendered correctly
-        tetrisGame.renderGame(monitor);
-    }   //??
+        lines.setText("lines:\n" + tetrisGame.getLinesCleared());
+        scores.setText("score:\n" + tetrisGame.getScoreGained());
+    }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig)
+    public void onConfigurationChanged(@NonNull Configuration newConfig)
     {
         super.onConfigurationChanged(newConfig);
 
         // Handle the configuration change (e.g., update UI if necessary)
-        tetrisGame.renderGame(monitor); // Ensure the game is re-rendered
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        // Resume rendering or related operations on SurfaceView
-        // Ensure the SurfaceView has been recreated before using it
-        SurfaceView surfaceView = findViewById(R.id.mon);
-        if (surfaceView != null) {
-            // Initialize or resume rendering logic
-        }
     }
 
     @Override
@@ -263,21 +265,6 @@ public class MainActivity extends AppCompatActivity
 
     private final Map<String, Boolean> keyState = new HashMap<>();
 
-    // Create a new Handler for this button
-    Handler movementHandler = new Handler();
-
-    // Tracks which direction is active
-    final String[] currentDirection = {null};
-    Runnable movementRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (currentDirection[0] != null) {
-                doMovementAction(currentDirection[0]); // Use current direction
-                movementHandler.postDelayed(movementRunnable, 100); // Repeat
-            }
-        }
-    };
-
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         String action = switch (keyCode) {
@@ -289,11 +276,8 @@ public class MainActivity extends AppCompatActivity
 
         if (action != null && (keyState.get(action) == null || Boolean.FALSE.equals(keyState.get(action))))
         {
-            Handler movementHandler = new Handler();
-
             keyState.put(action, true);
             doMovementAction(action);
-            movementHandler.postDelayed(() -> doMovementAction(action), 100);
             return true;
         }
 

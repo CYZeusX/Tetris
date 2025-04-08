@@ -12,12 +12,12 @@ public class Shapes
     public String block = "■";
     public static String space = "□";
 
-    public void setShape(String block)
+    public void setBlock(String block)
     {
         this.block = block;
     }
 
-    public String getShape()
+    public String getBlock()
     {
         return this.block;
     }
