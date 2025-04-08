@@ -2,19 +2,19 @@ package com.cyzco.game;
 
 import java.util.Map;
 
-import android.graphics.Color;
-import android.graphics.Rect;
+import android.os.Build;
 import android.util.Log;
 import java.util.HashMap;
 import android.os.Bundle;
+import java.util.Objects;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.KeyEvent;
 import android.widget.Button;
 import android.os.Parcelable;
-import android.widget.RelativeLayout;
+import android.graphics.Color;
 import android.widget.TextView;
 import android.content.Context;
 import android.view.InputDevice;
@@ -23,6 +23,9 @@ import android.view.SurfaceView;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 import androidx.activity.EdgeToEdge;
+import android.widget.RelativeLayout;
+
+import androidx.annotation.RequiresApi;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import android.content.pm.ActivityInfo;
@@ -32,8 +35,6 @@ import android.content.SharedPreferences;
 import android.view.WindowInsetsController;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MainActivity extends AppCompatActivity
@@ -53,39 +54,28 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
-        TetrisGame tetrisGame;
         // Retrieve the orientation from SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
 
         int orientation = sharedPreferences.getInt("orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         Log.d("MainActivity", "Retrieved orientation: " + orientation);
-        if (orientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-            setRequestedOrientation(orientation);
+        setRequestedOrientation(orientation);
 
+        TetrisGame tetrisGame;
         setContentView(R.layout.activity_main);
 
-        Window window = getWindow();
-        WindowInsetsController insetsController = window.getInsetsController();
+        // Hide the status bar and navigation bar
+        WindowInsetsController insetsController = getWindow().getInsetsController();
         if (insetsController != null)
         {
-            // Hide the status bar and navigation bar
             insetsController.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
-
-            // Enable gestures for immersive experience (if needed)
             insetsController.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
         }
+
+        Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
-
-        EdgeToEdge.enable(this);
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) ->
-        {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         // Initialize views and game logic
         A = findViewById(R.id.A);
@@ -273,6 +263,43 @@ public class MainActivity extends AppCompatActivity
 
     private final Map<String, Boolean> keyState = new HashMap<>();
 
+    // Create a new Handler for this button
+    Handler movementHandler = new Handler();
+
+    // Tracks which direction is active
+    final String[] currentDirection = {null};
+    Runnable movementRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (currentDirection[0] != null) {
+                doMovementAction(currentDirection[0]); // Use current direction
+                movementHandler.postDelayed(movementRunnable, 100); // Repeat
+            }
+        }
+    };
+
+    @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+        String action = switch (keyCode) {
+            case KeyEvent.KEYCODE_DPAD_LEFT -> "a";
+            case KeyEvent.KEYCODE_DPAD_RIGHT -> "d";
+            case KeyEvent.KEYCODE_DPAD_DOWN -> "s";
+            default -> null;
+        };
+
+        if (action != null && (keyState.get(action) == null || Boolean.FALSE.equals(keyState.get(action))))
+        {
+            Handler movementHandler = new Handler();
+
+            keyState.put(action, true);
+            doMovementAction(action);
+            movementHandler.postDelayed(() -> doMovementAction(action), 100);
+            return true;
+        }
+
+        return super.onKeyLongPress(keyCode, event);
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
@@ -286,7 +313,7 @@ public class MainActivity extends AppCompatActivity
             default -> null;
         };
 
-        if (action != null && ( keyState.get(action) == null || Boolean.FALSE.equals(keyState.get(action)) ) )
+        if (action != null && (keyState.get(action) == null || Boolean.FALSE.equals(keyState.get(action))))
         {
             keyState.put(action, true);
             tetrisGame.getAction(action);
@@ -306,11 +333,13 @@ public class MainActivity extends AppCompatActivity
             case KeyEvent.KEYCODE_BUTTON_Y -> "Y";
             case KeyEvent.KEYCODE_BUTTON_L1 -> "l1";
             case KeyEvent.KEYCODE_BUTTON_R1 -> "r1";
+            case KeyEvent.KEYCODE_DPAD_LEFT -> "a";
+            case KeyEvent.KEYCODE_DPAD_RIGHT -> "d";
+            case KeyEvent.KEYCODE_DPAD_DOWN -> "s";
             default -> null;
         };
 
-        if (action != null)
-        {
+        if (action != null) {
             keyState.put(action, false);
             return true;
         }
@@ -318,6 +347,7 @@ public class MainActivity extends AppCompatActivity
         return super.onKeyUp(keyCode, event);
     }
 
+    // feature is added to plan -> to see if exclusive UI layout is possible
     private boolean isGamepadConnected()
     {
         int[] deviceIds = InputDevice.getDeviceIds();

@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.VibrationEffect;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -19,6 +20,9 @@ import android.widget.EditText;
 import android.graphics.Paint;
 import android.graphics.Color;
 import android.os.Vibrator;
+
+import com.bumptech.glide.Glide;
+
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.Map;
@@ -300,6 +304,7 @@ public class TetrisGame
                     break;
                 }
             }
+
             if (lineComplete)
             {
                 removeLine(y);
@@ -313,7 +318,8 @@ public class TetrisGame
         {
             scoreGained += REMOVE_LINE_SCORE * 2; // Double the score for clearing 4 rows
             showEffect = true;
-            effectEndTime = System.currentTimeMillis() + 140;
+            long newEndTime = System.currentTimeMillis() + 140;
+            effectEndTime = Math.max(effectEndTime, newEndTime);
             tetrisGained++;
         }
         else scoreGained += REMOVE_LINE_SCORE * rowsClearedInThisStep; // Normal score for other cases
@@ -344,14 +350,16 @@ public class TetrisGame
     {
         if (effectBitmap == null)
         {
-            effectBitmap = BitmapFactory.decodeResource(resources, R.drawable.tetris_boom_max);
+            // clear 4 rows effect
+            int effect = R.drawable.tetris_boom_max;
+
+            effectBitmap = BitmapFactory.decodeResource(resources, effect);
             if (effectBitmap != null)
             {
                 resizedEffectBitmap = Bitmap.createScaledBitmap(effectBitmap, 250, 95, true);
                 System.out.println("Effect bitmaps initialized.");
             }
-            else
-                System.err.println("Error: Could not decode resource for tetris_boom.");
+            else System.err.println("Error: Could not decode resource for tetris_boom.");
         }
     }
 
@@ -381,27 +389,27 @@ public class TetrisGame
         holder.setFormat(PixelFormat.TRANSLUCENT);
         Canvas canvas = holder.lockCanvas();
 
-        if (canvas != null)
-        {
-            // Clear the canvas with a transparent background
-            clearCanvas(canvas);
+        if (canvas == null)
+            return;
 
-            Paint paint = createPaint(monitor.getContext());
+        // Clear the canvas with a transparent background
+        clearCanvas(canvas);
 
-            // Calculate block size and padding
-            int canvasWidth = canvas.getWidth();
-            int canvasHeight = canvas.getHeight();
-            int blockSize = Math.min(canvasWidth / BOARD_WIDTH, canvasHeight / BOARD_HEIGHT);
-            int paddingLeft = (canvasWidth - (BOARD_WIDTH * blockSize)) / 2;
-            int paddingTop = (canvasHeight - (BOARD_HEIGHT * blockSize)) / 2;
+        Paint paint = createPaint(monitor.getContext());
 
-            renderBoardBackground(canvas, paint, blockSize, paddingLeft, paddingTop);
-            renderFixedBlocks(canvas, paint, blockSize, paddingLeft, paddingTop);
-            renderCurrentPiece(canvas, paint, blockSize, paddingLeft, paddingTop);
-            renderShadow(canvas, paint, blockSize, paddingLeft, paddingTop);
-            renderEffect(canvas, canvasWidth, canvasHeight);
-            holder.unlockCanvasAndPost(canvas);
-        }
+        // Calculate block size and padding
+        int canvasWidth = canvas.getWidth();
+        int canvasHeight = canvas.getHeight();
+        int blockSize = Math.min(canvasWidth / BOARD_WIDTH, canvasHeight / BOARD_HEIGHT);
+        int paddingLeft = (canvasWidth - (BOARD_WIDTH * blockSize)) / 2;
+        int paddingTop = (canvasHeight - (BOARD_HEIGHT * blockSize)) / 2;
+
+        renderBoardBackground(canvas, paint, blockSize, paddingLeft, paddingTop);
+        renderFixedBlocks(canvas, paint, blockSize, paddingLeft, paddingTop);
+        renderCurrentPiece(canvas, paint, blockSize, paddingLeft, paddingTop);
+        renderShadow(canvas, paint, blockSize, paddingLeft, paddingTop);
+        renderEffect(canvas, canvasWidth, canvasHeight);
+        holder.unlockCanvasAndPost(canvas);
     }
 
     private void clearCanvas(Canvas canvas) {
@@ -507,24 +515,35 @@ public class TetrisGame
         canvas.drawText(getBlock(), blockX, blockY, paint);
     }
 
+    private long lastVibrationTime = 0;
+    private static final long VIBRATION_INTERVAL = 100; // milliseconds
+
     private void renderEffect(Canvas canvas, int canvasWidth, int canvasHeight)
     {
         if (showEffect && resizedEffectBitmap != null)
         {
             long currentTime = System.currentTimeMillis();
+
             if (currentTime <= effectEndTime)
             {
                 float posX = (canvasWidth - resizedEffectBitmap.getWidth()) / 2.0f;
                 float posY = (canvasHeight - resizedEffectBitmap.getHeight()) / 2.0f;
 
-                setVibrator(new long[]{0, 210}, new int[]{0, 30});
+                if (currentTime - lastVibrationTime >= VIBRATION_INTERVAL)
+                {
+                    setVibrator(new long[]{0, 210}, new int[]{0, 30});
+                    lastVibrationTime = currentTime;
+                }
+
                 canvas.drawBitmap(resizedEffectBitmap, posX, posY, null);
-            }
-            else showEffect = false;
+
+            } else showEffect = false;
         }
+
         else if (showEffect)
             System.err.println("Error: resizedEffectBitmap is null. Effect will not be rendered.");
     }
+
 
     public void setVibrator(long[] timings, int[] amplitudes)
     {

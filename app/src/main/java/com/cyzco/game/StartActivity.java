@@ -28,33 +28,32 @@ public class StartActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.start_game);
 
-        // Get the saved theme mode from SharedPreferences (as you're already doing)
+        // Retrieve the orientation from SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
+
+        int orientation = sharedPreferences.getInt("orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        Log.d("MainActivity", "Retrieved orientation: " + orientation);
+        setRequestedOrientation(orientation);
+
+        // Get the saved theme mode from SharedPreferences
         int savedThemeMode = sharedPreferences.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         AppCompatDelegate.setDefaultNightMode(savedThemeMode);
 
-        // Retrieve and apply the saved orientation
-        int orientation = sharedPreferences.getInt("orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        Log.d("StartActivity", "Retrieved orientation: " + orientation);
-        if (orientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {setRequestedOrientation(orientation);}
+        setContentView(R.layout.start_game);
 
-        Window window = getWindow();
-        WindowInsetsController insetsController = window.getInsetsController();
+        // Hide the status bar and navigation bar
+        WindowInsetsController insetsController = getWindow().getInsetsController();
         if (insetsController != null)
         {
-            // Hide the status bar and navigation bar
             insetsController.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
-
-            // Enable gestures for immersive experience (if needed)
             insetsController.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
         }
+
+        Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
-
-        EdgeToEdge.enable(this);
 
         // Get references to buttons and views
         orient_p = findViewById(R.id.orient_at_portrait);

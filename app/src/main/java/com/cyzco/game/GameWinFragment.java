@@ -1,5 +1,8 @@
 package com.cyzco.game;
 
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,16 +16,27 @@ import android.widget.RelativeLayout;
 import android.content.DialogInterface;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.Objects;
+
 public class GameWinFragment extends DialogFragment
 {
+    private View rootView;
+
     @Override
     public void onStart()
     {
         super.onStart();
-        if (getDialog() != null && getDialog().getWindow() != null)
+        if (getDialog() == null && getDialog().getWindow() == null)
+            return;
+
+        Objects.requireNonNull(getDialog().getWindow()).setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        if (isAdded())
         {
-            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            rootView = requireActivity().getWindow().getDecorView().getRootView();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                rootView.setRenderEffect(RenderEffect.createBlurEffect(20, 20, Shader.TileMode.MIRROR));
         }
     }
 
@@ -35,6 +49,7 @@ public class GameWinFragment extends DialogFragment
 
         // resources setup
         View view = inflater.inflate(R.layout.game_win, container, false);
+        rootView = view.getRootView();
         RelativeLayout game_win = view.findViewById(R.id.gameWin_menu);
         Button restart = view.findViewById(R.id.restart);
         Button quit_app = view.findViewById(R.id.quit_app);
@@ -71,6 +86,8 @@ public class GameWinFragment extends DialogFragment
     public void onDismiss(@NonNull DialogInterface dialog)
     {
         super.onDismiss(dialog);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && rootView != null)
+            rootView.setRenderEffect(null);
         restart();
     }
 

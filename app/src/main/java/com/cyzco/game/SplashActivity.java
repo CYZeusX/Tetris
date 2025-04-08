@@ -1,7 +1,11 @@
 package com.cyzco.game;
 
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.content.Intent;
+import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
@@ -17,7 +21,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 public class SplashActivity extends AppCompatActivity
 {
     private boolean isTransitionStarted = false; // Prevent transition from being triggered multiple times.
-
     private void fadeInAndOut(FrameLayout splashScreenView)
     {
 
@@ -41,32 +44,32 @@ public class SplashActivity extends AppCompatActivity
     private void startNextActivity(FrameLayout splashScreenView)
     {
         // Only trigger transition once
-        if (!isTransitionStarted)
+        if (isTransitionStarted)
+            return;
+
+        isTransitionStarted = true; // Set flag to true to avoid double transition.
+
+        // Add a listener to wait for the animation to complete
+        splashScreenView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
         {
-            isTransitionStarted = true; // Set flag to true to avoid double transition.
-
-            // Add a listener to wait for the animation to complete
-            splashScreenView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
+            @Override
+            public boolean onPreDraw()
             {
-                @Override
-                public boolean onPreDraw()
+                // Make sure the animation has ended before starting the next activity
+                if (isTransitionStarted)
                 {
-                    // Make sure the animation has ended before starting the next activity
-                    if (isTransitionStarted)
-                    {
-                        // Remove the listener
-                        splashScreenView.getViewTreeObserver().removeOnPreDrawListener(this);
+                    // Remove the listener
+                    splashScreenView.getViewTreeObserver().removeOnPreDrawListener(this);
 
-                        // Start the next activity after a slight delay for smoothness
-                        Intent intent = new Intent(SplashActivity.this, StartActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(0, 0); // No transition animation
-                        finish(); // Finish the splash activity
-                    }
-                    return true; // Continue drawing the view
+                    // Start the next activity after a slight delay for smoothness
+                    Intent intent = new Intent(SplashActivity.this, StartActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0); // No transition animation
+                    finish(); // Finish the splash activity
                 }
-            });
-        }
+                return true; // Continue drawing the view
+            }
+        });
     }
 
     @Override
@@ -74,14 +77,19 @@ public class SplashActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
+        // Retrieve the orientation from SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
+
+        int orientation = sharedPreferences.getInt("orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        Log.d("MainActivity", "Retrieved orientation: " + orientation);
+        setRequestedOrientation(orientation);
+
         if (savedInstanceState != null)
             isTransitionStarted = savedInstanceState.getBoolean("isTransitionStarted", false);
 
-        // Check current theme (light/dark) and apply it
-        int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        int mode = nightModeFlags == Configuration.UI_MODE_NIGHT_YES ?
-                AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
-        AppCompatDelegate.setDefaultNightMode(mode);
+        // Get the saved theme mode from SharedPreferences (as you're already doing)
+        int savedThemeMode = sharedPreferences.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        AppCompatDelegate.setDefaultNightMode(savedThemeMode);
 
         // Set custom splash screen view
         SplashScreenView splashScreenView = new SplashScreenView(this);
@@ -89,16 +97,15 @@ public class SplashActivity extends AppCompatActivity
 
         fadeInAndOut(splashScreenView);
 
-        Window window = getWindow();
-        WindowInsetsController insetsController = window.getInsetsController();
+        // Hide the status bar and navigation bar
+        WindowInsetsController insetsController = getWindow().getInsetsController();
         if (insetsController != null)
         {
-            // Hide the status bar and navigation bar
             insetsController.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
-
-            // Enable gestures for immersive experience (if needed)
             insetsController.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
         }
+
+        Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
@@ -110,5 +117,4 @@ public class SplashActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putBoolean("isTransitionStarted", isTransitionStarted);
     }
-
 }
