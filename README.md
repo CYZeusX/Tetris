@@ -1,18 +1,14 @@
-> [!IMPORTANT]
-> ### HONEST DISCLAIMER:  NOT quite the result of my knowledge. 
-> ### <ins>AI contributed Half of it</ins>
-
 > [!NOTE]
 > ### meant for Android ONLY
 ---
 > [!TIP]
 > ### * Incommensurably Innovative Features
-    - able to play on both orientation                                                >> potrait | landscape
-    - blocks can be emojis, letters, symbols, or even sentence(NOT Recommended)!
-    - can change the blocks of the game                                               >> because the blocks formed with symbols (String)
-    - can change the particles of the background                                      >> because the background forms with symbols (char)
+    - has support on both orientation: landscape, potrait                >> potrait | landscape
+    - has ability to change, customize the blocks                        >> because the blocks formed with symbols (String)
+          Such as: emojis, letters, symbols, even text !!
     - has shoulder buttons, can use index figers to rotate blocks
-    - NO Ads. !!!!
+    - has haptic immersive feedbacks
+    - has NO Ads. !!!!
 
     
 ### Purpose
@@ -20,11 +16,10 @@
     and making it as perfect as possible AT ALL COST
     
     Q&A: Why not just download one on app store?
-         - Because I have high demand. 
-         - I have found LACK OF FEATURES on most of the Tetris games on Android.
-                > lack of blocks anti-clockwise rotation
-                > lack of landscape orientation mode
-                > lack of immersive experience (vibration)
+         > Competitors has LACK OF FEATURES
+         - lack of blocks anti-clockwise rotation
+         - lack of landscape orientation mode
+         - lack of immersive experience (vibration)
 
     
 ### * Comming soon features
@@ -34,28 +29,37 @@
 
 
 ### * Working on
-    - List of values | default block, choose block, custom block
-    - ^^^^ same, but blocks for background  ^^^^
+    - unexpected flickering when switching app in landscape mode
+    - better intercommunication within blocks selection
     - save block for later
     - 3 next following blocks
-    - sync monitor between potrait and landscape mode
-    - sync monitor between switching light|dark theme
+
 
 ### * Completed features / fixes
-    - fixed blocks unaligned with monitor
-    - fixed freezed "Tetris!" effect when triggered the second time
-    + Implemented block shadow
-    + Implemented "Tetris!" effect when cleared 4 rows at once
-    + Implemented "Tetris!" effect with vibration
-    + Implemented having colours for each blocks
-    + Implemented customization for particles of the blocks and background
-    + Implemented light|dark mode
-    + Implemented the setting menu
-    + Implemented button in setting menu for customize character for blocks
-    + Implemented menu
-    + Implemented resume
-    + Implemented restart
-    + Implemented quit app
-    + Implemented game over page
-    + Implemented game win slide fragment
-    + Altered the position of the Light|Dark theme mode button into the setting menu
+    - Fixed:
+        - blocks unaligned with monitor
+        - freezed "Tetris!" effect when triggered the second time
+        
+    + Implemented:
+        + block shadow
+        + "Tetris!" effect when cleared 4 rows at once
+        + "Tetris!" effect with vibration
+        + having colours for each blocks
+        + customization for particles of the blocks and background
+        + light|dark mode theme
+        + the setting menu
+        + button in setting menu for customize character for blocks
+        + menu
+        + resume function
+        + restart fuinction
+        + quit app fuinction
+        + game over page
+        + game win slide fragment
+        + sync game progress after switching orientation
+        + sync game progress after switching light|dark theme
+        + selection dropdown view: custom block, select block
+        
+    * Altered:
+        * the position of the Light|Dark theme mode button into the setting menu
+        * the UI style of the whole app
+
