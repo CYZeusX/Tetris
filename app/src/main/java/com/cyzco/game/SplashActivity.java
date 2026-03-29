@@ -1,19 +1,14 @@
 package com.cyzco.game;
 
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.content.Intent;
-import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowInsets;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.view.ViewTreeObserver;
+import android.content.pm.ActivityInfo;
 import android.annotation.SuppressLint;
-import android.content.res.Configuration;
-import android.view.WindowInsetsController;
+import android.content.SharedPreferences;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
@@ -23,8 +18,7 @@ public class SplashActivity extends AppCompatActivity
     private boolean isTransitionStarted = false; // Prevent transition from being triggered multiple times.
     private void fadeInAndOut(FrameLayout splashScreenView)
     {
-
-        splashScreenView.setAlpha(0.9f); // Start invisible
+        splashScreenView.setAlpha(0.9f); // Start semi-transparent
         splashScreenView
                 .animate()
                 .alpha(1f) // Fade-in animation
@@ -63,8 +57,9 @@ public class SplashActivity extends AppCompatActivity
 
                     // Start the next activity after a slight delay for smoothness
                     Intent intent = new Intent(SplashActivity.this, StartActivity.class);
+                    intent.putExtra("orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                     startActivity(intent);
-                    overridePendingTransition(0, 0); // No transition animation
+                    overridePendingTransition(R.anim.zero_ani, R.anim.zero_ani);
                     finish(); // Finish the splash activity
                 }
                 return true; // Continue drawing the view
@@ -79,9 +74,7 @@ public class SplashActivity extends AppCompatActivity
 
         // Retrieve the orientation from SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
-
         int orientation = sharedPreferences.getInt("orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        Log.d("MainActivity", "Retrieved orientation: " + orientation);
         setRequestedOrientation(orientation);
 
         if (savedInstanceState != null)
@@ -96,23 +89,10 @@ public class SplashActivity extends AppCompatActivity
         setContentView(splashScreenView);
 
         fadeInAndOut(splashScreenView);
-
-        // Hide the status bar and navigation bar
-        WindowInsetsController insetsController = getWindow().getInsetsController();
-        if (insetsController != null)
-        {
-            insetsController.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
-            insetsController.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-        }
-
-        Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState)
+    public void onSaveInstanceState(@NonNull Bundle outState)
     {
         super.onSaveInstanceState(outState);
         outState.putBoolean("isTransitionStarted", isTransitionStarted);

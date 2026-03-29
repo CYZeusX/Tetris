@@ -1,127 +1,106 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settings_dialog"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/monitor_plate">
+    android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:id="@+id/setting_menu"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:background="@drawable/monitor_plate">
+    <TextView
+        android:id="@+id/gameover"
+        android:layout_width="230dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:elevation="5dp"
+        android:shadowColor="@color/score_textDark"
+        android:shadowRadius="80"
+        android:text="@string/setting"
+        android:textColor="@color/white"
+        android:textSize="55sp"
+        android:textStyle="bold"
+        tools:ignore="PrivateResource"/>
 
-        <TextView
-            android:id="@+id/gameover"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center"
-            android:text="@string/setting"
-            android:textSize="35sp"
-            android:textStyle="bold" />
+    <Button
+        android:id="@+id/lightDark"
+        android:layout_width="230dp"
+        android:layout_height="70dp"
+        android:background="@drawable/function_button"
+        android:layout_below="@+id/gameover"
+        android:layout_centerHorizontal="true"
+        android:paddingStart="-58dp"
+        android:fontFamily="@font/minecraft_font"
+        android:gravity="center"
+        android:text="?attr/textAppearanceBody1"
+        android:textColor="?attr/colorAccent"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        tools:ignore="RtlSymmetry" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_below="@+id/gameover"
-            android:layout_alignStart="@+id/textView"
-            android:layout_alignEnd="@+id/textView"
-            android:elevation="10dp"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="10dp"
-            android:text="@string/set_blocks"
-            android:textAlignment="textStart"
-            android:textColor="?attr/colorAccent"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/minecraft_font"/>
+    <ImageView
+        android:layout_width="45dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/lightDark"
+        android:layout_alignEnd="@+id/lightDark"
+        android:layout_alignBottom="@+id/lightDark"
+        android:paddingTop="3dp"
+        android:layout_marginEnd="23.5dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/nul"
+        android:src="@drawable/light_dark" />
 
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView3"
-            android:layout_alignEnd="@+id/textView"
-            android:layout_marginVertical="13dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="16dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/nul"
-            android:elevation="2dp"
-            android:src="@drawable/light_dark" />
+    <Spinner
+        android:id="@+id/choose_block"
+        android:layout_width="230dp"
+        android:layout_height="70dp"
+        android:layout_below="@+id/lightDark"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/function_button"
+        android:popupBackground="@drawable/popup_spinner"
+        android:spinnerMode="dropdown" />
 
-        <TextView
-            android:id="@+id/choose_block_text"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:layout_alignStart="@+id/textView"
-            android:layout_alignBottom="@+id/textView"
-            android:layout_marginBottom="50dp"
-            android:fontFamily="@font/minecraft_font"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="10dp"
-            android:text="@string/set_blocks"
-            android:textAlignment="textStart"
-            android:textColor="?attr/colorAccent"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:elevation="10dp"/>
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="230dp"
+        android:layout_height="70dp"
+        android:layout_alignTop="@+id/choose_block"
+        android:layout_centerHorizontal="true"
+        android:paddingStart="10dp"
+        android:fontFamily="@font/minecraft_font"
+        android:gravity="center"
+        android:text="@string/set_blocks"
+        android:textColor="?attr/colorAccent"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        tools:ignore="RtlSymmetry" />
 
-        <TableLayout
-            android:id="@+id/textView"
-            android:layout_width="250dp"
-            android:layout_height="200dp"
-            android:layout_centerInParent="true"
-            android:background="@drawable/monitor"
-            android:elevation="1dp">
+    <EditText
+        android:id="@+id/change_block"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/choose_block"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/function_button"
+        android:gravity="center"
+        android:hint="@string/default_block"
+        android:inputType="text"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="#FFC021"
+        android:textColorHint="#FFC021"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
-            <EditText
-                android:id="@+id/change_block"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_weight="0"
-                android:background="@drawable/dialog_column"
-                android:hint="@string/default_block"
-                android:inputType="text"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="7dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:textAlignment="textEnd"
-                android:textColor="?attr/colorOnPrimary"
-                android:textColorHint="?attr/colorOnPrimary"
-                android:textSize="25sp"
-                android:textStyle="bold"/>
-
-            <Button
-                android:id="@+id/lightDark"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@drawable/dialog_column"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="10dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:text="@string/theme_light_dark"
-                android:textAlignment="textStart"
-                android:textColor="?attr/colorAccent"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/minecraft_font"/>
-
-            <Spinner
-                android:id="@+id/choose_block"
-                android:layout_width="250dp"
-                android:layout_height="50dp"
-                android:layout_weight="0"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_gravity="center"
-                android:background="@drawable/dialog_column"
-                android:popupBackground="@drawable/popup_spinner"
-                android:spinnerMode="dropdown"/>
-
-        </TableLayout>
-    </RelativeLayout>
-
+    <Button
+        android:id="@+id/emoji_button"
+        android:layout_width="70dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_alignTop="@+id/change_block"
+        android:layout_toEndOf="@+id/change_block"
+        android:background="@drawable/function_button"
+        android:visibility="gone" />
 </RelativeLayout>

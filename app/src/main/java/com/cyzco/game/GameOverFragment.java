@@ -2,9 +2,12 @@ package com.cyzco.game;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import java.util.Objects;
 import android.widget.Button;
 import android.view.ViewGroup;
+import android.content.Context;
 import android.graphics.Shader;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
@@ -12,15 +15,13 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.graphics.RenderEffect;
-import android.widget.RelativeLayout;
 import android.content.DialogInterface;
 import androidx.fragment.app.DialogFragment;
-
-import java.util.Objects;
 
 public class GameOverFragment extends DialogFragment
 {
     private View rootView;
+    private GameOverListener listener;
 
     @Override
     public void onStart()
@@ -50,7 +51,6 @@ public class GameOverFragment extends DialogFragment
         // resources setup
         View view = inflater.inflate(R.layout.game_over, container, false);
         rootView = view.getRootView();
-        RelativeLayout game_over_menu = view.findViewById(R.id.gameOver_menu);
         Button restart = view.findViewById(R.id.restart);
         Button quit_app = view.findViewById(R.id.quit_app);
         ImageView cat_laugh = view.findViewById(R.id.cat_laugh);
@@ -63,20 +63,25 @@ public class GameOverFragment extends DialogFragment
         lines_cleared.setText(String.format("Lines: %s", tetrisGame[0].getLinesCleared()));
         tetris_gained.setText(String.format("Tetris: %s", tetrisGame[0].tetrisGained));
 
-        game_over_menu.setOnClickListener(v -> {});
-
         Glide.with(requireContext()).load(R.drawable.cat_laugh).into(cat_laugh);
+
 
         restart.setOnClickListener(v ->
         {
             dismiss();
-            restart();
+
+            // Get MainActivity instance and call restart
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).restartGame();
+            } else {
+                Log.e("GameRestart", "Cannot call restartGame: Activity is not MainActivity");
+            }
         });
 
         quit_app.setOnClickListener(v ->
         {
             dismiss();
-            quit_app();
+            if (listener != null) listener.onQuitGame();
         });
 
         return view;
@@ -88,25 +93,21 @@ public class GameOverFragment extends DialogFragment
         super.onDismiss(dialog);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && rootView != null)
             rootView.setRenderEffect(null);
-        restart();
+        if (listener != null) listener.onRestartGame();
     }
 
-    private void restart()
-    {
-        MainActivity mainActivity = (MainActivity) getActivity();
-        assert mainActivity != null;
-        final TetrisGame[] tetrisGame = {mainActivity.tetrisGame};
-        tetrisGame[0].togglePause();
-        tetrisGame[0] = new TetrisGame(mainActivity);
-        mainActivity.tetrisGame = tetrisGame[0];
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        if (context instanceof GameOverListener)
+            listener = (GameOverListener) context;
+        else throw new RuntimeException(
+                context + " must implement GameOverListener");
     }
 
-    private void quit_app()
-    {
-        MainActivity mainActivity = (MainActivity) getActivity();
-        assert mainActivity != null;
-        final TetrisGame[] tetrisGame = {mainActivity.tetrisGame};
-        mainActivity.finishAffinity();
-        System.exit(0);
+    public interface GameOverListener {
+        void onRestartGame();
+        void onQuitGame();
     }
 }

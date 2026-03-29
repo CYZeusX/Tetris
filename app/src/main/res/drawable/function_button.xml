@@ -5,6 +5,6 @@
     android:shape="rectangle">
     <corners android:radius="120dp"/>
     <stroke android:width="5dp" android:color="?attr/colorTertiary"/>
-    <solid android:color="?attr/colorContainer"
+    <solid android:color="?attr/colorOutline"
         tools:ignore="PrivateResource" />
 </shape>

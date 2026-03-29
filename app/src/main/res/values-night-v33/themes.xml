@@ -5,15 +5,24 @@
         <item name="colorContainer">@color/monitorPlateDark</item>
         <item name="colorPrimary">@color/monitorEdgeDark</item>
         <item name="colorSecondary">@color/leftButtonDark</item>
+        <item name="colorControlNormal">@color/leftJoystickBaseDark</item>
         <item name="colorOnPrimary">@color/rightButtonDark</item>
         <item name="colorOnSecondary">@color/rightButtonTextDark</item>
-        <item name="colorTertiary">@color/shoulderButtonDark</item>
+        <item name="colorTertiary">@color/fnStrokeDark</item>
+        <item name="colorOutline">@color/fnButtonDark</item>
         <item name="colorSurface">@color/monitorSideDark</item>
         <item name="colorOnSurface">@color/monitorMidDark</item>
         <item name="colorAccent">@color/score_textDark</item>
+        <item name="color">@color/score_text</item>
         <item name="colorButtonNormal">@color/start_gameDark</item>
+        <item name="colorSurfaceDim">@color/matteDark</item>
+        <item name="textAppearanceBody1">@string/theme_light</item>
 
         <item name="materialButtonStyle">@style/NoThemeButton</item>
         <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
     </style>
 </resources>

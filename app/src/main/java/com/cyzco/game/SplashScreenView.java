@@ -1,7 +1,7 @@
 package com.cyzco.game;
 
-import android.graphics.Color;
 import android.view.Gravity;
+import android.graphics.Color;
 import android.content.Context;
 import android.widget.ImageView;
 import android.widget.FrameLayout;
@@ -30,7 +30,7 @@ public final class SplashScreenView extends FrameLayout
         ImageView appIcon = new ImageView(context);
         LayoutParams iconParams = new LayoutParams(800, 800); // Size of the icon in dp
         iconParams.gravity = Gravity.CENTER;
-        appIcon.setImageResource(R.drawable.app_icon); // Replace with your drawable
+        appIcon.setImageResource(R.drawable.app_icon_pro);
         appIcon.setLayoutParams(iconParams);
         addView(appIcon);
     }

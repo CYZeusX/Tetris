@@ -1,14 +1,10 @@
 package com.cyzco.game;
 
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.graphics.BitmapFactory;
 import android.content.res.Resources;
-import android.graphics.PixelFormat;
-import android.graphics.PorterDuff;
-import android.os.Bundle;
+import androidx.annotation.NonNull;
+import android.os.VibratorManager;
 import android.os.VibrationEffect;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.graphics.Typeface;
 import android.view.SurfaceView;
@@ -18,36 +14,89 @@ import android.content.Context;
 import android.widget.EditText;
 import android.graphics.Paint;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Vibrator;
-
+import java.util.ArrayList;
+import android.os.Handler;
 import java.util.HashMap;
-import java.util.Arrays;
-import java.util.Map;
+import android.os.Bundle;
+import java.util.HashSet;
+import android.os.Looper;
 import java.util.Objects;
+import android.util.Log;
+import android.os.Build;
+import java.util.List;
+import java.util.Map;
 
 public class TetrisGame
 {
+    // board setup
     private String[][] BOARD;
     private final int BOARD_WIDTH = 10; // 10 blocks wide
-    private final int BOARD_HEIGHT = 20; // 20 blocks tall
+    private final int BOARD_HEIGHT = 18; // 18 blocks tall
+    private final float ASPECT_RATIO = (float) BOARD_WIDTH / (float) BOARD_HEIGHT;
     private final String BOARD_BLOCK = Shapes.space;
     private final Context CONTEXT;
+    private final Rect textBoundsRect = new Rect();
+    public boolean isPaused = false;
+
+    // scoring setting
     private final int REMOVE_LINE_SCORE = 100;
     public int tetrisGained, linesCleared, scoreGained = 0;
+    private final int PLACE_BLOCK_SCORE = 36;
+    private static final long LOCK_DELAY = 500; // in ms
+
+    // block lock delay setup
+    public boolean isTouchingGround = false;
+    public long lockStartTime = 0;
+
+    // Cleared 4 effect setup
     private boolean showEffect = false;
     private long effectEndTime = 135; // Timestamp for when the effect ends
+    private Bitmap effectBitmap, resizedEffectBitmap = null;
+    private volatile boolean effectBitmapLoading = false;
+    private volatile boolean effectBitmapReady = false;
+    private int lastCanvasWidthForEffect = -1; // Track size to avoid rescaling unnecessarily
+    private int lastCanvasHeightForEffect = -1;
+
+    // Haptic Feedback effect setup
+    private boolean hapticFeedback = false;
+    private int hapticIndex = 200;
+    private Vibrator vibrator;
+
+    // edit shape and block setup
     private Tetromino currentPiece;
-    private Bitmap effectBitmap, resizedEffectBitmap;
+    private int currentShadowY = -1;
+    public EditText stringShape;
+    public String block;
+    private final Map<String, Integer> characterCenterYOffsets = new HashMap<>();
     private final Map<String, Integer> blockColors = new HashMap<>();
-    private EditText stringShape;
     private final Shapes shapes = new Shapes();
+
+    // instantiations
     private final GameOverFragment gameOverFragment = new GameOverFragment();
     private final GameWinFragment gameWinFragment = new GameWinFragment();
 
+    // shape emoji mode, false is custom String shape
+    public boolean emojiMode;
+
+    // paint setup for game rendering
+    private Paint boardPaint;
+    private Paint blockPaint;
+
+    // Restore Constants
+    private static final String TAG_RESTORE = "RestoreState"; // Tag for restore logs
+    private static final String TAG_DRAW = "DrawBlockDebug"; // Tag for draw logs
+
+
+    /* --- Constructor --- */
     public TetrisGame(Context context)
     {
         this.CONTEXT = context;
+        Log.d("TetrisGameInit", "Constructor started.");
+        long startTime = System.nanoTime();
 
+        // Initialize Board
         BOARD = new String[BOARD_HEIGHT][BOARD_WIDTH];
         for (int y = 0; y < BOARD_HEIGHT; y++)
         {
@@ -55,12 +104,188 @@ public class TetrisGame
                 BOARD[y][x] = BOARD_BLOCK;
         }
 
+        // Initialize Resources
+        // Set up color map and initial block char
+        long time1 = System.nanoTime();
         initializeBlockColorsAndCharacters();
+
+        // Initialize Paint objects *ONCE*
+        long time2 = System.nanoTime();
+        initPaints();
+
+        // Initialize effect Bitmaps *ONCE*
+        long time3 = System.nanoTime();
+        initEffects(context.getResources());
+
+        // Get Vibrator service *ONCE*
+        long time4 = System.nanoTime();
+        initVibrator(context);
+
+        // Spawn First Piece
+        long time5 = System.nanoTime();
         spawnNewPiece();
+        long endTime = System.nanoTime();
+
+        // Log initialization timings
+        Log.d("TetrisGameTiming", "Constructor Total: " + (endTime - startTime) / 1_000_000 + "ms");
+        Log.d("TetrisGameTiming", "  - Colors/Chars: " + (time2 - time1) / 1_000_000 + "ms");
+        Log.d("TetrisGameTiming", "  - Paints: " + (time3 - time2) / 1_000_000 + "ms");
+        Log.d("TetrisGameTiming", "  - Effects: " + (time4 - time3) / 1_000_000 + "ms");
+        Log.d("TetrisGameTiming", "  - Vibrator: " + (time5 - time4) / 1_000_000 + "ms");
+        Log.d("TetrisGameTiming", "  - Spawn: " + (endTime - time5) / 1_000_000 + "ms");
+        Log.d("TetrisGameInit", "Constructor finished.");
     }
 
-    public void setStringShape(EditText stringShape)
+    private void initPaints()
     {
+        Log.d("TetrisGameInit", "Initializing Paints...");
+
+        boardPaint = new Paint();
+        boardPaint.setColor(Color.WHITE);
+        boardPaint.setAlpha(30);
+        boardPaint.setStyle(Paint.Style.STROKE);
+        boardPaint.setStrokeWidth(2);
+        boardPaint.setAntiAlias(true);
+
+        blockPaint = new Paint();
+        blockPaint.setTypeface(Typeface.SANS_SERIF);
+        blockPaint.setTextAlign(Paint.Align.CENTER); // Default alignment
+        blockPaint.setAntiAlias(true);
+        // Text size will be set dynamically in drawBlock based on blockSize
+
+        Log.d("TetrisGameInit", "Paints Initialized.");
+    }
+
+    public void initEffects(final Resources resources)
+    {
+        // Only start loading if not already loaded and not currently loading
+        if (effectBitmap == null && !effectBitmapLoading)
+        {
+            effectBitmapLoading = true;
+            effectBitmapReady = false;
+
+            // Create new background thread
+            new Thread(() ->
+            {
+                int effectResourceId = R.drawable.tetris_clear_effect;
+                Bitmap loadedBitmap = null;
+                Bitmap scaledBitmap = null;
+
+                try
+                {
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    loadedBitmap = BitmapFactory.decodeResource(resources, effectResourceId, options);
+                    if (loadedBitmap != null)
+                        scaledBitmap = loadedBitmap;
+                }
+
+                catch (OutOfMemoryError oom) {
+                    Log.e("TetrisGameInit", "Background thread: Out of Memory Error loading effect bitmap!", oom);
+                }
+
+                catch (Exception e) {
+                    Log.e("TetrisGameInit", "Background thread: Error loading effect bitmap", e);
+                }
+
+                finally
+                {
+                    // --- Update member variables on the main thread ---
+                    final Bitmap finalLoaded = loadedBitmap;
+                    final Bitmap finalScaled = scaledBitmap;
+
+                    new Handler(Looper.getMainLooper()).post(() ->
+                    {
+                        effectBitmap = finalLoaded; // Assign potentially null original
+                        resizedEffectBitmap = finalScaled; // Assign potentially null scaled
+                        effectBitmapReady = (resizedEffectBitmap != null); // Mark as ready if successful
+                        effectBitmapLoading = false; // Mark loading as finished
+                        Log.d("TetrisGameInit", "Main thread: Updated effect bitmap variables. Ready=" + effectBitmapReady);
+                    });
+                }
+            }).start();
+        }
+
+        else if (effectBitmapLoading)
+            Log.d("TetrisGameInit", "Effects Bitmap is already loading in the background.");
+
+        else effectBitmapReady = true;
+    }
+
+    private void initVibrator(Context context)
+    {
+        Log.d("TetrisGameInit", "Initializing Vibrator...");
+
+        // Use VibratorManager for API 31+ for better compatibility
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+        {
+            VibratorManager vibratorManager = (VibratorManager) context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+            if (vibratorManager != null)
+                vibrator = vibratorManager.getDefaultVibrator();
+
+            else
+            {
+                Log.w("TetrisGameInit", "VibratorManager service not available.");
+                vibrator = null;
+            }
+        }
+        // Use deprecated Vibrator for older APIs
+        else vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
+        // Check if vibrator exists and has capability (hasVibrator deprecated but still useful check)
+        if (vibrator == null || !vibrator.hasVibrator()) {
+            Log.w("TetrisGameInit", "Vibrator service not available or device doesn't have a vibrator.");
+            vibrator = null; // Ensure it's null if not usable
+        }
+        else Log.d("TetrisGameInit", "Vibrator Initialized successfully.");
+    }
+
+    private void initializeBlockColorsAndCharacters()
+    {
+        Log.d("TetrisGameInit", "Initializing Block Colors/Chars...");
+
+        // set initial block character based on current state
+        this.block = shapes.getBlock();
+        Log.d("TetrisGameInit", "Initial block character set to: '" + this.block + "'");
+
+        blockColors.put(Shapes.I_BLOCK, Color.parseColor("#00FFFF")); // I-shape
+        blockColors.put(Shapes.O_BLOCK, Color.parseColor("#FFEB3B")); // O-shape
+        blockColors.put(Shapes.T_BLOCK, Color.parseColor("#9500FF")); // T-shape
+        blockColors.put(Shapes.S_BLOCK, Color.parseColor("#59FF33")); // S-shape
+        blockColors.put(Shapes.Z_BLOCK, Color.parseColor("#FF4D4D")); // Z-shape
+        blockColors.put(Shapes.J_BLOCK, Color.parseColor("#3460FF")); // J-shape
+        blockColors.put(Shapes.L_BLOCK, Color.parseColor("#FFA621")); // L-shape
+        blockColors.put(Shapes.space, Color.TRANSPARENT);
+
+        // --- Pre-Measure Characters ---
+        Log.d("TetrisGameInit", "Pre-measuring character offsets...");
+        Paint measurementPaint = new Paint();
+        measurementPaint.setTypeface(Typeface.SANS_SERIF);
+        Rect bounds = new Rect();
+        List<String> charsToMeasure = new ArrayList<>();
+
+        // Add all possible block characters/emojis
+        charsToMeasure.add(this.block);
+        charsToMeasure.addAll(Shapes.EMOJI_MAP.values());
+
+        float typicalBlockSizePx = 54f;
+        measurementPaint.setTextSize(typicalBlockSizePx);
+
+        for (String character : new HashSet<>(charsToMeasure))
+        {
+            // Use HashSet to avoid duplicates
+            if (character != null && !character.isEmpty())
+            {
+                measurementPaint.getTextBounds(character, 0, character.length(), bounds);
+                characterCenterYOffsets.put(character, bounds.centerY());
+                Log.d("CharMeasure", "Char: '" + character + "', CenterY Offset: " + bounds.centerY());
+            }
+        }
+
+        Log.d("TetrisGameInit", "Character offsets measured.");
+        Log.d("TetrisGameInit", "Block Colors/Chars Initialized.");
+    }
+
+    public void setStringShape(EditText stringShape) {
         this.stringShape = stringShape;
     }
 
@@ -79,8 +304,7 @@ public class TetrisGame
         shapes.setBlock(block);
     }
 
-    public String getBlock()
-    {
+    public String getBlock() {
         return shapes.getBlock();
     }
 
@@ -100,28 +324,106 @@ public class TetrisGame
         this.scoreGained = scoreGained;
     }
 
-    private void spawnNewPiece()
+    public void spawnNewPiece()
     {
-        int randomIndex = (int) (Math.random() * Shapes.SHAPES.length);  // Random index for shapes
-        String[][] randomShape = Shapes.SHAPES[randomIndex];  // Get the random shape from the Shapes array
+        // Random index for shapes
+        int randomIndex = (int) (Math.random() * Shapes.SHAPES.length);
 
-        currentPiece = new Tetromino(randomShape);  // Pass the shape to the Tetromino constructor
+        // Get the random shape from the Shapes array
+        String[][] randomShape = Shapes.SHAPES[randomIndex];
 
-        // Position the new piece at the top of the board
-        int startX = (BOARD_WIDTH - currentPiece.getShape()[0].length) / 2;
-        int startY = 0;
-        currentPiece.setPosition(startX, startY);
+        // Get the corresponding enum type - IMPORTANT: Assumes order matches
+        Shapes.PieceType type = Shapes.PieceType.values()[randomIndex];
 
-        // Check if the piece can be placed
-        if (!canMove(currentPiece, startX, startY))
-            handleGameOver();  // Handle game over if the piece can't fit
+        // Calculate starting position *before* creating the piece
+        int shapeWidth;
+        if (randomShape.length > 0 && randomShape[0] != null)
+            shapeWidth = randomShape[0].length;
+
+        else {
+            System.err.println("Error: Invalid shape matrix selected.");
+            return;
+        }
+
+        int startX = (BOARD_WIDTH - shapeWidth) / 2;
+        int startY = -1;
+        Tetromino potentialPiece = new Tetromino(type, randomShape, startX, startY);
+
+        // Check if the piece can be placed at the calculated starting position using isValidPosition
+        if (potentialPiece.isValidPosition(potentialPiece.getShapeCopy(), startX, startY, BOARD)) {
+            currentPiece = potentialPiece;
+            updateShadowPosition();
+        }
+
+        else
+        {
+            potentialPiece = new Tetromino(type, randomShape, startX, startY);
+            if (potentialPiece.isValidPosition(potentialPiece.getShapeCopy(), startX, startY, BOARD)) {
+                currentPiece = potentialPiece;
+                return;
+            }
+
+            handleGameOver();
+        }
     }
-
-    public boolean isPaused = false;
 
     public void togglePause()
     {
-        isPaused = !isPaused;
+        //Resources for pause
+        MainActivity activity = ((MainActivity) CONTEXT);
+
+        if (!isPaused)
+        {
+            // --- Pause the game ---
+            isPaused = true;
+
+            // Log state change
+            activity.pauseGameLoop();
+            Log.d("TetrisGame/togglePause()/MA.pauseGameLoop()", "MA.pauseGameLoop(): isPaused = true ::: " + isPaused);
+
+            // Disable the joystick pad interaction if needed
+            if (activity.joystick_pad != null)
+                activity.joystick_pad.setEnabled(false);
+        }
+
+        else
+        {
+            // --- Resume the game ---
+            isPaused = false;
+
+            Log.d("TetrisGame togglePause()", "TetrisGame togglePause(): isPaused = false ::: " + isPaused);
+
+            // Ensure input states are reset BEFORE resuming the loop
+            if (activity != null) {
+                resetInputStates(activity);
+            }
+
+            assert activity != null;
+            activity.resumeGameLoop();
+            Log.d("TetrisGame/togglePause()/MA.resumeGameLoop()","MA.resumeGameLoop(): isPaused = false ::: " + isPaused);
+
+            // Re-enable the joystick pad interaction
+            if (activity.joystick_pad != null)
+                activity.joystick_pad.setEnabled(true);
+        }
+    }
+
+    // Helper to clear input states on pause/resume
+    private void resetInputStates(MainActivity activity)
+    {
+        // Reset DAS/ARR state to prevent instant movement on resume
+        activity.activeHorizontalDirection = MainActivity.MoveDirection.NONE;
+        activity.softDropActive = false;
+        activity.nextHorizontalMoveTime = 0; // Reset repeat timers
+        activity.nextSoftDropTime = 0;
+        activity.dasChargedHorizontal = false; // Reset DAS charge state
+        activity.dasChargedSoftDrop = false; // Reset DAS charge state
+
+        // Clear joystick active flags to be safe
+        activity.isStickLeftActive = false;
+        activity.isStickRightActive = false;
+        activity.isStickDownActive = false;
+        activity.updateJoystickDirection(null); // Stop any ongoing DAS/ARR
     }
 
     private void handleGameWin()
@@ -142,25 +444,6 @@ public class TetrisGame
         catch (Exception e) {
             Log.e("GameOverFragment", "Error showing GameOverFragment", e);
         }
-
-    }
-
-    public void movePieceLeft()
-    {
-        if (canMove(currentPiece, currentPiece.getX() - 1, currentPiece.getY()))
-        {
-            currentPiece.setPosition(currentPiece.getX() - 1, currentPiece.getY());
-            setVibrator(new long[]{0, 3}, new int[]{0, 50});
-        }
-    }
-
-    public void movePieceRight()
-    {
-        if (canMove(currentPiece, currentPiece.getX() + 1, currentPiece.getY()))
-        {
-            currentPiece.setPosition(currentPiece.getX() + 1, currentPiece.getY());
-            setVibrator(new long[]{0, 3}, new int[]{0, 50});
-        }
     }
 
     // for right buttons controls
@@ -169,12 +452,13 @@ public class TetrisGame
         switch (action)
         {
             // left buttons
-            case "a" -> movePieceLeft();
-            case "s" -> movePieceDown();
-            case "d" -> movePieceRight();
+            case "a" -> moveBlockLeft();
+            case "s" -> moveBlockDown();
+            case "d" -> moveBlockRight();
 
             // right buttons
-            case "A" -> dropPiece();
+            case "A" -> dropBlock();
+            case "B" -> holdBlock();
             case "X", "l1" -> rotatePieceCounterClockwise();
             case "Y", "r1" -> rotatePieceClockwise();
             default -> System.out.println("Unknown action: " + action);
@@ -183,61 +467,177 @@ public class TetrisGame
 
     public void updateGame()
     {
-        if (!isPaused)
-            movePieceDown();
+        if (showEffect && System.currentTimeMillis() > effectEndTime + 200)
+            showEffect = false;
     }
 
-    public void movePieceDown()
+    /**
+     * Attempts to move the current piece down by one step due to gravity.
+     * If the piece cannot move down, it manages the lock delay timer.
+     * @return true if the piece has locked in place after the delay, false otherwise.
+     */
+    public boolean applyGravityAndCheckLock()
+    {
+        if (currentPiece == null) return false;
+        int currentX = currentPiece.getX();
+        int currentY = currentPiece.getY();
+
+        if (canMove(currentPiece, currentX, currentY + 1))
+        {
+            currentPiece.setPosition(currentX, currentY + 1);
+            isTouchingGround = false;
+            lockStartTime = 0;
+            return false;
+        }
+
+        else
+        {
+            if (!isTouchingGround)
+            {
+                isTouchingGround = true;
+                lockStartTime = System.currentTimeMillis();
+                return false; // Just touched
+            }
+
+            else
+            {
+                long elapsedTime = System.currentTimeMillis() - lockStartTime;
+                return elapsedTime >= LOCK_DELAY;
+            }
+        }
+    }
+
+    public void moveBlockDown()
     {
         int currentX = currentPiece.getX();
         int currentY = currentPiece.getY();
 
         if (canMove(currentPiece, currentX, currentY + 1))
         {
-            // Move the piece down by one row
+            // Move down by one row
             currentPiece.setPosition(currentX, currentY + 1);
-            setVibrator(new long[]{0, 2}, new int[]{0, 50});
+            isTouchingGround = false;
+            lockStartTime = 0;
         }
 
         else
         {
-            // Lock the piece in place and spawn a new one
-            lockPiece();
-            spawnNewPiece();
+            if (!isTouchingGround)
+            {
+                isTouchingGround = true;
+                lockStartTime = System.currentTimeMillis();
+            }
+
+            else
+            {
+                long elapsedTime = System.currentTimeMillis() - lockStartTime;
+                if (elapsedTime >= LOCK_DELAY)
+                {
+                    // Lock the block, Spawn a block
+                    placeBlock();
+                    spawnNewPiece();
+                    isTouchingGround = false;
+                    lockStartTime = 0;
+                }
+            }
+        }
+
+        hapticFeedback = true;
+        hapticIndex = 10;
+    }
+
+    public void moveBlockLeft()
+    {
+        if (isPaused || currentPiece == null) return;
+
+        int currentX = currentPiece.getX();
+        int currentY = currentPiece.getY();
+
+        if (canMove(currentPiece, currentX - 1, currentY))
+        {
+            currentPiece.setPosition(currentX - 1, currentY);
+            hapticFeedback = true;
+            hapticIndex = 10;
+
+            // Reset lock delay. Only if grounded & successful move
+            if (isTouchingGround) lockStartTime = System.currentTimeMillis();
+
+            updateShadowPosition();
         }
     }
 
-    public void dropPiece()
+    public void moveBlockRight()
+    {
+        if (isPaused || currentPiece == null) return;
+
+        int currentX = currentPiece.getX();
+        int currentY = currentPiece.getY();
+
+        if (canMove(currentPiece, currentX + 1, currentY))
+        {
+            currentPiece.setPosition(currentX + 1, currentY);
+            hapticFeedback = true;
+            hapticIndex = 10;
+
+            // Reset lock delay. Only if grounded & successful move
+            if (isTouchingGround) lockStartTime = System.currentTimeMillis();
+
+            updateShadowPosition();
+        }
+    }
+
+    public void dropBlock()
     {
         // Move the piece down to the lowest possible position
         int newY = currentPiece.getY();
 
+        // Keep moving down until we can't
         while (canMove(currentPiece, currentPiece.getX(), newY + 1))
-            newY++; // Keep moving down until we can't
+            newY++;
 
         // Set the piece to the final position
         currentPiece.setPosition(currentPiece.getX(), newY);
-        lockPiece();  // Lock the piece in place
+        placeBlock();  // Lock the piece in place
         spawnNewPiece(); // Spawn a new piece after the drop
     }
 
     public void rotatePieceClockwise()
     {
-        currentPiece.rotateClockwise();
-        if (!canMove(currentPiece, currentPiece.getX(), currentPiece.getY()))
-            currentPiece.rotateCounterClockwise(); // Undo rotation if invalid
+        if (isPaused || currentPiece == null) return;
+
+        if (currentPiece.rotateClockwise(BOARD))
+        {
+            if (isTouchingGround)
+                lockStartTime = System.currentTimeMillis();
+            updateShadowPosition();
+        }
     }
 
     public void rotatePieceCounterClockwise()
     {
-        currentPiece.rotateCounterClockwise();
-        if (!canMove(currentPiece, currentPiece.getX(), currentPiece.getY()))
-            currentPiece.rotateClockwise(); // Undo rotation if invalid
+        if (isPaused || currentPiece == null) return;
+
+
+        if (currentPiece.rotateCounterClockwise(BOARD))
+        {
+            if (isTouchingGround)
+                lockStartTime = System.currentTimeMillis();
+            updateShadowPosition();
+        }
+    }
+
+    public void holdBlock()
+    {
+//        if (isPaused)
+//            return;
+        // TODO: Implement hold logic
+        Log.w("HoldBlock", "Hold function not implemented yet.");
     }
 
     public boolean canMove(Tetromino piece, int newX, int newY)
     {
-        String[][] shape = piece.getShape();
+        String[][] shape = piece.getShapeInternal();
+
         for (int i = 0; i < shape.length; i++)
         {
             for (int j = 0; j < shape[i].length; j++)
@@ -246,18 +646,28 @@ public class TetrisGame
                 {
                     int boardX = newX + j;
                     int boardY = newY + i;
-                    if (boardX < 0 || boardX >= BOARD_WIDTH || boardY >= BOARD_HEIGHT || (boardY >= 0 && !Objects.equals(BOARD[boardY][boardX], BOARD_BLOCK)))
-                        return false; // Blocked, cannot move
+
+                    // Check if the piece is outside the board
+                    if (boardX < 0 || boardX >= BOARD_WIDTH || boardY >= BOARD_HEIGHT)
+                        return false;
+
+                    // Only check collision if within bounds
+                    if (boardY >= 0) {
+                        // Check if there's a locked block at that position
+                        if (!Objects.equals(BOARD[boardY][boardX], BOARD_BLOCK))
+                            return false;
+                    }
                 }
             }
         }
 
-        return true; // No collisions, can move
+        // No collisions, can move
+        return true;
     }
 
-    private void lockPiece()
+    public void placeBlock()
     {
-        String[][] shape = currentPiece.getShape();
+        String[][] shape = currentPiece.getShapeInternal();
         int startX = currentPiece.getX();
         int startY = currentPiece.getY();
 
@@ -276,12 +686,11 @@ public class TetrisGame
             }
         }
 
-        int placeBlockScore = 36;
-        scoreGained += placeBlockScore;
+        scoreGained += PLACE_BLOCK_SCORE;
         checkCompletedLines(); // Check for completed lines after locking
     }
 
-    private void checkCompletedLines()
+    public void checkCompletedLines()
     {
         int rowsClearedInThisStep = 0; // Counter for rows cleared in one step
 
@@ -305,6 +714,9 @@ public class TetrisGame
             }
         }
 
+        hapticFeedback = true;
+        hapticIndex = rowsClearedInThisStep;
+
         // Check if 4 rows were cleared at once
         if (rowsClearedInThisStep == 4)
         {
@@ -314,9 +726,12 @@ public class TetrisGame
             effectEndTime = Math.max(effectEndTime, newEndTime);
             tetrisGained++;
         }
-        else scoreGained += REMOVE_LINE_SCORE * rowsClearedInThisStep; // Normal score for other cases
 
-        linesCleared += rowsClearedInThisStep; // Update the total lines cleared
+        // Normal score for other cases
+        else scoreGained += REMOVE_LINE_SCORE * rowsClearedInThisStep;
+
+        // Update the total lines cleared
+        linesCleared += rowsClearedInThisStep;
 
         if (linesCleared >= 50)
             handleGameWin();
@@ -330,293 +745,553 @@ public class TetrisGame
             BOARD[0][x] = BOARD_BLOCK;
     }
 
-    public int calculateShadowPosition()
-    {
-        int shadowY = currentPiece.getY();
-        while (canMove(currentPiece, currentPiece.getX(), shadowY + 1))
-            shadowY++;
-        return shadowY; // The Y-coordinate where the shadow will rest
-    }
-
-    public void initEffects(Resources resources)
-    {
-        if (effectBitmap == null)
-        {
-            // clear 4 rows effect
-            int effect = R.drawable.tetris_boom_max;
-
-            effectBitmap = BitmapFactory.decodeResource(resources, effect);
-            if (effectBitmap != null)
-            {
-                resizedEffectBitmap = Bitmap.createScaledBitmap(effectBitmap, 250, 95, true);
-                System.out.println("Effect bitmaps initialized.");
-            }
-            else System.err.println("Error: Could not decode resource for tetris_boom.");
-        }
-    }
-
-    private void initializeBlockColorsAndCharacters()
-    {
-        blockColors.put(Shapes.I_BLOCK, Color.parseColor("#00FFFF")); // I-shape
-        blockColors.put(Shapes.O_BLOCK, Color.parseColor("#FFEB3B")); // O-shape
-        blockColors.put(Shapes.T_BLOCK, Color.parseColor("#9500FF")); // T-shape
-        blockColors.put(Shapes.S_BLOCK, Color.parseColor("#59FF33")); // S-shape
-        blockColors.put(Shapes.Z_BLOCK, Color.parseColor("#FF4D4D")); // Z-shape
-        blockColors.put(Shapes.J_BLOCK, Color.parseColor("#3460FF")); // J-shape
-        blockColors.put(Shapes.L_BLOCK, Color.parseColor("#FFA621")); // L-shape
-        blockColors.put(Shapes.space, Color.WHITE); // No color for empty spaces
-    }
-
+    /* --- Rendering Methods --- */
     public void renderGame(SurfaceView monitor)
     {
-        // Ensure effect bitmaps are initialized
-        if (effectBitmap == null || resizedEffectBitmap == null)
+        SurfaceHolder holder = monitor.getHolder();
+        Canvas canvas = holder.lockCanvas();
+        if (canvas == null) return;
+
+        // Start timing renderGame
+        long frameRenderStartTime = System.nanoTime();
+
+        try
         {
-            System.err.println("Effect bitmaps not initialized!");
-            initEffects(CONTEXT.getResources());
+            // --- Aspect Ratio Calculation ---
+            long aspectCalcStart = System.nanoTime();
+            int canvasHeight = canvas.getHeight();
+            int canvasWidth = canvas.getWidth();
+
+            // Unlock before returning
+            if (canvasWidth <= 0 || canvasHeight <= 0) {
+                holder.unlockCanvasAndPost(canvas);
+                return;
+            }
+
+            float viewAspectRatio = (float) canvasWidth / canvasHeight;
+            int blockSize;
+            int paddingLeft;
+            int paddingTop;
+
+            if (viewAspectRatio > ASPECT_RATIO)
+            {
+                blockSize = canvasHeight / BOARD_HEIGHT;
+                int gameAreaWidth = blockSize * BOARD_WIDTH;
+                paddingLeft = (canvasWidth - gameAreaWidth) / 2;
+                paddingTop = 0;
+            }
+
+            else
+            {
+                blockSize = canvasWidth / BOARD_WIDTH;
+                int gameAreaHeight = blockSize * BOARD_HEIGHT;
+                paddingLeft = 0;
+                paddingTop = (canvasHeight - gameAreaHeight) / 2;
+            }
+            long aspectCalcEnd = System.nanoTime();
+
+            // --- >>> Check and Scale Effect Bitmap <<< ---
+            long effectScaleStart = System.nanoTime();
+            if (effectBitmapReady && effectBitmap != null)
+            {
+                boolean needsRescaling = resizedEffectBitmap == null ||
+                        lastCanvasWidthForEffect != canvasWidth ||
+                        lastCanvasHeightForEffect != canvasHeight;
+
+                if (needsRescaling)
+                {
+                    // Calculate target size based on game board size for consistency
+                    Log.d("RenderGame", "Rescaling effect bitmap...");
+                    int targetWidth = blockSize * BOARD_WIDTH;
+                    float originalAspectRatio = (float) effectBitmap.getWidth() / effectBitmap.getHeight();
+                    int targetHeight = (int) (targetWidth / originalAspectRatio);
+
+                    if (targetWidth > 0 && targetHeight > 0)
+                    {
+                        try
+                        {
+                            Log.w("RenderGame", "Performing effect bitmap scaling (can cause jank)...");
+                            long scaleStartTime = System.nanoTime();
+                            // Recycle old one first
+                            if (resizedEffectBitmap != null && resizedEffectBitmap != effectBitmap) {
+                                resizedEffectBitmap.recycle();
+                            }
+
+                            // Scale the ORIGINAL bitmap
+                            resizedEffectBitmap = Bitmap.createScaledBitmap(effectBitmap, targetWidth, targetHeight, true);
+                            lastCanvasWidthForEffect = canvasWidth;
+                            lastCanvasHeightForEffect = canvasHeight;
+                            long scaleEndTime = System.nanoTime();
+                            Log.d("RenderGame", "Effect scaling took: " + (scaleEndTime - scaleStartTime) / 1_000_000 + "ms");
+                        }
+
+                        catch (Exception e) {
+                            Log.e("RenderGame", "Error scaling effect bitmap", e);
+                            resizedEffectBitmap = null; // Ensure it's null on error
+                        }
+                    }
+                    else resizedEffectBitmap = null;
+                }
+            }
+            long effectScaleEnd = System.nanoTime();
+
+            // Clear the canvas with a transparent background
+            long clearStart = System.nanoTime();
+            clearCanvas(canvas);
+            long clearEnd = System.nanoTime();
+
+            // --- Render Board Background ---
+            long boardBgStart = System.nanoTime();
+            renderBoardBackground(canvas, boardPaint, blockSize, paddingLeft, paddingTop);
+            long boardBgEnd = System.nanoTime();
+
+            // --- Render Fixed Blocks ---
+            long fixedBlocksStart = System.nanoTime();
+            renderFixedBlocks(canvas, blockPaint, blockSize, paddingLeft, paddingTop);
+            long fixedBlocksEnd = System.nanoTime();
+
+            // --- Render Shadow Block ---
+            long shadowStart = System.nanoTime();
+            if (currentPiece != null)
+                renderShadowBlock(canvas, blockPaint, blockSize, paddingLeft, paddingTop);
+            long shadowEnd = System.nanoTime();
+
+            // --- Render Current Piece ---
+            long currentPieceStart = System.nanoTime();
+            if (currentPiece != null)
+                renderCurrentBlock(canvas, blockPaint, blockSize, paddingLeft, paddingTop);
+            long currentPieceEnd = System.nanoTime();
+
+            // --- Render Effects ---
+            long effectRenderStart = System.nanoTime();
+            renderEffect(canvas, canvasWidth, canvasHeight);
+            long effectRenderEnd = System.nanoTime();
+
+            setHapticFeedbacks(hapticIndex);
+
+
+            // --- Calculate Durations (in microseconds for more detail) ---
+            long aspectCalcUs = (aspectCalcEnd - aspectCalcStart) / 1000;
+            long effectScaleUs = (effectScaleEnd - effectScaleStart) / 1000;
+            long clearUs = (clearEnd - clearStart) / 1000;
+            long boardBgUs = (boardBgEnd - boardBgStart) / 1000;
+            long fixedBlocksUs = (fixedBlocksEnd - fixedBlocksStart) / 1000;
+            long shadowUs = (shadowEnd - shadowStart) / 1000;
+            long currentPieceUs = (currentPieceEnd - currentPieceStart) / 1000;
+            long effectRenderUs = (effectRenderEnd - effectRenderStart) / 1000;
+            long totalRenderUs = (effectRenderEnd - frameRenderStartTime) / 1000; // Total time spent in renderGame
+
+            // Log detailed timings
+//            Log.d("RenderTiming", String.format(
+//                    "Render Total: %d us [Aspect:%d Scale:%d Clear:%d Bg:%d Fixed:%d Shadow:%d Current:%d Effect:%d]",
+//                    totalRenderUs, aspectCalcUs, effectScaleUs, clearUs, boardBgUs, fixedBlocksUs, shadowUs, currentPieceUs, effectRenderUs
+//            ));
         }
 
-        monitor.setZOrderOnTop(true);
-        SurfaceHolder holder = monitor.getHolder();
-        holder.setFormat(PixelFormat.TRANSLUCENT);
-        Canvas canvas = holder.lockCanvas();
+        catch (Exception e) {
+            Log.e("RenderGame", "Error during rendering", e);
+        }
 
-        if (canvas == null)
-            return;
-
-        // Clear the canvas with a transparent background
-        clearCanvas(canvas);
-
-        Paint paint = createPaint(monitor.getContext());
-
-        // Calculate block size and padding
-        int canvasWidth = canvas.getWidth();
-        int canvasHeight = canvas.getHeight();
-        int blockSize = Math.min(canvasWidth / BOARD_WIDTH, canvasHeight / BOARD_HEIGHT);
-        int paddingLeft = (canvasWidth - (BOARD_WIDTH * blockSize)) / 2;
-        int paddingTop = (canvasHeight - (BOARD_HEIGHT * blockSize)) / 2;
-
-        renderBoardBackground(canvas, paint, blockSize, paddingLeft, paddingTop);
-        renderFixedBlocks(canvas, paint, blockSize, paddingLeft, paddingTop);
-        renderCurrentPiece(canvas, paint, blockSize, paddingLeft, paddingTop);
-        renderShadow(canvas, paint, blockSize, paddingLeft, paddingTop);
-        renderEffect(canvas, canvasWidth, canvasHeight);
-        holder.unlockCanvasAndPost(canvas);
+        // Always unlock canvas even if errors occur
+        finally {
+            holder.unlockCanvasAndPost(canvas);
+        }
     }
 
     private void clearCanvas(Canvas canvas) {
-        canvas.drawColor(Color.argb(0, 255, 255, 255), PorterDuff.Mode.CLEAR);
+        canvas.drawColor(Color.BLACK);
     }
 
-    private Paint createPaint(Context context)
+    private String checkShapeToEmoji(String blockType) {
+        return Shapes.EMOJI_MAP.getOrDefault(blockType, blockType);
+    }
+
+    // --- Helper Method to Calculate Shadow ---
+    private void updateShadowPosition()
     {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE);
+        // No block, no shadow
+        if (currentPiece == null) {
+            currentShadowY = -1;
+            return;
+        }
 
-        // Determine the shape size based on orientation
-        int orientation = sharedPreferences.getInt("orientation", ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        int shapeSize = (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) ? 50 : 36;
+        int pieceX = currentPiece.getX();
+        int testY = currentPiece.getY();
 
-        // Create and configure the Paint object
-        Paint paint = new Paint();
-        paint.setTextSize(shapeSize);
-        paint.setTypeface(Typeface.MONOSPACE);
-        return paint;
+        // Use the piece's current shape for the check
+        while (canMove(currentPiece, pieceX, testY + 1))
+            testY++;
+
+        // Store the calculated position
+        currentShadowY = testY;
     }
 
     private void renderBoardBackground(Canvas canvas, Paint paint, int blockSize, int paddingLeft, int paddingTop)
     {
-        paint.setColor(Color.rgb(0, 0, 0));
         for (int y = 0; y < BOARD_HEIGHT; y++)
         {
             for (int x = 0; x < BOARD_WIDTH; x++)
             {
-                float posX = paddingLeft + (x + 0f) * blockSize;
-                float posY = paddingTop + (y + 1f) * blockSize;
-                paint.setAlpha(220);
-                canvas.drawText(String.valueOf(Shapes.space), posX, posY, paint);
+                float left = paddingLeft + x * blockSize;
+                float top = paddingTop + y * blockSize;
+                float right = left + blockSize;
+                float bottom = top + blockSize;
+
+                canvas.drawRect(left, top, right, bottom, paint);
+            }
+        }
+    }
+
+    private void renderCurrentBlock(Canvas canvas, Paint paint, int blockSize, int paddingLeft, int paddingTop)
+    {
+        // Use the passed-in blockPaint
+        if (currentPiece == null) return;
+        String[][] shape = currentPiece.getShapeInternal(); // Use internal getter
+        int pieceX = currentPiece.getX();
+        int pieceY = currentPiece.getY();
+
+        for (int y = 0; y < shape.length; y++)
+        {
+            for (int x = 0; x < shape[y].length; x++)
+            {
+                // Bounds check
+                if (x < shape[y].length) {
+                    if (shape[y][x] != null && !Objects.equals(shape[y][x], BOARD_BLOCK))
+                        drawBlock(canvas, paint, shape[y][x], pieceX + x, pieceY + y, blockSize, paddingLeft, paddingTop, 255);
+                }
+            }
+        }
+    }
+
+    private void renderShadowBlock(Canvas canvas, Paint paint, int blockSize, int paddingLeft, int paddingTop)
+    {
+        if (currentPiece == null || currentShadowY < 0) return;
+
+        String[][] shape = currentPiece.getShapeInternal();
+        int pieceX = currentPiece.getX();
+
+        for (int y = 0; y < shape.length; y++)
+        {
+            for (int x = 0; x < shape[y].length; x++)
+            {
+                if (shape[y][x] != null && !Objects.equals(shape[y][x], BOARD_BLOCK))
+                    drawBlock(canvas, paint, shape[y][x], pieceX + x, currentShadowY + y , blockSize, paddingLeft, paddingTop, 120);
             }
         }
     }
 
     private void renderFixedBlocks(Canvas canvas, Paint paint, int blockSize, int paddingLeft, int paddingTop)
     {
-        for (int y = 0; y < BOARD.length; y++)
+        for (int y = 0; y < BOARD_HEIGHT; y++)
         {
-            for (int x = 0; x < BOARD[y].length; x++)
+            for (int x = 0; x < BOARD_WIDTH; x++)
             {
-                String blockChar = BOARD[y][x];
-                if (!Objects.equals(blockChar, Shapes.space))
+                // Bounds check
+                if (y < BOARD.length && x < BOARD[y].length)
                 {
-                    Integer color = blockColors.get(blockChar);
-                    if (color != null)
-                    {
-                        paint.setColor(color);
-                        paint.setFakeBoldText(true);
-                    }
-                    float posX = paddingLeft + x * blockSize;
-                    float posY = paddingTop + (y + 1) * blockSize;
-                    canvas.drawText(getBlock(), posX, posY, paint);
+                    String blockType = BOARD[y][x];
+                    if (blockType != null && !Objects.equals(blockType, BOARD_BLOCK))
+                        drawBlock(canvas, paint, blockType, x, y, blockSize, paddingLeft, paddingTop, 255);
                 }
             }
         }
     }
 
-    private void renderCurrentPiece(Canvas canvas, Paint paint, int blockSize, int paddingLeft, int paddingTop)
+    private void drawBlock(@NonNull Canvas canvas, @NonNull Paint paint, @NonNull String blockType,
+                           int x, int y, int blockSize, int paddingLeft, int paddingTop, int alpha)
     {
-        String[][] shape = currentPiece.getShape();
-        int pieceX = currentPiece.getX();
-        int pieceY = currentPiece.getY();
+        if (y < 0 || y >= BOARD_HEIGHT) return;
 
-        for (int i = 0; i < shape.length; i++)
+        Integer color = blockColors.get(blockType);
+        if (color == null) color = Color.GRAY;
+
+        String characterToDraw = emojiMode ? checkShapeToEmoji(blockType) : getBlock();
+
+        if (characterToDraw == null || characterToDraw.isEmpty() || Objects.equals(characterToDraw, BOARD_BLOCK)) {
+            Log.d(TAG_DRAW, "Skipping draw at [" + x + "," + y + "]: Empty/Null character.");
+            return;
+        }
+
+        float computedBlockSize = emojiMode ? blockSize * 0.85f : blockSize * 1f;
+
+        // Configure Paint
+        paint.setColor(color);
+        paint.setAlpha(alpha);
+        paint.setTextSize(computedBlockSize);
+        paint.setStyle(Paint.Style.FILL);
+
+        // Calculate positioning
+        float cellCenterX = paddingLeft + x * blockSize + (blockSize / 2f);
+        float cellCenterY = paddingTop + y * blockSize + (blockSize / 2f);
+
+        // Use Pre-Measured Offset
+        Integer preMeasuredOffsetY = characterCenterYOffsets.get(characterToDraw);
+
+        // If character is not pre-measured:
+        if (preMeasuredOffsetY == null)
         {
-            for (int j = 0; j < shape[i].length; j++)
+            Log.w("DrawBlock", "Warning: Character '" + characterToDraw + "' not pre-measured. Measuring now.");
+            paint.getTextBounds(characterToDraw, 0, characterToDraw.length(), textBoundsRect);
+            preMeasuredOffsetY = textBoundsRect.centerY();
+            characterCenterYOffsets.put(characterToDraw, preMeasuredOffsetY);
+        }
+
+        float baselineY = cellCenterY - preMeasuredOffsetY;
+
+        canvas.drawText(characterToDraw, cellCenterX, baselineY, paint);
+    }
+
+    private void setHapticFeedbacks(int hapticIndex)
+    {
+        if (!hapticFeedback) return;
+
+        if (vibrator != null && vibrator.hasVibrator())
+        {
+            long[] timings;
+            int[] amplitudes = switch (hapticIndex)
             {
-                if (!Objects.equals(shape[i][j], Shapes.space))
-                    drawBlock(canvas, paint, shape[i][j], pieceX + j, pieceY + i, blockSize, paddingLeft, paddingTop, 255);
-            }
-        }
-    }
+                // Placing blocks
+                case 0 -> {
+                    timings = new long[] {0, 40};
+                    yield new int[] {0, 20};
+                }
 
-    private void renderShadow(Canvas canvas, Paint paint, int blockSize, int paddingLeft, int paddingTop)
-    {
-        int shadowY = calculateShadowPosition();
-        String[][] shape = currentPiece.getShape();
-        int pieceX = currentPiece.getX();
+                // Cleared 4 at once
+                case 4 -> {
+                    timings = new long[] {0, 80, 15, 180, 15, 550};
+                    yield new int[] {0, 20, 0, 20, 0, 20};
+                }
 
-        for (int i = 0; i < shape.length; i++)
-        {
-            for (int j = 0; j < shape[i].length; j++)
+                // Joystick movement
+                case 10 -> {
+                    timings = new long[] {0, 3};
+                    yield new int[] {0, 30};
+                }
+
+                // Normal clearing
+                default -> {
+                    timings = new long[] {0, 180};
+                    yield new int[] {0, 20};
+                }
+            };
+
+            try
             {
-                if (!Objects.equals(shape[i][j], Shapes.space))
-                    drawBlock(canvas, paint, shape[i][j], pieceX + j, shadowY + i + 1, blockSize, paddingLeft, paddingTop, 120);
+                // Use VibrationEffect for API 26+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1));
+                }
+                
+                else {
+                    Log.w("Vibration", "VibrationEffect not supported on this API level, skipping complex vibration.");
+                    vibrator.vibrate(50);
+                }
+            } 
+            
+            catch (Exception e) {
+                Log.e("Vibration", "Error triggering vibration", e);
             }
-        }
-    }
 
-    private void drawBlock(Canvas canvas, Paint paint, String blockChar, int x, int y, int blockSize, int paddingLeft, int paddingTop, int alpha)
-    {
-        Integer color = blockColors.get(blockChar);
-        if (color != null)
-        {
-            paint.setColor(color);
-            paint.setFakeBoldText(true);
-            paint.setAlpha(alpha);
-        }
-        float blockX = paddingLeft + x * blockSize;
-        float blockY = paddingTop + y * blockSize;
-        canvas.drawText(getBlock(), blockX, blockY, paint);
+            hapticFeedback = false;
+        } 
+        
+        else Log.w("Vibration", "Vibrator not available, cannot vibrate.");
     }
-
-    private long lastVibrationTime = 0;
-    private static final long VIBRATION_INTERVAL = 100; // milliseconds
 
     private void renderEffect(Canvas canvas, int canvasWidth, int canvasHeight)
     {
         if (showEffect && resizedEffectBitmap != null)
         {
-            long currentTime = System.currentTimeMillis();
-
-            if (currentTime <= effectEndTime)
-            {
-                float posX = (canvasWidth - resizedEffectBitmap.getWidth()) / 2.0f;
-                float posY = (canvasHeight - resizedEffectBitmap.getHeight()) / 2.0f;
-
-                if (currentTime - lastVibrationTime >= VIBRATION_INTERVAL)
-                {
-                    setVibrator(new long[]{0, 210}, new int[]{0, 30});
-                    lastVibrationTime = currentTime;
-                }
-
-                canvas.drawBitmap(resizedEffectBitmap, posX, posY, null);
-
-            } else showEffect = false;
+            float posX = (canvasWidth - resizedEffectBitmap.getWidth()) / 2.0f;
+            float posY = (canvasHeight - resizedEffectBitmap.getHeight()) / 2.0f;
+            canvas.drawBitmap(resizedEffectBitmap, posX, posY, null);
         }
 
         else if (showEffect)
-            System.err.println("Error: resizedEffectBitmap is null. Effect will not be rendered.");
-    }
-
-
-    public void setVibrator(long[] timings, int[] amplitudes)
-    {
-        if (CONTEXT != null)
-        {
-            Vibrator vibrator = (Vibrator) CONTEXT.getSystemService(Context.VIBRATOR_SERVICE);
-            if (vibrator != null && vibrator.hasVibrator())
-                vibrator.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1));
-        }
+            Log.e("renderEffect Error", "resizedEffectBitmap is null. Effect will not be rendered.");
     }
 
     public Bundle saveGameState()
     {
         Bundle bundle = new Bundle();
-        bundle.putSerializable("boardGrid", BOARD);
-        bundle.putString("currentBlock", getBlock());
+        Log.d("GameState", "Saving state...");
+
+        // Save general game state
         bundle.putInt("linesCleared", linesCleared);
         bundle.putInt("scoreGained", scoreGained);
+        bundle.putInt("tetrisGained", tetrisGained);
+        bundle.putString("currentBlock", getBlock());
+        bundle.putBoolean("emojiMode", emojiMode);
+        bundle.putLong("lockStartTime", lockStartTime);
+        bundle.putBoolean("isTouchingGround", isTouchingGround);
+        bundle.putInt("currentShadowY", currentShadowY);
+        bundle.putBoolean("showEffect", showEffect);
+        bundle.putLong("effectEndTime", effectEndTime);
 
-        // Flatten String[][] to String[]
-        int rows = BOARD.length;
-        int cols = BOARD[0].length;
-        String[] flatGrid = new String[rows * cols];
-        for (int i = 0; i < rows; i++)
-            System.arraycopy(BOARD[i], 0, flatGrid, i * cols, cols);
+        // --- Save Board ---
+        if (BOARD != null && BOARD.length > 0 && BOARD[0] != null)
+        {
+            int rows = BOARD.length;
+            int cols = BOARD[0].length;
+            String[] flatGrid = new String[rows * cols];
+            for (int i = 0; i < rows; i++) {
+                // Check if BOARD[i] is null before copying, though ideally it shouldn't be
+                if (BOARD[i] != null && BOARD[i].length == cols) {
+                    System.arraycopy(BOARD[i], 0, flatGrid, i * cols, cols);
+                } else {
+                    System.err.println("Warning: Invalid row in BOARD during save at index " + i);
+                }
+            }
 
-        bundle.putStringArray("boardGrid", flatGrid);
-        bundle.putInt("rows", rows);
-        bundle.putInt("cols", cols);
+            bundle.putStringArray("boardGrid", flatGrid);
+            bundle.putInt("rows", rows);
+            bundle.putInt("cols", cols);
+        }
 
+        else {
+            System.err.println("Warning: BOARD is null or invalid during saveGameState.");
+            bundle.putInt("rows", 0);
+            bundle.putInt("cols", 0);
+        }
 
-        // Flatten Tetromino shape
-        String[][] shape = currentPiece.getShape();
-        int size = shape.length;
-        String[] flatShape = new String[size * size];
-        for (int i = 0; i < size; i++)
-            System.arraycopy(shape[i], 0, flatShape, i * size, size);
+        // --- Save Current Piece (Only if it exists) ---
+        if (currentPiece != null)
+        {
+            Log.d(TAG_RESTORE, "Saving piece: Type=" + currentPiece.getShapeType().name() + " X=" + currentPiece.getX() + " Y=" + currentPiece.getY() + " Rot=" + currentPiece.getRotationState());
 
-        bundle.putInt("tetrominoSize", size);
-        bundle.putStringArray("currentPieceShape", flatShape);
-        bundle.putInt("currentPieceX", currentPiece.getX());
-        bundle.putInt("currentPieceY", currentPiece.getY());
+            // --- >>> SAVE MISSING DATA <<< ---
+            bundle.putString("shapeType", currentPiece.getShapeType().name()); // Save enum name as String
+            bundle.putInt("rotationState", currentPiece.getRotationState());   // Save rotation state
 
+            // Save shape
+            String[][] shape = currentPiece.getShapeCopy();
+            int shapeRows = shape.length;
+            int shapeCols = (shapeRows > 0 && shape[0] != null) ? shape[0].length : 0;
 
+            // Proceed only if shape dimensions are valid
+            if (shapeCols > 0)
+            {
+                bundle.putInt("shapeRows", shapeRows);
+                bundle.putInt("shapeCols", shapeCols);
+                String[] flatShape = new String[shapeRows * shapeCols];
+
+                for (int i = 0; i < shapeRows; i++)
+                {
+                    if (shape[i] != null && shape[i].length == shapeCols)
+                        System.arraycopy(shape[i], 0, flatShape, i * shapeCols, shapeCols);
+
+                    else System.err.println("Warning: Invalid row in piece shape during save at index " + i);
+                }
+
+                // Save position
+                bundle.putStringArray("currentShape", flatShape);
+                bundle.putInt("currentPieceX", currentPiece.getX());
+                bundle.putInt("currentPieceY", currentPiece.getY());
+            } else Log.e(TAG_RESTORE,"Error saving piece: Invalid shape dimensions.");
+        }
+        else Log.d(TAG_RESTORE, "Saving state: currentPiece is null.");
+
+        Log.d("GameState", "State saved. isPaused=" + isPaused);
         return bundle;
     }
 
     public void restoreGameState(Bundle bundle)
     {
-        // Rebuild game from the saved data
-        if (bundle == null) return;
+        if (bundle == null) { Log.w(TAG_RESTORE,"Restore bundle is null."); return; }
+        Log.d(TAG_RESTORE, "Restoring state...");
 
+        // Rebuild game from the saved data
         linesCleared = bundle.getInt("linesCleared", 0);
         scoreGained = bundle.getInt("scoreGained", 0);
-
+        tetrisGained = bundle.getInt("tetrisGained", 0);
+        emojiMode = bundle.getBoolean("emojiMode", false);
         changeBlock(bundle.getString("currentBlock", "■"));
 
-        int rows = bundle.getInt("rows", 20);
-        int cols = bundle.getInt("cols", 10);
+        // --- >>> RESTORE isPaused STATE <<< ---
+        lockStartTime = bundle.getLong("lockStartTime", 0);
+        isTouchingGround = bundle.getBoolean("isTouchingGround", false);
+        currentShadowY = bundle.getInt("currentShadowY", -1);
+        showEffect = bundle.getBoolean("showEffect", false);
+        effectEndTime = bundle.getLong("effectEndTime", 0);
+        Log.d(TAG_RESTORE, "Restored flags: isPaused=" + isPaused + " emojiMode=" + emojiMode);
+
+        // Restore board grid
+        int rows = bundle.getInt("rows", BOARD_HEIGHT);
+        int cols = bundle.getInt("cols", BOARD_WIDTH);
         String[] flatGrid = bundle.getStringArray("boardGrid");
+        BOARD = new String[rows][cols];
 
-        if (flatGrid != null)
+        // Always fill with default block first
+        for (int i = 0; i < rows; i++)
         {
-            BOARD = new String[rows][cols];
+            for (int j = 0; j < cols; j++)
+                BOARD[i][j] = BOARD_BLOCK;
+        }
+
+        // Then fill with saved state if available
+        if (flatGrid != null && rows > 0 && cols > 0)
+        {
+            Log.d(TAG_RESTORE, "Restoring board grid...");
             for (int i = 0; i < rows; i++)
-                System.arraycopy(flatGrid, i * cols, BOARD[i], 0, cols);
+            {
+                if ((i * cols + cols) <= flatGrid.length)
+                    System.arraycopy(flatGrid, i * cols, BOARD[i], 0, cols);
+
+                else {
+                    Log.e(TAG_RESTORE,"Error restoring board grid: index OOB.");
+                    break;
+                }
+            }
         }
 
-        int size = bundle.getInt("tetrominoSize", 4); // default size
-        String[] flatShape = bundle.getStringArray("currentPieceShape");
-        if (flatShape != null) {
-            String[][] shape = new String[size][size];
-            for (int i = 0; i < size; i++)
-                System.arraycopy(flatShape, i * size, shape[i], 0, size);
+        // Restore current Tetromino shape
+        currentPiece = null;
+        String shapeType = bundle.getString("shapeType");
+        if (shapeType != null)
+        {
+            int shapeRows = bundle.getInt("shapeRows", 0);
+            int shapeCols = bundle.getInt("shapeCols", 0);
+            String[] flatShape = bundle.getStringArray("currentShape");
+            int rotationState = bundle.getInt("rotationState", 0);
+            int x = bundle.getInt("currentPieceX", 0);
+            int y = bundle.getInt("currentPieceY", 0);
 
-            currentPiece = new Tetromino(shape);
-            currentPiece.setPosition(
-                    bundle.getInt("currentPieceX", 0),
-                    bundle.getInt("currentPieceY", 0)
-            );
+            if (flatShape != null && shapeRows > 0 && shapeCols > 0)
+            {
+                // ... (Reconstruct shape array with bounds checks) ...
+                String[][] shape = new String[shapeRows][shapeCols];
+                boolean shapeOk = true;
+
+                for (int i = 0; i < shapeRows; i++)
+                {
+                    if ((i * shapeCols + shapeCols) <= flatShape.length)
+                        System.arraycopy(flatShape, i * shapeCols, shape[i], 0, shapeCols);
+
+                    else {
+                        Log.e("Error restoring shape", "Error restoring shape: Array index out of bounds.");
+                        shapeOk = false;
+                        break;
+                    }
+                }
+
+                if (shapeOk)
+                {
+                    try
+                    {
+                        Shapes.PieceType type = Shapes.PieceType.valueOf(shapeType);
+                        currentPiece = new Tetromino(type, shape, x, y);
+                        currentPiece.setRotationState(rotationState);
+                    }
+
+                    catch (Exception e) {
+                        Log.e("GameState", "Error fully restoring piece", e);
+                        currentPiece = null;
+                    }
+                }
+                else { currentPiece = null; }
+            }
+            else { currentPiece = null; }
         }
-
+        Log.d("GameState", "State restored. isPaused=" + isPaused + ", currentPiece=" + (currentPiece != null));
     }
 }

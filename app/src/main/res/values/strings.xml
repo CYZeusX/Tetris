@@ -3,7 +3,7 @@
     <string name="title_game">Game</string>
     <string name="title_home">Home</string>
     <string name="title_notifications">Notifications</string>
-    <string name="start">START</string>
+    <string name="start">Tetris!</string>
     <string name="tetris">Tetris</string>
     <string name="score">score:\n0</string>
     <string name="lines">lines:\n0</string>
@@ -13,18 +13,22 @@
     <string name="btn_Y">Y</string>
     <string name="nul" />
     <string name="setting">Setting</string>
-    <string name="set_blocks">Set Blocks</string>
-    <string name="theme_light_dark">Light | Dark</string>
-    <string name="default_block">\"■\"</string>
+    <string name="set_blocks">Block 🟨</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="default_block">| insert a block!</string>
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>
-    <string name="restart">Restart &lt;&lt;</string>
+    <string name="restart">Restart</string>
     <string name="quit_app">Quit App</string>
     <string name="game_over">GAME OVER</string>
     <string name="haha_you_loose">HaHa, You loose</string>
     <string name="you_won">You Won</string>
-    <string name="play_again">Play Again >></string>
+    <string name="play_again">Play Again</string>
     <string name="score_gained">Score: </string>
     <string name="lines_cleared">Lines:</string>
     <string name="tetris_gained">Tetris: </string>
+    <string name="quit">Quit</string>
+    <string name="restart_game"><![CDATA[<<]]></string>
+    <string name="cyrusTradeMark">Cyrus™</string>
 </resources>
